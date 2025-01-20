@@ -3,13 +3,14 @@ kind: Config
 metadata:
   name: weather-app
 build:
- artifacts:
-   - image: current-weather-app
-     docker:
-      dockerfile: Dockerfile
+  artifacts:
+    - image: current-weather-app
+      docker:
+        dockerfile: Dockerfile
+      context: ./CurrentWeatherApp
 manifests:
   rawYaml:
-    - ./CurrentWeatherApp/CurrentWeatherAPI/k8s/CurrentWeather.yaml
+    - ./CurrentWeatherApp/k8s/CurrentWeather.yaml
 deploy:
   kubectl: {}
 # Setup profiles here

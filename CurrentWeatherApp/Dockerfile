@@ -9,10 +9,11 @@ COPY . .
 WORKDIR "/src/CurrentWeatherAPI"
 RUN dotnet build "CurrentWeatherAPI.csproj" -c Release -o /app/build
 
-FROM build AS publish # NOTE - Having them separated into these stages makes the final copy from publish smaller
+ # NOTE - Having them separated into these stages makes the final copy from publish smaller
+FROM build AS publish
 RUN dotnet publish "CurrentWeatherAPI.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "CurrentWeatherAPI.dll"] # Run the DLL.
