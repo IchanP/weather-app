@@ -22,28 +22,26 @@ spec:
   replicas: 1 # TODO set horizontal scaling too?
   selector:
     matchLabels:
-      deploymen.name: current-weather
+      deployment.name: current-weather
   template:
-      metadata:
-        labels:
-          deployment.name: current-weather
-      spec:
-        containers:
-        - name: current-weather-api
-          image: current-weather-app
-          resources:
-          # TODO - might need to adjust depending on where to deploy
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            env:
-              # TODO - set environment variables
-            ports:
-              - containerport: 8888
-                name: "cw-port-http"
-        imagePullSecrets:
-        - name: docker-pull # TODO need to set this up in pipeline
+    metadata:
+      labels:
+        deployment.name: current-weather
+    spec:
+      containers:
+      - name: current-weather-api
+        image: current-weather-app
+        resources:
+        # TODO - might need to adjust depending on where to deploy
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+        ports:
+          - containerPort: 8888
+            name: "cw-port-http"
+      imagePullSecrets:
+      - name: docker-pull # TODO need to set this up in pipeline
 # TODO scaling?
