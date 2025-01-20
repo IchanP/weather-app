@@ -1,0 +1,12 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: weather-app
+# build:
+ # Setup artifacts here:
+manifests:
+  rawYaml:
+    - ./todo
+deploy:
+  kubectl: {}
+# Setup profiles here?
