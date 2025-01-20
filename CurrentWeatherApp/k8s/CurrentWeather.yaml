@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: current-weather-service
+    app: current-weather
+  name: current-weather
+spec:
+  ports:
+    - name: "current-weather-port"
+      port: 8888
+      targetPort: "cw-port-http"
+  selector:
+    deployment.name: current-weather
+# Load balancer?
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: current-weather
+spec:
+  replicas: 1 # TODO set horizontal scaling too?
+  selector:
+    matchLabels:
+      deploymen.name: current-weather
+  template:
+      metadata:
+        labels:
+          deployment.name: current-weather
+      spec:
+        containers:
+        - name: current-weather-api
+          image: current-weather-app
+          resources:
+          # TODO - might need to adjust depending on where to deploy
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            env:
+              # TODO - set environment variables
+            ports:
+              - containerport: 8888
+                name: "cw-port-http"
+        imagePullSecrets:
+        - name: docker-pull # TODO need to set this up in pipeline
+# TODO scaling?

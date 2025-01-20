@@ -2,11 +2,14 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: weather-app
-# build:
- # Setup artifacts here:
+build:
+ artifacts:
+   - image: current-weather-app
+     docker:
+      dockerfile: Dockerfile
 manifests:
   rawYaml:
-    - ./todo
+    - ./CurrentWeatherApp/CurrentWeatherAPI/k8s/CurrentWeather.yaml
 deploy:
   kubectl: {}
-# Setup profiles here?
+# Setup profiles here
