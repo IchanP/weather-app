@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY ["CurrentWeatherAPI/CurrentWeatherAPI.csproj", "CurrentWeatherAPI/"]
+RUN dotnet restore "CurrentWeatherAPI/CurrentWeatherAPI.csproj"
+COPY . .
+WORKDIR "./CurrentWeatherAPI"
+
+# Development stage - use this for watching
+FROM build as development
+ENTRYPOINT ["dotnet", "watch", "run"]
