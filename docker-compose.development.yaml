@@ -1,0 +1,16 @@
+# Dockerfile.development
+services:
+
+  current-weather-app:
+    build:
+      context: ./CurrentWeatherApp
+      dockerfile: Dockerfile.development
+    
+    volumes:
+     - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
+      # TODO - Add development specific variables?
+      
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_WATCH=1
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1

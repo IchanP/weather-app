@@ -1,0 +1,10 @@
+services:
+  # TODO - add redis here
+
+  current-weather-app:
+    image: cw-api:1.0.0
+    restart: on-failure
+    environment:
+      - ASPNETCORE_URLS=http://+:5074 
+    ports:
+      - 8888:5074
