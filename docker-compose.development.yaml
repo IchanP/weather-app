@@ -1,4 +1,4 @@
-# Dockerfile.development
+# Dockercompose.development
 services:
 
   current-weather-app:
@@ -9,8 +9,12 @@ services:
     volumes:
      - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
       # TODO - Add development specific variables?
-      
+     - nuget-packages:/root/.nuget/packages
+    
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH=1
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+
+volumes:
+  nuget-packages:
