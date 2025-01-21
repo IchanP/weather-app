@@ -9,12 +9,10 @@ services:
     volumes:
      - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
       # TODO - Add development specific variables?
-     - nuget-packages:/root/.nuget/packages
+     - /src/CurrentWeatherAPI/bin/
+     - /src/CurrentWeatherAPI/obj/
     
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH=1
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
-
-volumes:
-  nuget-packages:
