@@ -4,8 +4,12 @@ namespace CurrentWeatherAPI.src.services
 {
     public class WeatherService(ILogger<WeatherService> logger, IWeatherFetcher<WeatherStation> fetcher) : BackgroundService
     {
-        private readonly int fetchOffsetHour = 0;
-        private readonly int fetchOffsetMinute = 47;
+        // How many hours from now we want to fetch.
+        // If the time is 18:30 that means we want to fetch at 19:XX
+        private readonly int fetchOffsetHour = 1;
+        // What minute on the next hour we want to fetch
+        // If minute is set to 1 we want to fetch on XX:01
+        private readonly int fetchOffsetMinute = 1;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -17,7 +21,7 @@ namespace CurrentWeatherAPI.src.services
                     TimeSpan delay = util.Timer.CreateTimeSpanOffset(fetchOffsetHour, fetchOffsetMinute, currentTime);
                     await Task.Delay(delay, stoppingToken);
                     List<WeatherStation> stationData = await fetcher.FetchWeather();
-                    System.Console.WriteLine(stationData.ToString());
+
                 }
                 catch (OperationCanceledException)
                 {
