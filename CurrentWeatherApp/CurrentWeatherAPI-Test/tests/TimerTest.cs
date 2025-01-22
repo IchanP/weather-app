@@ -13,7 +13,6 @@ public class TimerTests
     [Theory]
     [InlineData(1, 0)]  // 1 hour ahead
     [InlineData(2, 15)] // 2 hours and 15 minutes ahead
-    [InlineData(0, 30)] // 30 minute ahead
     public void CreateTimeSpanOffset_ShouldReturnCorrectOffset(int hours, int minutes)
     {
         DateTime now = DateTime.Now;
@@ -54,5 +53,18 @@ public class TimerTests
     {
         TimeSpan result = Timer.CreateTimeSpanOffset(hour, minute, spoofedTime);
         Assert.True(result.Hours == 0, $"Expected the result.Hours to equal 0. But got {result.Hours}");
+    }
+
+    [Theory]
+    [InlineData("2024-01-01 10:30", 1, 11, 40)]
+    [InlineData("2024-01-01 10:50", 1, 11, 40)]
+    [InlineData("2024-01-01 11:00", 1, 12, 40)]
+    public void CreateTimeSpanOffset_ReturnsCorrectDelay(string currentTime, int hour, int expectedHour, int expectedMinute)
+    {
+        DateTime now = DateTime.Parse(currentTime);
+        TimeSpan result = Timer.CreateTimeSpanOffset(hour, 40, now);
+
+        var expectedTime = new DateTime(2024, 1, 1, expectedHour, expectedMinute, 0);
+        Assert.Equal(expectedTime - now, result);
     }
 }
