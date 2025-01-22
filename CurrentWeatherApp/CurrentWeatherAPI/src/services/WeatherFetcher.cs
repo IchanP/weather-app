@@ -1,10 +1,41 @@
 using CurrentWeatherAPI.src.model;
+using CurrentWeatherAPI.src.extensions;
+using Newtonsoft.Json.Linq;
 
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherFetcher(IHttpClientFactory factory, IConfiguration configuration)
+    public class WeatherFetcher(IHttpClientFactory factory, IConfiguration configuration, ILogger<WeatherFetcher> logger) : IWeatherFetcher<WeatherStation>
     {
         private readonly string clientName = configuration["WeatherClientName"]
             ?? throw new ArgumentNullException("WeatherClientName configuration is missing");
+
+        public async Task<List<WeatherStation>> FetchWeather()
+        {
+            using HttpClient client = factory.CreateClient(clientName);
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync("parameter/1/station-set/all/period/latest-hour/data.json");
+                response.EnsureSuccessStatusCode().WriteRequestToConsole(logger);
+
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+
+                JObject unmappedJson = JObject.Parse(jsonResponse);
+
+                List<WeatherStation>? stations = unmappedJson["station"]?.ToObject<List<WeatherStation>>();
+                if (stations == null)
+                {
+                    throw new ArgumentNullException(nameof(stations), "Deserialization resulted in null object.");
+                }
+
+                logger.Log(LogLevel.Information, "Successfully deserialized response from hourly data.");
+                return stations;
+            }
+            catch (Exception e)
+            {
+                // TODO should add our own custom message depending on the type of error
+                logger.LogError(e.Message);
+                throw; // Rethrow the error so that alerts can be sent out/retry logic can happen
+            }
+        }
     }
 }

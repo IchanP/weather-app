@@ -1,10 +1,8 @@
 
-using CurrentWeatherAPI.src.model;
-
 namespace CurrentWeatherAPI.src.services
 {
-    public interface IWeatherFetcher
+    public interface IWeatherFetcher<T>
     {
-        Task<List<WeatherStation>> FetchWeather();
+        Task<List<T>> FetchWeather();
     }
 }
