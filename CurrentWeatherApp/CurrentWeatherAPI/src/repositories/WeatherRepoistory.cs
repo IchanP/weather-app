@@ -4,12 +4,12 @@ namespace CurrentWeatherAPI.src.repositories
 {
     public class WeatherRepository(ILogger<WeatherRepository> logger) : IWeatherRepository<WeatherStation>
     {
-        public List<WeatherStation> GetWeatherData()
+        public async Task<List<WeatherStation>> GetWeatherData()
         {
             throw new NotImplementedException();
         }
 
-        public void WriteWeatherData(List<WeatherStation> data)
+        public async Task WriteWeatherData(List<WeatherStation> data)
         {
             throw new NotImplementedException();
         }
