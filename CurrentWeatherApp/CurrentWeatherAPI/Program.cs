@@ -1,9 +1,9 @@
 using CurrentWeatherAPI.src.model;
+using CurrentWeatherAPI.src.repositories;
 using CurrentWeatherAPI.src.services;
 
 var builder = WebApplication.CreateBuilder(args);
 string? redisString = builder.Configuration["REDIS_CONNECTION_STRING"];
-System.Console.WriteLine(redisString);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -22,7 +22,8 @@ builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
 });
 
 builder.Services.AddSingleton<IWeatherFetcher<WeatherStation>, WeatherFetcher>();
-// TODO add repository here
+// NOTE -  Better to have it singleton and allow Redis to handle the concurrent requests
+builder.Services.AddSingleton<IWeatherRepository<WeatherStation>, WeatherRepository>();
 builder.Services.AddHostedService<WeatherService>();
 
 var app = builder.Build();
