@@ -7,7 +7,6 @@ namespace CurrentWeatherAPI.src.util
         {
             int extraHour = 1;
             DateTime nextRunTime = now.Date.AddHours(now.Hour + hours).AddMinutes(minutes);
-            // TODO write a test for this...
             if (nextRunTime <= now)
             {
                 nextRunTime = nextRunTime.AddHours(extraHour); // Offset by 1 hour
