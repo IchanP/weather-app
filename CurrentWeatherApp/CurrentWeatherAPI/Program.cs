@@ -2,6 +2,8 @@ using CurrentWeatherAPI.src.model;
 using CurrentWeatherAPI.src.services;
 
 var builder = WebApplication.CreateBuilder(args);
+string? redisString = builder.Configuration["REDIS_CONNECTION_STRING"];
+System.Console.WriteLine(redisString);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
