@@ -1,9 +1,11 @@
+using CurrentWeatherAPI.src.model;
+
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherService(ILogger<WeatherService> logger) : BackgroundService
+    public class WeatherService(ILogger<WeatherService> logger, IWeatherFetcher<WeatherStation> fetcher) : BackgroundService
     {
-        private readonly int fetchOffsetHour = 1;
-        private readonly int fetchOffsetMinute = 1;
+        private readonly int fetchOffsetHour = 0;
+        private readonly int fetchOffsetMinute = 47;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -14,7 +16,8 @@ namespace CurrentWeatherAPI.src.services
                     DateTime currentTime = DateTime.Now;
                     TimeSpan delay = util.Timer.CreateTimeSpanOffset(fetchOffsetHour, fetchOffsetMinute, currentTime);
                     await Task.Delay(delay, stoppingToken);
-                    // TODO fetch the weather data from weather fetcher.
+                    List<WeatherStation> stationData = await fetcher.FetchWeather();
+                    System.Console.WriteLine(stationData.ToString());
                 }
                 catch (OperationCanceledException)
                 {
