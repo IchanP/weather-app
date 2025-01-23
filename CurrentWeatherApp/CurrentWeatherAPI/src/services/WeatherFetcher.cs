@@ -1,15 +1,15 @@
-using CurrentWeatherAPI.src.model;
+using CurrentWeatherAPI.src.model.WeatherResponse;
 using CurrentWeatherAPI.src.extensions;
 using Newtonsoft.Json.Linq;
 
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherFetcher(IHttpClientFactory factory, IConfiguration configuration, ILogger<WeatherFetcher> logger) : IWeatherFetcher<WeatherStation>
+    public class WeatherFetcher(IHttpClientFactory factory, IConfiguration configuration, ILogger<WeatherFetcher> logger) : IWeatherFetcher<WeatherResponse>
     {
         private readonly string clientName = configuration["WeatherClientName"]
             ?? throw new ArgumentNullException("WeatherClientName configuration is missing");
 
-        public async Task<List<WeatherStation>> FetchWeather()
+        public async Task<WeatherResponse> FetchWeather()
         {
             using HttpClient client = factory.CreateClient(clientName);
             try
@@ -21,14 +21,14 @@ namespace CurrentWeatherAPI.src.services
 
                 JObject unmappedJson = JObject.Parse(jsonResponse);
 
-                List<WeatherStation>? stations = unmappedJson["station"]?.ToObject<List<WeatherStation>>();
-                if (stations == null)
+                WeatherResponse? weatherResponse = unmappedJson.ToObject<WeatherResponse>();
+                if (weatherResponse == null)
                 {
-                    throw new ArgumentNullException(nameof(stations), "Deserialization resulted in null object.");
+                    throw new ArgumentNullException(nameof(weatherResponse), "Deserialization resulted in null object.");
                 }
 
                 logger.Log(LogLevel.Information, "Successfully deserialized response from hourly data.");
-                return stations;
+                return weatherResponse;
             }
             catch (Exception e)
             {
