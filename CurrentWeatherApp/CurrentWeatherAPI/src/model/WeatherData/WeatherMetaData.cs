@@ -1,3 +1,4 @@
+
 namespace CurrentWeatherAPI.src.model.WeatherData
 {
     public class WeatherMetaData
