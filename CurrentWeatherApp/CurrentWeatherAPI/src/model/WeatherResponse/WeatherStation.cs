@@ -1,4 +1,4 @@
-namespace CurrentWeatherAPI.src.model
+namespace CurrentWeatherAPI.src.model.WeatherResponse
 {
     public class WeatherStation
     {
@@ -13,5 +13,7 @@ namespace CurrentWeatherAPI.src.model
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public List<WeatherValue> Value { get; set; } = [];
+
+        
     }
 }

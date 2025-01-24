@@ -24,6 +24,7 @@ namespace CurrentWeatherAPI.src.services
                     WeatherResponse stationData = await fetcher.FetchWeather();
                     System.Console.WriteLine(stationData.ToString());
                     // TODO - perform some operation on the data to make it more readable/accesible before caching?
+                    
                     // await repository.WriteWeatherData(stationData);
                 }
                 catch (OperationCanceledException)

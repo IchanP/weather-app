@@ -17,7 +17,11 @@ namespace CurrentWeatherAPI.src.repositories
 
         public async Task WriteWeatherData(List<WeatherStation> data)
         {
-            throw new NotImplementedException();
+           try {
+            db.StringSetAndGet("current-weather", data.ToString());
+           } catch (Exception e) {
+                
+           }
         }
     }
 }

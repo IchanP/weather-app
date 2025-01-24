@@ -1,4 +1,4 @@
-namespace CurrentWeatherAPI.src.model
+namespace CurrentWeatherAPI.src.model.WeatherResponse
 {
     public class Period
     {
