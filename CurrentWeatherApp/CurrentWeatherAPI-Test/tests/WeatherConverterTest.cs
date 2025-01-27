@@ -5,7 +5,7 @@ using CurrentWeatherAPI.src.model.WeatherResponse;
 using CurrentWeatherAPI.src.services;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Xunit.Sdk;
+using Xunit;
 
 public class WeatherConverterTest
 {
@@ -19,30 +19,58 @@ public class WeatherConverterTest
     }
 
     [Fact]
-    public void WeatherConverter_ShouldThrowNullExceptionWhenPassedNullData()
+    public void ConvertToWriteableData_NullData_ThrowsArgumentNullException()
     {
-        ArgumentNullException? dataException = Assert.Throws<ArgumentNullException>(() => _weatherConverter.ConvertToWriteableData(null));
-        Assert.Equal("Weather response data cannot be null (Parameter 'data')", dataException.Message);
+        ArgumentNullException? exception = Assert.Throws<ArgumentNullException>(
+            () => _weatherConverter.ConvertToWriteableData(null));
+
+        Assert.Equal("Weather response data cannot be null (Parameter 'data')", exception.Message);
     }
 
     [Fact]
-    public void WeatherConverter_ShouldThrowNullExceptionWhenParamaterIsNull()
+    public void ConvertToWriteableData_NullParameter_ThrowsArgumentNullException()
     {
-        WeatherResponse nullParam = new()
+        WeatherResponse response = CreateWeatherResponse(parameter: null);
+
+        ArgumentNullException exception = Assert.Throws<ArgumentNullException>(
+            () => _weatherConverter.ConvertToWriteableData(response));
+
+        Assert.Equal("Weather Paramater cannot be null (Parameter 'data')", exception.Message);
+    }
+
+    [Fact]
+    public void ConvertToWriteableData_NullableFields_ReturnsDefaultValues()
+    {
+        WeatherStation station = CreateWeatherStation(quality: null);
+        WeatherResponse response = CreateWeatherResponse(
+            parameter: new Parameter { Summary = null, Unit = null },
+            stations: [station]
+        );
+
+        WeatherData result = _weatherConverter.ConvertToWriteableData(response);
+
+        Assert.Equal("No unit specified", result.MetaData.Unit);
+        Assert.Equal("No description available", result.MetaData.Description);
+        Assert.Equal("No air quality data gathered.", result.Stations[0].AirQuality);
+    }
+
+    private static WeatherResponse CreateWeatherResponse(
+        Parameter? parameter = null,
+        Period? period = null,
+        List<WeatherStation>? stations = null)
+    {
+        return new WeatherResponse
         {
-            Parameter = null,
-            Period = null,
-            Station = null
+            Parameter = parameter,
+            Period = period,
+            Updated = DateTime.Now.Ticks,
+            Station = stations is null ? new List<WeatherStation>() : stations
         };
-
-        ArgumentNullException? paramException = Assert.Throws<ArgumentNullException>(() => _weatherConverter.ConvertToWriteableData(nullParam));
-        Assert.Equal("Weather Paramater cannot be null (Parameter 'data')", paramException.Message);
     }
 
-    [Fact]
-    public void WeatherConverteR_ShouldReturnDefaultValuesOnNullableFields()
+    private static WeatherStation CreateWeatherStation(string? quality = "Good")
     {
-        WeatherStation nulledFieldStation = new()
+        return new WeatherStation
         {
             Key = "20",
             Owner = "FORSVORSMAKTEN",
@@ -52,29 +80,14 @@ public class WeatherConverterTest
             Latitude = 50.0,
             Longitude = 100.2,
             Height = 0.5,
-            Value = [ new(){
-                Date = DateTime.Now.Ticks,
-            Value = "20",
-            Quality = null
-            }]
-
-        };
-
-        WeatherResponse defaultSumAndUnit = new()
-        {
-            Parameter = new Parameter()
+            Value = new List<WeatherValue>
             {
-                Summary = null,
-                Unit = null,
-            },
-            Period = null,
-            Updated = DateTime.Now.Ticks,
-            Station = [nulledFieldStation]
+                new(){
+                    Date = DateTime.Now.Ticks,
+                    Value = "20",
+                    Quality = quality
+                }
+            }
         };
-
-        WeatherData nullableFieldsValues = _weatherConverter.ConvertToWriteableData(defaultSumAndUnit);
-        Assert.Equal("No unit specified", nullableFieldsValues.MetaData.Unit);
-        Assert.Equal("No description available", nullableFieldsValues.MetaData.Description);
-        Assert.Equal("No air quality data gathered.", nullableFieldsValues.Stations[0].AirQuality);
     }
 }
