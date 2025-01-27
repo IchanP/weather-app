@@ -9,13 +9,13 @@ using Xunit;
 
 public class WeatherConverterTest
 {
-    private readonly ILogger<WeatherConverter> _logger;
+    private readonly Mock<ILogger<WeatherConverter>> _loggerMock;
     private readonly WeatherConverter _weatherConverter;
 
     public WeatherConverterTest()
     {
-        _logger = new Mock<ILogger<WeatherConverter>>().Object;
-        _weatherConverter = new WeatherConverter(_logger);
+        _loggerMock = new Mock<ILogger<WeatherConverter>>();
+        _weatherConverter = new WeatherConverter(_loggerMock.Object);
     }
 
     [Fact]
@@ -54,6 +54,43 @@ public class WeatherConverterTest
         Assert.Equal("No air quality data gathered.", result.Stations[0].AirQuality);
     }
 
+    [Fact]
+    public void ConvertToWriteableData_StationsShouldHaveOneValue_ThrowsArgumentOutOfRangeException()
+    {
+        WeatherStation emptyValueStation = CreateWeatherStation(quality: null);
+        emptyValueStation.Value = [];
+        WeatherResponse response = CreateWeatherResponse(
+            parameter: new Parameter { Summary = null, Unit = null },
+            stations: [emptyValueStation]
+        );
+        ArgumentOutOfRangeException outOfRangeException = Assert.Throws<ArgumentOutOfRangeException>(() => _weatherConverter.ConvertToWriteableData(response));
+        Assert.Equal("At least one station must have values. (Parameter 'Station')", outOfRangeException.Message);
+
+    }
+
+    [Fact]
+    public void ConvertToWriteableData_StationNull_ThrowsArgumentNullException()
+    {
+        WeatherStation station = CreateWeatherStation();
+        WeatherResponse response = CreateWeatherResponse(
+            parameter: new Parameter { Summary = "momentanvärde, 1 gång/tim", Unit = "celsius" },
+            stations: [station, null]
+        );
+        WeatherData weatherData = _weatherConverter.ConvertToWriteableData(response);
+        _loggerMock.Verify(
+            x => x.Log(
+            LogLevel.Error,
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Something went wrong while converting station to StationData.")),
+            It.Is<ArgumentNullException>(e => e.ParamName == "station"),
+            It.IsAny<Func<It.IsAnyType, Exception?, string>>()
+            ),
+            Times.Once
+        );
+
+        Assert.Equal(weatherData.Stations[0].Temperature, station.Value[0].Value);
+    }
+
     private static WeatherResponse CreateWeatherResponse(
         Parameter? parameter = null,
         Period? period = null,
@@ -68,7 +105,7 @@ public class WeatherConverterTest
         };
     }
 
-    private static WeatherStation CreateWeatherStation(string? quality = "Good")
+    private static WeatherStation CreateWeatherStation(string? quality = "G")
     {
         return new WeatherStation
         {
