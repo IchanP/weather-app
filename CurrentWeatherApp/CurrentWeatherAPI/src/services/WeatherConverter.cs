@@ -21,8 +21,11 @@ namespace CurrentWeatherAPI.src.services
                 logger.LogInformation("Converting WeatherResponse to WeatherData");
                 WeatherMetaData metaData = ConvertMetaData(data);
 
-                List<WeatherStation> stations = data.Station.FindAll(station => station.Value.Count != 0);
+                List<WeatherStation> stations = data.Station.FindAll(station => station?.Value?.Count != 0);
                 List<StationData> stationData = [];
+
+                if (stations.Count == 0)
+                    throw new ArgumentOutOfRangeException(nameof(data.Station), "At least one station must have values.");
 
                 foreach (WeatherStation station in stations)
                 {
@@ -32,7 +35,7 @@ namespace CurrentWeatherAPI.src.services
                     }
                     catch (Exception e)
                     {
-                        logger.LogError("Something went wrong while converting station to StationData.");
+                        logger.LogError(e, "Something went wrong while converting station to StationData.");
                         continue;
                     }
                 }
