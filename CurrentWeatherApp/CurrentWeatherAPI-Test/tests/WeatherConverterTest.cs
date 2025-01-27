@@ -91,6 +91,63 @@ public class WeatherConverterTest
         Assert.Equal(weatherData.Stations[0].Temperature, station.Value[0].Value);
     }
 
+    [Fact]
+    public void ConvertToWriteableData_MultipleStationsWithValidData_ReturnsCorrectlyMappedData()
+    {
+        WeatherStation station1 = CreateWeatherStation(quality: "G");
+        WeatherStation station2 = CreateWeatherStation(quality: "Y");
+        WeatherResponse response = CreateWeatherResponse(
+            parameter: new Parameter { Summary = "momentanvärde, 1 gång/tim", Unit = "celsius" },
+            stations: new List<WeatherStation> { station1, station2 }
+        );
+
+        WeatherData result = _weatherConverter.ConvertToWriteableData(response);
+
+        Assert.Equal(2, result.Stations.Count);
+
+        // TODO - Make this... nicer? big block currently
+        Assert.Equal(station1.Name, result.Stations[0].Name);
+        Assert.Equal(station1.Latitude, result.Stations[0].Latitude);
+        Assert.Equal(station1.Height, result.Stations[0].Altitude);
+        Assert.Equal(station1.Longitude, result.Stations[0].Longitude);
+        Assert.Equal(station1.Value[0].Date, result.Stations[0].TimeGathered);
+        Assert.Equal(station1.Value[0].Value, result.Stations[0].Temperature);
+        Assert.Equal(station1.Value[0].Quality, result.Stations[0].AirQuality);
+
+        Assert.Equal(station2.Name, result.Stations[1].Name);
+        Assert.Equal(station2.Latitude, result.Stations[1].Latitude);
+        Assert.Equal(station2.Height, result.Stations[1].Altitude);
+        Assert.Equal(station2.Longitude, result.Stations[1].Longitude);
+        Assert.Equal(station2.Value[0].Date, result.Stations[1].TimeGathered);
+        Assert.Equal(station2.Value[0].Value, result.Stations[1].Temperature);
+        Assert.Equal(station2.Value[0].Quality, result.Stations[1].AirQuality);
+    }
+
+    [Fact]
+    public void ConvertToWriteableData_StationWithMultipleValues_ReturnsLatestValue()
+    {
+        WeatherStation station = CreateWeatherStation(quality: "G");
+        station.Value = new List<WeatherValue>
+    {
+        new() { Date = DateTime.Now.AddHours(-2).Ticks, Value = "15", Quality = "G" },
+        new() { Date = DateTime.Now.AddHours(-1).Ticks, Value = "20", Quality = "Y" },
+        new() { Date = DateTime.Now.Ticks, Value = "25", Quality = "R" }
+    };
+
+        WeatherResponse response = CreateWeatherResponse(
+            parameter: new Parameter { Summary = "momentanvärde, 1 gång/tim", Unit = "celsius" },
+            stations: new List<WeatherStation> { station }
+        );
+
+        WeatherData result = _weatherConverter.ConvertToWriteableData(response);
+
+        Assert.Single(result.Stations);
+
+        Assert.Equal(station.Value[2].Date, result.Stations[0].TimeGathered);
+        Assert.Equal(station.Value[2].Value, result.Stations[0].Temperature);
+        Assert.Equal(station.Value[2].Quality, result.Stations[0].AirQuality);
+    }
+
     private static WeatherResponse CreateWeatherResponse(
         Parameter? parameter = null,
         Period? period = null,
