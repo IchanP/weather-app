@@ -63,13 +63,13 @@ namespace CurrentWeatherAPI.src.services
         private static WeatherMetaData ConvertMetaData(WeatherResponse data)
         {
             if (data.Parameter == null)
-                throw new ArgumentNullException(nameof(data), "Weather data cannot be null");
+                throw new ArgumentNullException(nameof(data), "Weather Paramater cannot be null");
 
             WeatherMetaData metaData = new()
             {
                 Description = data.Parameter.Summary ?? "No description available",
                 Unit = data.Parameter.Unit ?? "No unit specified",
-                UpdatedAt = data.Updated
+                UpdatedAt = data.Updated // data.Updated can't be null.
             };
 
             return metaData;

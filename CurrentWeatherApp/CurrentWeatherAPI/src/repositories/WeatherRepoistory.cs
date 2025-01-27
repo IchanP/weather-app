@@ -1,4 +1,4 @@
-using CurrentWeatherAPI.src.model;
+using CurrentWeatherAPI.src.model.WeatherResponse;
 using StackExchange.Redis;
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
@@ -17,11 +17,14 @@ namespace CurrentWeatherAPI.src.repositories
 
         public async Task WriteWeatherData(List<WeatherStation> data)
         {
-           try {
-            db.StringSetAndGet("current-weather", data.ToString());
-           } catch (Exception e) {
-                
-           }
+            try
+            {
+                db.StringSetAndGet("current-weather", data.ToString());
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }
