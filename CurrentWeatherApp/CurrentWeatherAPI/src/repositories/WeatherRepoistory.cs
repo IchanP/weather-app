@@ -27,6 +27,18 @@ namespace CurrentWeatherAPI.src.repositories
                 {
                     throw new InvalidOperationException("Failed to write weather data to Redis");
                 }
+
+                logger.Log(LogLevel.Information, "Successfully wrote Weather Data to cache.");
+            }
+            catch (RedisConnectionException ex)
+            {
+                logger.LogError(ex, "Redis connection error while writing weather data");
+                throw new InvalidOperationException("Failed to connect to Redis database", ex);
+            }
+            catch (RedisTimeoutException ex)
+            {
+                logger.LogError(ex, "Redis timeout while writing weather data");
+                throw new InvalidOperationException("Redis operation timed out", ex);
             }
             catch (InvalidOperationException e)
             {
