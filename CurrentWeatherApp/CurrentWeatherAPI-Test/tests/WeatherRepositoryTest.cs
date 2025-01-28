@@ -9,6 +9,7 @@ using CurrentWeatherAPI.src.repositories;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using CurrentWeatherAPI.src.model.WeatherData;
+using System.Threading.Tasks;
 
 public class WeatherRepositoryTest
 {
@@ -63,6 +64,22 @@ public class WeatherRepositoryTest
         ActAssertWriteInvalidOperationException("Redis operation timed out", defaultData);
     }
 
+    [Fact]
+    public async Task WriteWeatherData_SuccessfullWrite_LogsSuccessMessage()
+    {
+        WeatherData defaultData = CreateDefaultWeatherData();
+        // logger.Log(LogLevel.Information, "Successfully wrote Weather Data to cache.");
+        await _weatherRepository.WriteWeatherData(defaultData);
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString().Equals("Successfully wrote Weather Data to cache.")),
+                null,
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()
+            )
+        );
+    }
     private async void ActAssertWriteInvalidOperationException(string expected, WeatherData data)
     {
         InvalidOperationException? exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _weatherRepository.WriteWeatherData(data));
