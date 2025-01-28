@@ -1,3 +1,4 @@
+using CurrentWeatherAPI.src.model.WeatherData;
 using CurrentWeatherAPI.src.model.WeatherResponse;
 using CurrentWeatherAPI.src.repositories;
 using CurrentWeatherAPI.src.services;
@@ -37,7 +38,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>();
 // NOTE -  Better to have it singleton and allow Redis to handle the concurrent requests
-builder.Services.AddSingleton<IWeatherRepository<WeatherStation>, WeatherRepository>();
+builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository>();
+builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
 builder.Services.AddHostedService<WeatherService>();
 
 var app = builder.Build();

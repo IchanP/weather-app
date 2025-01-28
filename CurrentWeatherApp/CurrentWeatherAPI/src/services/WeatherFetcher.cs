@@ -32,9 +32,8 @@ namespace CurrentWeatherAPI.src.services
             }
             catch (Exception e)
             {
-                // TODO should add our own custom message depending on the type of error
-                logger.LogError(e.Message);
-                throw; // Rethrow the error so that alerts can be sent out/retry logic can happen
+                logger.LogError(e, "An error occurred in WeatherFetcher: {Message}", e.Message);
+                throw;
             }
         }
     }
