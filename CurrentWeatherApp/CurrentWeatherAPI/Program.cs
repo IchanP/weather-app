@@ -1,11 +1,48 @@
+using CurrentWeatherAPI.src.model.WeatherData;
+using CurrentWeatherAPI.src.model.WeatherResponse;
+using CurrentWeatherAPI.src.repositories;
+using CurrentWeatherAPI.src.services;
+using StackExchange.Redis;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+
+// Ensure that all the Configuration tokens are available.
+string? httpClientName = builder.Configuration["WeatherClientName"];
+ArgumentException.ThrowIfNullOrEmpty(httpClientName, "HTTPClient name is missing.");
+string? weatherFetcherBaseUrl = builder.Configuration["WeatherFetcherUrl"];
+ArgumentException.ThrowIfNullOrEmpty(weatherFetcherBaseUrl, "Base URL to fetch from is missing.");
+string? redisString = builder.Configuration["REDIS_CONNECTION_STRING"];
+ArgumentException.ThrowIfNullOrEmpty(redisString, "Redis connection string is missing.");
+
+// Configure HttpClient with base address
+builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
+{
+    client.BaseAddress = new Uri(weatherFetcherBaseUrl);
+});
+
+ConfigurationOptions conf = new ConfigurationOptions
+{
+    EndPoints = { redisString },
+    AbortOnConnectFail = false
+    // TODO setup and ENABLE TLS
+};
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(conf)
+);
+
+builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>();
+// NOTE -  Better to have it singleton and allow Redis to handle the concurrent requests
+builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository>();
+builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
+builder.Services.AddHostedService<WeatherService>();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -13,29 +50,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
