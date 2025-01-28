@@ -1,9 +1,10 @@
+using CurrentWeatherAPI.src.model.WeatherData;
 using CurrentWeatherAPI.src.model.WeatherResponse;
 using CurrentWeatherAPI.src.repositories;
 
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherService(ILogger<WeatherService> logger, IWeatherFetcher<WeatherResponse> fetcher, IWeatherRepository<WeatherStation> repository) : BackgroundService
+    public class WeatherService(ILogger<WeatherService> logger, IWeatherFetcher<WeatherResponse> fetcher, IWeatherRepository<WeatherData> repository, IWeatherConverter<WeatherData, WeatherResponse> converter) : BackgroundService
     {
         // How many hours from now we want to fetch.
         // If the time is 18:30 that means we want to fetch at 19:XX
@@ -22,10 +23,8 @@ namespace CurrentWeatherAPI.src.services
                     TimeSpan delay = util.Timer.CreateTimeSpanOffset(fetchOffsetHour, fetchOffsetMinute, currentTime);
                     await Task.Delay(delay, stoppingToken);
                     WeatherResponse stationData = await fetcher.FetchWeather();
-                    System.Console.WriteLine(stationData.ToString());
-                    // TODO - perform some operation on the data to make it more readable/accesible before caching?
-                    
-                    // await repository.WriteWeatherData(stationData);
+                    WeatherData cacheableData = converter.ConvertToWriteableData(stationData);
+                    await repository.WriteWeatherData(cacheableData);
                 }
                 catch (OperationCanceledException)
                 {
