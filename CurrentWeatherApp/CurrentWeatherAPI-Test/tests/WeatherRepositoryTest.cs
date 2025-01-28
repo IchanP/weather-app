@@ -38,14 +38,42 @@ public class WeatherRepositoryTest
     }
 
     [Fact]
-    public async Task WriteWeatherData_FailWrite_ThrowsInvalidOperationException()
+    public void WriteWeatherData_FailWrite_ThrowsInvalidOperationException()
     {
         WeatherData defaultData = CreateDefaultWeatherData();
         SetupStringSetAsyncReturnValue(false);
-        InvalidOperationException? exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _weatherRepository.WriteWeatherData(defaultData));
-        Assert.Equal("Failed to write weather data.", exception.Message);
+        ActAssertWriteInvalidOperationException("Failed to write weather data.", defaultData);
     }
 
+    [Fact]
+    public void WriteWeatherData_ConnectionException_ThrowsInvalidOperationException()
+    {
+        RedisConnectionException exception = new RedisConnectionException(ConnectionFailureType.UnableToConnect, "Failed to connect.");
+        SetupStringSetAsyncThrows(exception);
+        WeatherData defaultData = CreateDefaultWeatherData();
+        ActAssertWriteInvalidOperationException("Failed to connect to Redis database", defaultData);
+    }
+
+    [Fact]
+    public void WriteWeatherData_RedisTimeOutExcception_ThrowsInvalidOperationException()
+    {
+        RedisTimeoutException exception = new RedisTimeoutException("Redis connection timed out.", CommandStatus.Unknown);
+        SetupStringSetAsyncThrows(exception);
+        WeatherData defaultData = CreateDefaultWeatherData();
+        ActAssertWriteInvalidOperationException("Redis operation timed out", defaultData);
+    }
+
+    private async void ActAssertWriteInvalidOperationException(string expected, WeatherData data)
+    {
+        InvalidOperationException? exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _weatherRepository.WriteWeatherData(data));
+        Assert.Equal(expected, exception.Message);
+    }
+
+    private void SetupStringSetAsyncThrows(Exception e)
+    {
+        _dbMock.Setup(db => db.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), null, false, When.Always, CommandFlags.None))
+              .ThrowsAsync(e);
+    }
     private void SetupStringSetAsyncReturnValue(bool value)
     {
         _dbMock.Setup(db => db.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), null, false, When.Always, CommandFlags.None))
