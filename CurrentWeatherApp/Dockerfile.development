@@ -7,4 +7,5 @@ WORKDIR "./CurrentWeatherAPI"
 
 # Development stage - use this for watching
 FROM build as development
+RUN dotnet restore
 ENTRYPOINT ["dotnet", "watch", "run"]

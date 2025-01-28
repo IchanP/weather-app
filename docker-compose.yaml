@@ -1,10 +1,18 @@
 services:
-  # TODO - add redis here
+
+  redis-weather-cache:
+    # TODO - TLS SETUP
+    image: redis:7.4.2
+    ports:
+    - 6379:6379
 
   current-weather-app:
     image: cw-api:1.0.0
     restart: on-failure
     environment:
       - ASPNETCORE_URLS=http://+:5074 
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis-weather-cache:6379}
+    depends_on:
+      - redis-weather-cache
     ports:
       - 8888:5074
