@@ -42,6 +42,9 @@ builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository
 builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
 builder.Services.AddHostedService<WeatherService>();
 
+// Keep request service scoped for scalability
+builder.Services.AddScoped<IWeatherApiService<WeatherData>, WeatherApiService>();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
