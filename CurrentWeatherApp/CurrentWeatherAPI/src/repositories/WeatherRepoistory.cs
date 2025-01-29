@@ -8,7 +8,7 @@ namespace CurrentWeatherAPI.src.repositories
     {
         private readonly IDatabase db = redis.GetDatabase();
 
-        public async Task<List<WeatherData>> GetWeatherData()
+        public async Task<WeatherData> GetWeatherData()
         {
             throw new NotImplementedException();
         }
@@ -23,6 +23,7 @@ namespace CurrentWeatherAPI.src.repositories
                 }
                 string serializedData = JsonConvert.SerializeObject(data);
                 bool result = await db.StringSetAsync("current-weather", serializedData);
+
                 if (!result)
                 {
                     throw new InvalidOperationException("Failed to write weather data to Redis");
