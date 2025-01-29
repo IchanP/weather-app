@@ -41,7 +41,7 @@ builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>(
 builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository>();
 builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
 builder.Services.AddHostedService<WeatherBackgroundService>();
-builder.Services.AddSingleton<IPipeline, WeatherDataPipeline>();
+builder.Services.AddSingleton<IPipeline<WeatherData>, WeatherDataPipeline>();
 // Keep request service scoped for scalability
 builder.Services.AddScoped<IWeatherApiService<WeatherData>, WeatherApiService>();
 
