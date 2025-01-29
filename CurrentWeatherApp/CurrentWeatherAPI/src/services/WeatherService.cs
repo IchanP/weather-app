@@ -11,7 +11,7 @@ namespace CurrentWeatherAPI.src.services
         private readonly int fetchOffsetHour = 0;
         // What minute on the next hour we want to fetch
         // If minute is set to 1 we want to fetch on XX:01
-        private readonly int fetchOffsetMinute = 37;
+        private readonly int fetchOffsetMinute = 12;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -34,6 +34,7 @@ namespace CurrentWeatherAPI.src.services
                 catch (Exception e)
                 {
                     // TODO depending on the error we might want to send out info about Fetched data being outdated? To other services
+                    // NOTE - Maybe on redis connection fail when writing it ? 
                     logger.LogError(e.Message);
                     await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken); // Add a retry after a delay to avoid repeated errors
                 }
