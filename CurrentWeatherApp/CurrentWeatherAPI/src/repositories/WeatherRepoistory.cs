@@ -7,10 +7,35 @@ namespace CurrentWeatherAPI.src.repositories
     public class WeatherRepository(ILogger<WeatherRepository> logger, IConnectionMultiplexer redis) : IWeatherRepository<WeatherData>
     {
         private readonly IDatabase db = redis.GetDatabase();
+        private readonly string currenWeatherKey = "current-weather";
 
-        public async Task<WeatherData> GetWeatherData()
+        // TODO refactor this in the future to return a string to make it generic
+        public async Task<string> GetWeatherData()
         {
-            throw new NotImplementedException();
+            try
+            {
+                string? data = await db.StringGetAsync(currenWeatherKey);
+                if (data == null)
+                {
+                    throw new ArgumentNullException(nameof(data), "Fetching from cache returned null.");
+                }
+                return data;
+            }
+            catch (ArgumentNullException e)
+            {
+                logger.LogError(e, e.Message);
+                throw new InvalidOperationException("Failed to get weather data from cache.", e);
+            }
+            catch (RedisConnectionException ex)
+            {
+                logger.LogError(ex, "Redis connection error while fetching weather data");
+                throw new InvalidOperationException("Failed to connect to Redis database", ex);
+            }
+            catch (RedisTimeoutException ex)
+            {
+                logger.LogError(ex, "Redis timeout while fetching weather data");
+                throw new InvalidOperationException("Redis operation timed out", ex);
+            }
         }
 
         public async Task WriteWeatherData(WeatherData data)
@@ -22,7 +47,7 @@ namespace CurrentWeatherAPI.src.repositories
                     throw new ArgumentNullException(nameof(data), "Weather data cannot be null.");
                 }
                 string serializedData = JsonConvert.SerializeObject(data);
-                bool result = await db.StringSetAsync("current-weather", serializedData);
+                bool result = await db.StringSetAsync(currenWeatherKey, serializedData);
 
                 if (!result)
                 {

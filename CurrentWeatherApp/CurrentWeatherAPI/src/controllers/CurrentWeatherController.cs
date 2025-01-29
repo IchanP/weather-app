@@ -1,5 +1,6 @@
 
 using CurrentWeatherAPI.src.model.WeatherData;
+using CurrentWeatherAPI.src.services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CurrentWeatherAPI.src.controllers
@@ -7,13 +8,20 @@ namespace CurrentWeatherAPI.src.controllers
 
     [Route("api/weather/current")]
     [ApiController]
-    public class CurrentWeatherController : ControllerBase
+    public class CurrentWeatherController(IWeatherApiService<WeatherData> service) : ControllerBase
     {
 
         [HttpGet]
-        public async Task<IActionResult<WeatherData>> GetWeatherData()
+        public async Task<ActionResult<WeatherData>> GetWeatherData()
         {
+            try
+            {
 
+            }
+            catch (Exception e)
+            {
+                // TODO - Setup proper exceptions with error codes.
+            }
         }
 
     }

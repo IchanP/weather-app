@@ -3,17 +3,19 @@ using CurrentWeatherAPI.src.repositories;
 
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherApiService(ILogger<WeatherApiService> _logger, IWeatherRepository<WeatherData> repository) : IWeatherApiService<WeatherData>
+    public class WeatherApiService(ILogger<WeatherApiService> _logger, IWeatherRepository<WeatherData> repository, IPipeline pipeline) : IWeatherApiService<WeatherData>
     {
-        public Task<WeatherData> GetCurrentWeatherAsync()
+        public async Task<WeatherData> GetCurrentWeatherAsync()
         {
             try
             {
-
+                string unserializedWeatherData = await repository.GetWeatherData();
+                // TODO serialize the data
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
             {
-                // TODO - setup granular exceptions for error codes.
+                _logger.LogError(e, "Failed to fetch data from cache. Fetching from API instead.");
+                pipeline.ExecuteAsyncPipeline();
             }
         }
     }
