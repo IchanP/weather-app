@@ -37,11 +37,11 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 );
 
 builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>();
-// NOTE -  Better to have it singleton and allow Redis to handle the concurrent requests
+// NOTE -  Better to have repository as singleton and allow Redis to handle the concurrent requests
 builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository>();
 builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
-builder.Services.AddHostedService<WeatherService>();
-
+builder.Services.AddHostedService<WeatherBackgroundService>();
+builder.Services.AddSingleton<IPipeline, WeatherDataPipeline>();
 // Keep request service scoped for scalability
 builder.Services.AddScoped<IWeatherApiService<WeatherData>, WeatherApiService>();
 
