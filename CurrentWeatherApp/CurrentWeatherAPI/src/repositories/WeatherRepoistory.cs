@@ -1,6 +1,6 @@
 using CurrentWeatherAPI.src.model.WeatherData;
 using StackExchange.Redis;
-
+using Newtonsoft.Json;
 
 namespace CurrentWeatherAPI.src.repositories
 {
@@ -21,8 +21,8 @@ namespace CurrentWeatherAPI.src.repositories
                 {
                     throw new ArgumentNullException(nameof(data), "Weather data cannot be null.");
                 }
-
-                bool result = await db.StringSetAsync("current-weather", data.ToString());
+                string serializedData = JsonConvert.SerializeObject(data);
+                bool result = await db.StringSetAsync("current-weather", serializedData);
                 if (!result)
                 {
                     throw new InvalidOperationException("Failed to write weather data to Redis");
