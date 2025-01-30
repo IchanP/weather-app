@@ -11,12 +11,14 @@ using StackExchange.Redis;
 using CurrentWeatherAPI.src.model.WeatherData;
 using System.Threading.Tasks;
 
+
 public class WeatherRepositoryTest
 {
     private readonly Mock<ILogger<WeatherRepository>> _loggerMock;
     private readonly WeatherRepository _weatherRepository;
     private readonly Mock<IConnectionMultiplexer> _redisMock;
     private readonly Mock<IDatabase> _dbMock;
+
     public WeatherRepositoryTest()
     {
         _loggerMock = new Mock<ILogger<WeatherRepository>>();
@@ -41,7 +43,7 @@ public class WeatherRepositoryTest
     [Fact]
     public void WriteWeatherData_FailWrite_ThrowsInvalidOperationException()
     {
-        WeatherData defaultData = CreateDefaultWeatherData();
+        WeatherData defaultData = WeatherDataHelper.CreateDefaultWeatherData();
         SetupStringSetAsyncReturnValue(false);
         ActAssertWriteInvalidOperationException("Failed to write weather data.", defaultData);
     }
@@ -51,7 +53,7 @@ public class WeatherRepositoryTest
     {
         RedisConnectionException exception = new RedisConnectionException(ConnectionFailureType.UnableToConnect, "Failed to connect.");
         SetupStringSetAsyncThrows(exception);
-        WeatherData defaultData = CreateDefaultWeatherData();
+        WeatherData defaultData = WeatherDataHelper.CreateDefaultWeatherData();
         ActAssertWriteInvalidOperationException("Failed to connect to Redis database", defaultData);
     }
 
@@ -60,14 +62,14 @@ public class WeatherRepositoryTest
     {
         RedisTimeoutException exception = new RedisTimeoutException("Redis connection timed out.", CommandStatus.Unknown);
         SetupStringSetAsyncThrows(exception);
-        WeatherData defaultData = CreateDefaultWeatherData();
+        WeatherData defaultData = WeatherDataHelper.CreateDefaultWeatherData();
         ActAssertWriteInvalidOperationException("Redis operation timed out", defaultData);
     }
 
     [Fact]
     public async Task WriteWeatherData_SuccessfullWrite_LogsSuccessMessage()
     {
-        WeatherData defaultData = CreateDefaultWeatherData();
+        WeatherData defaultData = WeatherDataHelper.CreateDefaultWeatherData();
         // logger.Log(LogLevel.Information, "Successfully wrote Weather Data to cache.");
         await _weatherRepository.WriteWeatherData(defaultData);
         _loggerMock.Verify(
@@ -95,27 +97,5 @@ public class WeatherRepositoryTest
     {
         _dbMock.Setup(db => db.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), null, false, When.Always, CommandFlags.None))
                .ReturnsAsync(value);
-    }
-
-    private static WeatherData CreateDefaultWeatherData()
-    {
-        return new WeatherData
-        {
-            MetaData = new WeatherMetaData
-            {
-                Description = "momentanvärde, 1 gång/tim",
-                UpdatedAt = 1738094400000,
-                Unit = "c"
-            },
-            Stations = [new StationData{
-                Name = "Abisko Aut",
-                Latitude = 68.3538,
-                Longitude = 18.8164,
-                Altitude = 392.235,
-                TimeGathered = 1738094400000,
-                Temperature = "-5.8",
-                AirQuality = "G"
-            }]
-        };
     }
 }
