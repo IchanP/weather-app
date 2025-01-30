@@ -71,6 +71,16 @@ public class WeatherApiServiceTest
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.GetCurrentWeatherAsync());
     }
 
+    [Fact]
+    public async Task GetCurrentWeatherAsync_NullDeserialization_ShouldThrowError()
+    {
+        string? nullString = null;
+        repositoryMock.Setup(repo => repo.GetWeatherData()).ReturnsAsync(nullString);
+        SetupPipelineThrow();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.GetCurrentWeatherAsync());
+    }
+
     // NOTE - these are similar and could be abstracted in the future...
     private void SetupRepositoryThrow()
     {
