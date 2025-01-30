@@ -2,7 +2,7 @@ namespace CurrentWeatherAPI.src.repositories
 {
     public interface IWeatherRepository<T>
     {
-        Task<List<T>> GetWeatherData();
+        Task<string> GetWeatherData();
         Task WriteWeatherData(T data);
     }
 }

@@ -4,7 +4,7 @@ using CurrentWeatherAPI.src.repositories;
 
 namespace CurrentWeatherAPI.src.services
 {
-    public class WeatherService(ILogger<WeatherService> logger, IWeatherFetcher<WeatherResponse> fetcher, IWeatherRepository<WeatherData> repository, IWeatherConverter<WeatherData, WeatherResponse> converter) : BackgroundService
+    public class WeatherBackgroundService(ILogger<WeatherBackgroundService> logger, IPipeline<WeatherData> pipeline) : BackgroundService
     {
         // How many hours from now we want to fetch.
         // If the time is 18:30 that means we want to fetch at 19:XX
@@ -22,9 +22,7 @@ namespace CurrentWeatherAPI.src.services
                     DateTime currentTime = DateTime.Now;
                     TimeSpan delay = util.Timer.CreateTimeSpanOffset(fetchOffsetHour, fetchOffsetMinute, currentTime);
                     await Task.Delay(delay, stoppingToken);
-                    WeatherResponse stationData = await fetcher.FetchWeather();
-                    WeatherData cacheableData = converter.ConvertToWriteableData(stationData);
-                    await repository.WriteWeatherData(cacheableData);
+                    await pipeline.ExecuteAsyncPipeline();
                 }
                 catch (OperationCanceledException)
                 {

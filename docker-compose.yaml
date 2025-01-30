@@ -10,7 +10,7 @@ services:
     image: cw-api:1.0.0
     restart: on-failure
     environment:
-      - ASPNETCORE_URLS=http://+:5074 
+      - ASPNETCORE_URLS=http://0.0.0.0:5074
       - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis-weather-cache:6379}
     depends_on:
       - redis-weather-cache

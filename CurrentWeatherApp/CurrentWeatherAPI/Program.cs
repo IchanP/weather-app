@@ -2,6 +2,7 @@ using CurrentWeatherAPI.src.model.WeatherData;
 using CurrentWeatherAPI.src.model.WeatherResponse;
 using CurrentWeatherAPI.src.repositories;
 using CurrentWeatherAPI.src.services;
+using Microsoft.AspNetCore.Diagnostics;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,10 +38,13 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 );
 
 builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>();
-// NOTE -  Better to have it singleton and allow Redis to handle the concurrent requests
+// NOTE -  Better to have repository as singleton and allow Redis to handle the concurrent requests
 builder.Services.AddSingleton<IWeatherRepository<WeatherData>, WeatherRepository>();
 builder.Services.AddSingleton<IWeatherConverter<WeatherData, WeatherResponse>, WeatherConverter>();
-builder.Services.AddHostedService<WeatherService>();
+builder.Services.AddHostedService<WeatherBackgroundService>();
+builder.Services.AddSingleton<IPipeline<WeatherData>, WeatherDataPipeline>();
+// Keep request service scoped for scalability
+builder.Services.AddScoped<IWeatherApiService<WeatherData>, WeatherApiService>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -51,4 +55,33 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+
+// Exception handling.
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        IExceptionHandlerPathFeature? exceptionHandler = context.Features.Get<IExceptionHandlerPathFeature>();
+        if (exceptionHandler?.Error != null)
+        {
+            ILogger logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogError(exceptionHandler.Error, "An unhandled exception occurred.");
+
+            await context.Response.WriteAsync(
+                Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = "An internal server error occurred. Please try again later."
+                }),
+                context.RequestAborted
+            );
+        }
+    });
+});
+
+
 app.Run();
