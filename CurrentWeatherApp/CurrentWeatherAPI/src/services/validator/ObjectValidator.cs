@@ -13,7 +13,6 @@ namespace CurrentWeatherAPI.src.services
             {
                 throw new ValidationException("Validation failed: " + string.Join(", ", validationResults.Select(v => v.ErrorMessage)));
             }
-
         }
     }
 }
