@@ -29,7 +29,7 @@ namespace CurrentWeatherAPI.src.services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to fetch data from pipeline. Rethrowing error.");
-                    throw e;
+                    throw;
                 }
             }
         }

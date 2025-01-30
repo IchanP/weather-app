@@ -11,7 +11,7 @@ namespace CurrentWeatherAPI.src.controllers
     public class CurrentWeatherController(IWeatherApiService<WeatherData> service) : ControllerBase
     {
 
-        [HttpGet]
+        /* [HttpGet]
         public async Task<ActionResult<WeatherData>> GetWeatherData()
         {
             try
@@ -22,7 +22,7 @@ namespace CurrentWeatherAPI.src.controllers
             {
                 // TODO - Setup proper exceptions with error codes.
             }
-        }
+        } */
 
     }
 }
