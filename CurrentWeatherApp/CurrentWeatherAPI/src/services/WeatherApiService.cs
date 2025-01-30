@@ -15,10 +15,14 @@ namespace CurrentWeatherAPI.src.services
                 JObject unMapped = JObject.Parse(unserializedWeatherData);
                 WeatherData? mappedWeather = unMapped.ToObject<WeatherData>() ?? throw new InvalidOperationException("Failed to deserialize from cache.");
 
+                ObjectValidator.ValidateObject(mappedWeather);
+
                 _logger.LogInformation("Successfully deserialized data from cache. Returning cached data.");
                 return mappedWeather;
             }
-            catch (InvalidOperationException e)
+
+            // Will also catch the ValidationError... We want to retry no matter what anyway
+            catch (Exception e)
             {
                 _logger.LogError(e, "Failed to fetch data from cache. Fetching from API instead.");
                 try
