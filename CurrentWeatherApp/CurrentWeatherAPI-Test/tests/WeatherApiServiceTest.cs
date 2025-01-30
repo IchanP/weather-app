@@ -27,8 +27,7 @@ public class WeatherApiServiceTest
     public async Task GetCurrentWeatherAsync_GetWeatherDataInvalidOp_ShouldCallFetchFromPipeline()
     {
         // Mock throw
-        InvalidOperationException ex = new InvalidOperationException();
-        repositoryMock.Setup(repo => repo.GetWeatherData()).ThrowsAsync(ex);
+        SetupRepositoryThrow();
         // Mock pipeline
         WeatherData dummyWeatherData = GetDummyWeatherDataFromHelper();
         dataPipelineMock.Setup(pipeline => pipeline.ExecuteAsyncPipeline()).ReturnsAsync(dummyWeatherData);
@@ -53,9 +52,39 @@ public class WeatherApiServiceTest
         result.Should().BeEquivalentTo(dummyWeatherData);
     }
 
+    [Fact]
+    public async Task GetCurrentWeatherAsync_PipelineFetchFail_ShouldThrowError()
+    {
+        SetupRepositoryThrow();
+        SetupPipelineThrow();
 
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.GetCurrentWeatherAsync());
+    }
 
-    private WeatherData GetDummyWeatherDataFromHelper()
+    [Fact]
+    public async Task GetCurrentWeatherAsync_DeserializationFail_ShouldThrowError()
+    {
+        string serializedWeatherData = "{\"InvalidField\": 25}";
+        repositoryMock.Setup(repo => repo.GetWeatherData()).ReturnsAsync(serializedWeatherData);
+        SetupPipelineThrow();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.GetCurrentWeatherAsync());
+    }
+
+    // NOTE - these are similar and could be abstracted in the future...
+    private void SetupRepositoryThrow()
+    {
+        InvalidOperationException ex = new InvalidOperationException();
+        repositoryMock.Setup(repo => repo.GetWeatherData()).ThrowsAsync(ex);
+    }
+
+    private void SetupPipelineThrow()
+    {
+        InvalidOperationException ex = new InvalidOperationException();
+        dataPipelineMock.Setup(pipeline => pipeline.ExecuteAsyncPipeline()).ThrowsAsync(ex);
+    }
+
+    private static WeatherData GetDummyWeatherDataFromHelper()
     {
         return WeatherDataHelper.CreateDefaultWeatherData();
     }
