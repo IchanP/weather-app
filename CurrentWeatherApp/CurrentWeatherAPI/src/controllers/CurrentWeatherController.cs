@@ -16,7 +16,7 @@ namespace CurrentWeatherAPI.src.controllers
         {
             try
             {
-
+                // TODO fetch data and return it...
             }
             catch (Exception e)
             {
