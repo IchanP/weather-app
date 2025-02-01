@@ -6,6 +6,10 @@ services:
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.Redis
+    # TODO - setup a user here?
+    environment:
+    - USERNAME=${REDIS_CW_USERNAME:-CW-APP}
+    - USER_PASSWORD=${REDIS_CW_PASSWORD:-CW-APP-DEV-PW}
     ports:
     - 6379:6379  
     command: >
@@ -21,6 +25,8 @@ services:
       - REDIS_PFX_PATH=${REDIS_PFX_PATH:-/etc/redis/certs/redis_client.pfx}
       - REDIS_PFX_PW=${REDIS_PFX_PW:-u123oida123;%21340afldadslk[]44ad}
       - REDIS_SERVER_PEM_PATH=${REDIS_SERVER_PEM_PATH:-/etc/redis/certs/ca_server.pem}
+      - REDIS_USERNAME=${REDIS_CW_USERNAME:-CW-APP}
+      - REDIS_PASSWORD=${REDIS_CW_PASSWORD:-CW-APP-DEV-PW}
     depends_on:
       - redis-weather-cache
     ports:

@@ -5,15 +5,14 @@ using StackExchange.Redis;
 public class RedisConfSetup(ILogger<RedisConfSetup> logger, string serverPemPath)
 {
 
-    public ConfigurationOptions SetupRedisConf(string connectionString, string path, string password)
+    public ConfigurationOptions SetupRedisConf(string connectionString, string path, string pfxPassword, string redisUser, string redisPassword)
     {
         ConfigurationOptions conf = new()
         {
             EndPoints = { connectionString },
             AbortOnConnectFail = false,
-            // TODO setup a user here from inside the redis.conf file...
-            /* User = "default",
-            Password = "secret" */
+            User = redisUser,
+            Password = redisPassword,
             Ssl = true,
             SslProtocols = System.Security.Authentication.SslProtocols.Tls12
         };
@@ -21,7 +20,7 @@ public class RedisConfSetup(ILogger<RedisConfSetup> logger, string serverPemPath
         conf.CertificateSelection += delegate
         {
             // TODO - figure out how this is gonna work in production...
-            return X509CertificateLoader.LoadPkcs12FromFile(path, password);
+            return X509CertificateLoader.LoadPkcs12FromFile(path, pfxPassword);
         };
 
         conf.CertificateValidation += ValidateServerCertificate;
