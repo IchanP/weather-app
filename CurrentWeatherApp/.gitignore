@@ -291,3 +291,4 @@ __pycache__/
 env.json
 
 redis-certs
+redis-client
