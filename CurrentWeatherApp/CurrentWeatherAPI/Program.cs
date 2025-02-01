@@ -26,12 +26,10 @@ builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
     client.BaseAddress = new Uri(weatherFetcherBaseUrl);
 });
 
-ConfigurationOptions conf = new ConfigurationOptions
-{
-    EndPoints = { redisString },
-    AbortOnConnectFail = false
-    // TODO setup and ENABLE TLS
-};
+// TODO - maybe this shouldn't be static?
+RedisConfSetup redisHelper = new RedisConfSetup();
+
+ConfigurationOptions conf = redisHelper.SetupRedisConf(redisString);
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(conf)
