@@ -1,17 +1,28 @@
 services:
 
   redis-weather-cache:
-    # TODO - TLS SETUP
     image: redis:7.4.2
     ports:
     - 6379:6379
+    volumes:
+      - ./CurrentWeatherApp/redis/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./CurrentWeatherApp/redis/redis-conf/redis-certs:/usr/local/etc/redis/certs
+    environment:
+      - REDIS_TLS_CERT_FILE=/usr/local/etc/redis/certs/redis_server.crt
+      - REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key
+      - REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca_client.crt
+    # Runs the conf file inside the container
+    command: redis-server /usr/local/etc/redis/redis.conf
 
   current-weather-app:
     image: cw-api:1.0.0
     restart: on-failure
+    volumes:
+      # TODO - Seperate this away ?
+      - ./CurrentWeatherApp/redis/redis-conf/redis-certs:/etc/redis/certs
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5074
-      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis-weather-cache:6379}
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis://redis-weather-cache:6379}
     depends_on:
       - redis-weather-cache
     ports:

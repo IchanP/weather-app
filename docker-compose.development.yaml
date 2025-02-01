@@ -8,7 +8,6 @@ services:
     
     volumes:
      - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
-      # TODO - Add development specific variables?
      - /src/CurrentWeatherAPI/bin/
      - /src/CurrentWeatherAPI/obj/
     
