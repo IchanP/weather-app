@@ -8,13 +8,19 @@ services:
       dockerfile: Dockerfile.Redis
     ports:
     - 6379:6379  
+    command: >
+      sh -c "envsubst < /usr/local/etc/redis/redis-conf/redis.conf.template > /usr/local/etc/redis/redis-conf/redis.conf && 
+        redis-server /usr/local/etc/redis/redis-conf/redis.conf"
 
   current-weather-app:
     image: cw-api:1.0.0
     restart: on-failure
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5074
-      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis://redis-weather-cache:6379}
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis-weather-cache:6379}
+      - REDIS_PFX_PATH=${REDIS_PFX_PATH:-/etc/redis/certs/redis_client.pfx}
+      - REDIS_PFX_PW=${REDIS_PFX_PW:-u123oida123;%21340afldadslk[]44ad}
+      - REDIS_SERVER_PEM_PATH=${REDIS_SERVER_PEM_PATH:-/etc/redis/certs/ca_server.pem}
     depends_on:
       - redis-weather-cache
     ports:
