@@ -2,10 +2,10 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using StackExchange.Redis;
 
-public class RedisConfSetup()
+public class RedisConfSetup(ILogger<RedisConfSetup> logger, string serverPemPath)
 {
 
-    public ConfigurationOptions SetupRedisConf(string connectionString)
+    public ConfigurationOptions SetupRedisConf(string connectionString, string path, string password)
     {
         ConfigurationOptions conf = new()
         {
@@ -20,13 +20,12 @@ public class RedisConfSetup()
 
         conf.CertificateSelection += delegate
         {
-            // TODO - file path and password
-            // NOTE - figure out how this is gonna work in production...
-            return X509CertificateLoader.LoadPkcs12FromFile("/etc/redis/certs/redis_client.pfx", "secret");
+            // TODO - figure out how this is gonna work in production...
+            return X509CertificateLoader.LoadPkcs12FromFile(path, password);
         };
 
         conf.CertificateValidation += ValidateServerCertificate;
-
+        logger.LogInformation("Returning Redis Configuration...");
         return conf;
     }
 
@@ -40,15 +39,15 @@ public class RedisConfSetup()
         {
             return false;
         }
-        // TODO - not sure if this function will work since it says it required .PEM file?
-        // NOTE - Also should this service really have the server crt?
-        var ca = X509CertificateLoader.LoadCertificateFromFile("/etc/redis/certs/ca_server.crt");
+        var ca = X509CertificateLoader.LoadCertificateFromFile(serverPemPath);
         bool verdict = (certificate.Issuer == ca.Subject);
         if (verdict)
         {
+            logger.LogInformation("Successful verdict, returning true.");
             return true;
         }
         Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+        logger.LogInformation("Unsuccessful verdict, returning false.");
         return false;
     }
 }

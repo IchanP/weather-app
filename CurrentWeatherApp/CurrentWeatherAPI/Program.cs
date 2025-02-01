@@ -13,12 +13,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 // Ensure that all the Configuration tokens are available.
-string? httpClientName = builder.Configuration["WeatherClientName"];
-ArgumentException.ThrowIfNullOrEmpty(httpClientName, "HTTPClient name is missing.");
-string? weatherFetcherBaseUrl = builder.Configuration["WeatherFetcherUrl"];
-ArgumentException.ThrowIfNullOrEmpty(weatherFetcherBaseUrl, "Base URL to fetch from is missing.");
-string? redisString = builder.Configuration["REDIS_CONNECTION_STRING"];
-ArgumentException.ThrowIfNullOrEmpty(redisString, "Redis connection string is missing.");
+string? httpClientName = GetConfig("WeatherClientName", "HTTPClient name is missing.");
+string? weatherFetcherBaseUrl = GetConfig("WeatherFetcherUrl", "Base URL to fetch from is missing.");
+string? redisString = GetConfig("REDIS_CONNECTION_STRING", "Redis connection string is missing.");
+string? redisPfxPath = GetConfig("REDIS_PFX_PATH", "REDIS_PFX_PATH cannot be null.");
+string? pfxPw = GetConfig("REDIS_PFX_PW", "REDIS_PFX_PW cannot be null");
+string? redisServerPemPath = GetConfig("REDIS_SERVER_PEM_PATH", "REDIS_SERVER_PEM_PATH cannot be null.");
 
 // Configure HttpClient with base address
 builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
@@ -26,14 +26,30 @@ builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
     client.BaseAddress = new Uri(weatherFetcherBaseUrl);
 });
 
-// TODO - maybe this shouldn't be static?
-RedisConfSetup redisHelper = new RedisConfSetup();
-
-ConfigurationOptions conf = redisHelper.SetupRedisConf(redisString);
+builder.Services.AddSingleton<RedisConfSetup>(sp =>
+{
+    ILogger<RedisConfSetup> logger = sp.GetRequiredService<ILogger<RedisConfSetup>>();
+    return new RedisConfSetup(logger, redisServerPemPath);
+});
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(conf)
-);
+{
+    ILogger<Program> logger = sp.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        RedisConfSetup redisHelper = sp.GetRequiredService<RedisConfSetup>();
+        ConfigurationOptions conf = redisHelper.SetupRedisConf(redisString, redisPfxPath, pfxPw);
+        logger.LogInformation("Connecting to Redis...");
+        ConnectionMultiplexer? redis = ConnectionMultiplexer.Connect(conf);
+        logger.LogInformation("Successfully connected to Redis.");
+        return redis;
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to connect to Redis.");
+        throw;
+    }
+});
 
 builder.Services.AddSingleton<IWeatherFetcher<WeatherResponse>, WeatherFetcher>();
 // NOTE -  Better to have repository as singleton and allow Redis to handle the concurrent requests
@@ -83,3 +99,10 @@ app.UseExceptionHandler(errorApp =>
 
 
 app.Run();
+
+string GetConfig(string key, string failureMessage)
+{
+    string? value = builder.Configuration[key];
+    ArgumentException.ThrowIfNullOrEmpty(value, failureMessage);
+    return value;
+}
