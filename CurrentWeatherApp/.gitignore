@@ -289,3 +289,8 @@ __pycache__/
 *.xsd.cs
 
 env.json
+
+redis-certs
+redis-client
+
+redis.conf
