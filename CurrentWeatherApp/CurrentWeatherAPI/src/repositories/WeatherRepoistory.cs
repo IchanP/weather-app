@@ -9,7 +9,6 @@ namespace CurrentWeatherAPI.src.repositories
         private readonly IDatabase db = redis.GetDatabase();
         private readonly string currenWeatherKey = "current-weather";
 
-        // TODO refactor this in the future to return a string to make it generic
         public async Task<string> GetWeatherData()
         {
             try
