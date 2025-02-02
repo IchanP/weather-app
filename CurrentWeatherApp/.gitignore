@@ -292,3 +292,5 @@ env.json
 
 redis-certs
 redis-client
+
+redis.conf
