@@ -7,3 +7,4 @@ tls-protocols "TLSv1.2 TLSv1.3"
 tls-auth-clients yes
 user default off
 user CW-APP +@connection ~* +get +set on >CW-APP-DEV-PW 
+loglevel debug

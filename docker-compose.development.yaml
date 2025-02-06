@@ -5,11 +5,6 @@ services:
     volumes:
         - ./CurrentWeatherApp/redis/redis-conf:/usr/local/etc/redis/redis-conf
         - ./CurrentWeatherApp/redis/redis-certs:/usr/local/etc/redis/certs
-    environment:
-      - REDIS_TLS_CERT_FILE=/usr/local/etc/redis/certs/redis_server.crt
-      - REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key
-      - REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca_client.crt
-    # TODO - Can this be used in production too?
 
   current-weather-app:
     build:
