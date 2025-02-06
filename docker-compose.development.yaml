@@ -10,9 +10,6 @@ services:
       - REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key
       - REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca_client.crt
     # TODO - Can this be used in production too?
-    command: >
-      sh -c "envsubst < /usr/local/etc/redis/redis-conf/redis.conf.template > /usr/local/etc/redis/redis-conf/redis.conf && 
-        redis-server /usr/local/etc/redis/redis-conf/redis.conf"
 
   current-weather-app:
     build:
