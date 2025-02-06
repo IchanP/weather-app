@@ -6,7 +6,7 @@ services:
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.Redis
-    env_file: .env
+    # TODO set in production file env_file: .env.cw
     ports:
     - 6379:6379  
     command: >
@@ -18,7 +18,7 @@ services:
   current-weather-app:
     image: cw-api:1.0.0
     restart: on-failure
-    env_file: .env
+    # TODO set in production file env_file: .env.redis-cw
     depends_on:
       - redis-weather-cache
     ports:
