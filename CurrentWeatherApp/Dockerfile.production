@@ -1,5 +1,5 @@
 # TODO - https://youtu.be/t779DVjCKCs
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
 WORKDIR /src
 COPY ["CurrentWeatherAPI/CurrentWeatherAPI.csproj", "CurrentWeatherAPI/"]
 RUN dotnet restore "CurrentWeatherAPI/CurrentWeatherAPI.csproj"
@@ -11,7 +11,7 @@ RUN dotnet build "CurrentWeatherAPI.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "CurrentWeatherAPI.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-bookworm-slim
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN chown -R app:app /app .
