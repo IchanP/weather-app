@@ -1,3 +1,4 @@
+# TODO - https://youtu.be/t779DVjCKCs
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY ["CurrentWeatherAPI/CurrentWeatherAPI.csproj", "CurrentWeatherAPI/"]
