@@ -6,28 +6,28 @@ services:
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.Redis
-    # TODO - setup a user here?
-    environment:
-    - USERNAME=${REDIS_CW_USERNAME:-CW-APP}
-    - USER_PASSWORD=${REDIS_CW_PASSWORD:-CW-APP-DEV-PW}
+    volumes:
+      - ./CurrentWeatherApp/redis/redis-conf:/usr/local/etc/redis/redis-conf
+      - ./CurrentWeatherApp/redis/redis-certs:/usr/local/etc/redis/certs
+    # TODO set in production file env_file: .env.cw
     ports:
     - 6379:6379  
     command: >
-      sh -c "envsubst < /usr/local/etc/redis/redis-conf/redis.conf.template > /usr/local/etc/redis/redis-conf/redis.conf && 
-        redis-server /usr/local/etc/redis/redis-conf/redis.conf"
+      sh -c "ls -la /usr/local/etc/redis/certs/ &&
+             envsubst < /usr/local/etc/redis/redis-conf/redis.conf.template > /usr/local/etc/redis/redis-conf/redis.conf &&
+             cat /usr/local/etc/redis/redis-conf/redis.conf &&
+             redis-server /usr/local/etc/redis/redis-conf/redis.conf"
 
   current-weather-app:
     image: cw-api:1.0.0
     restart: on-failure
-    environment:
-      - ASPNETCORE_URLS=http://0.0.0.0:5074
-      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING:-redis-weather-cache:6379}
-      - REDIS_PFX_PATH=${REDIS_PFX_PATH:-/etc/redis/certs/redis_client.pfx}
-      - REDIS_PFX_PW=${REDIS_PFX_PW:-u123oida123;%21340afldadslk[]44ad}
-      - REDIS_SERVER_PEM_PATH=${REDIS_SERVER_PEM_PATH:-/etc/redis/certs/ca_server.pem}
-      - REDIS_USERNAME=${REDIS_CW_USERNAME:-CW-APP}
-      - REDIS_PASSWORD=${REDIS_CW_PASSWORD:-CW-APP-DEV-PW}
+    volumes:
+     - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
+     - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
+    # TODO set in production file env_file: .env.redis-cw
     depends_on:
       - redis-weather-cache
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5074
     ports:
       - 8888:5074
