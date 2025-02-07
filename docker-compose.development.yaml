@@ -2,15 +2,8 @@
 services:
 
   redis-weather-cache:
-    volumes:
-        - ./CurrentWeatherApp/redis/redis-conf:/usr/local/etc/redis/redis-conf
-        - ./CurrentWeatherApp/redis/redis-certs:/usr/local/etc/redis/certs
-    environment:
-      - REDIS_TLS_CERT_FILE=/usr/local/etc/redis/certs/redis_server.crt
-      - REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key
-      - REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca_client.crt
-    # TODO - Can this be used in production too?
-
+    env_file: ./dev-env/.env.redis-cw
+    
   current-weather-app:
     build:
       context: ./CurrentWeatherApp
@@ -21,7 +14,7 @@ services:
      - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
      - /src/CurrentWeatherAPI/bin/
      - /src/CurrentWeatherAPI/obj/
-    
+    env_file: ./dev-env/.env.cw
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH=1

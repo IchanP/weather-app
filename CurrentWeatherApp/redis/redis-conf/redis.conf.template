@@ -6,4 +6,5 @@ tls-ca-cert-file ${REDIS_TLS_CA_CERT_FILE}
 tls-protocols "TLSv1.2 TLSv1.3"
 tls-auth-clients yes
 user default off
-user CW-APP +@connection ~* +get +set on >CW-APP-DEV-PW 
+user ${REDIS_USERNAME} +@connection ~* +get +set on >${REDIS_PASSWORD}
+loglevel debug
