@@ -1,0 +1,19 @@
+name: Deploy Weather App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: printenv | grep '^REDIS_\|^CW_' > .env
+        env: ${{ toJSON(secrets) }}
+      
+      # TODO - setup deploy step here to digital ocean?
