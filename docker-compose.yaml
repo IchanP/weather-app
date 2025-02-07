@@ -21,5 +21,7 @@ services:
     # TODO set in production file env_file: .env.redis-cw
     depends_on:
       - redis-weather-cache
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5074
     ports:
       - 8888:5074

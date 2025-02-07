@@ -15,12 +15,12 @@ builder.Services.AddControllers();
 // Ensure that all the Configuration tokens are available.
 string? httpClientName = GetConfig("WeatherClientName", "HTTPClient name is missing.");
 string? weatherFetcherBaseUrl = GetConfig("WeatherFetcherUrl", "Base URL to fetch from is missing.");
-string? redisString = GetConfig("REDIS_CONNECTION_STRING", "Redis connection string is missing.");
-string? redisPfxPath = GetConfig("REDIS_PFX_PATH", "REDIS_PFX_PATH cannot be null.");
-string? pfxPw = GetConfig("REDIS_PFX_PW", "REDIS_PFX_PW cannot be null");
-string? redisServerPemPath = GetConfig("REDIS_SERVER_PEM_PATH", "REDIS_SERVER_PEM_PATH cannot be null.");
-string? redisUsername = GetConfig("REDIS_USERNAME", "REDIS_USERNAME cannot be null.");
-string? redisPassword = GetConfig("REDIS_PASSWORD", "REDIS_PASSWORD cannot be null");
+string? redisString = GetConfig("CW_REDIS_CONNECTION_STRING", "Redis connection string is missing.");
+string? redisPfxPath = GetConfig("CW_REDIS_PFX_PATH", "REDIS_PFX_PATH cannot be null.");
+string? pfxPw = GetConfig("CW_REDIS_PFX_PW", "REDIS_PFX_PW cannot be null");
+string? redisServerPemPath = GetConfig("CW_REDIS_SERVER_PEM_PATH", "REDIS_SERVER_PEM_PATH cannot be null.");
+string? redisUsername = GetConfig("CW_REDIS_USERNAME", "REDIS_USERNAME cannot be null.");
+string? redisPassword = GetConfig("CW_REDIS_PASSWORD", "REDIS_PASSWORD cannot be null");
 
 // Configure HttpClient with base address
 builder.Services.AddHttpClient<WeatherFetcher>(httpClientName, client =>
