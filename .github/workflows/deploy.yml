@@ -39,16 +39,6 @@ jobs:
           chmod 600 ${CERT_PATH}/*
           chmod 600 ${CLIENT_PATH}/*
 
-          if ! echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d >  ${CLIENT_PATH}/client.pfx; then
-              echo "Failed to create client.pfx"
-              exit 1
-            fi
-
-          if ! [ -f "${CLIENT_PATH}/client.pfx" ] || ! [ -f "${CERT_PATH}/redis_server.crt" ]; then
-              echo "Certificate files are missing"
-              exit 1
-            fi
-
       - name: Create .env file
         run: printenv | grep '^REDIS_\|^CW_' > .env
         env:
