@@ -22,7 +22,7 @@ jobs:
         
       - name: Create cert files
         run: |
-         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 --decode >  ${CLIENT_PATH}/client.pfx 
+         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 --decode >  ${CLIENT_PATH}/client.pfx
          echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 --decode > ${CLIENT_PATH}/ca_server.pem
          echo "${{ secrets._REDIS_TLS_CERT }}" | base64 --decode > ${CERT_PATH}/redis_server.crt
          echo "${{ secrets._REDIS_TLS_KEY }}" | base64 --decode > ${CERT_PATH}/redis_server.key
