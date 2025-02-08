@@ -45,7 +45,7 @@ jobs:
         env:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
-          CW_REDIS_CONNECTION_STRING: ${{ CW_REDIS_CONNECTION_STRING }}
+          CW_REDIS_CONNECTION_STRING: ${{ secrets.CW_REDIS_CONNECTION_STRING }}
 
       
       # TODO - setup deploy step here to digital ocean?
