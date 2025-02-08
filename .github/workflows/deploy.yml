@@ -22,26 +22,38 @@ jobs:
         
       - name: Create cert files
         run: |
-         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d >  ${CLIENT_PATH}/client.pfx
-         echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 -d > ${CLIENT_PATH}/ca_server.pem
-         echo "${{ secrets._REDIS_TLS_CERT }}" | base64 -d > ${CERT_PATH}/redis_server.crt
-         echo "${{ secrets._REDIS_TLS_KEY }}" | base64 -d > ${CERT_PATH}/redis_server.key
-         echo "${{ secrets._REDIS_TLS_CA_CERT }}" | base64 -d > ${CERT_PATH}/ca.crt
-         chmod 600 ${CERT_PATH}/*
-         chmod 600 ${CLIENT_PATH}/*
-
-         if ! echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d >  ${CLIENT_PATH}/client.pfx; then
-            echo "Failed to create client.pfx"
-            exit 1
+          echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d > ${CLIENT_PATH}/client.pfx || echo "Failed: client.pfx"
+          echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 -d > ${CLIENT_PATH}/ca_server.pem || echo "Failed: ca_server.pem"
+          echo "${{ secrets._REDIS_TLS_CERT }}" | base64 -d > ${CERT_PATH}/redis_server.crt || echo "Failed: redis_server.crt"
+          echo "${{ secrets._REDIS_TLS_KEY }}" | base64 -d > ${CERT_PATH}/redis_server.key || echo "Failed: redis_server.key"
+          echo "${{ secrets._REDIS_TLS_CA_CERT }}" | base64 -d > ${CERT_PATH}/ca.crt || echo "Failed: ca.crt"
+            
+          for f in ${CLIENT_PATH}/* ${CERT_PATH}/*; do
+          if [ -f "$f" ]; then
+            echo "Created: $f"
+          else
+            echo "Missing: $f"
           fi
+          done
+          
+          chmod 600 ${CERT_PATH}/*
+          chmod 600 ${CLIENT_PATH}/*
 
-         if ! [ -f "${CLIENT_PATH}/client.pfx" ] || ! [ -f "${CERT_PATH}/redis_server.crt" ]; then
-            echo "Certificate files are missing"
-            exit 1
-          fi
+          if ! echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d >  ${CLIENT_PATH}/client.pfx; then
+              echo "Failed to create client.pfx"
+              exit 1
+            fi
+
+          if ! [ -f "${CLIENT_PATH}/client.pfx" ] || ! [ -f "${CERT_PATH}/redis_server.crt" ]; then
+              echo "Certificate files are missing"
+              exit 1
+            fi
 
       - name: Create .env file
         run: printenv | grep '^REDIS_\|^CW_' > .env
-        env: ${{ toJSON(secrets) }}
+        env:
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
+          CW_REDIS_CONNECTION_STRING: ${{ secrets.CW_REDIS_CONNECTION_STRING }}
       
       # TODO - setup deploy step here to digital ocean?
