@@ -22,11 +22,11 @@ jobs:
         
       - name: Create cert files
         run: |
-         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 -d >  ${CLIENT_PATH}/client.pfx
-         echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 -d > ${CLIENT_PATH}/ca_server.pem
-         echo "${{ secrets._REDIS_TLS_CERT }}" | base64 -d > ${CERT_PATH}/redis_server.crt
-         echo "${{ secrets._REDIS_TLS_KEY }}" | base64 -d > ${CERT_PATH}/redis_server.key
-         echo "${{ secrets._REDIS_TLS_CA_CERT }}" | base64 -d > ${CERT_PATH}/ca.crt
+         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 --decode >  ${CLIENT_PATH}/client.pfx
+         echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 --decode > ${CLIENT_PATH}/ca_server.pem
+         echo "${{ secrets._REDIS_TLS_CERT }}" | base64 --decode > ${CERT_PATH}/redis_server.crt
+         echo "${{ secrets._REDIS_TLS_KEY }}" | base64 --decode > ${CERT_PATH}/redis_server.key
+         echo "${{ secrets._REDIS_TLS_CA_CERT }}" | base64 --decode > ${CERT_PATH}/ca.crt
          chmod 600 ${CERT_PATH}/*
          chmod 600 ${CLIENT_PATH}/*
 
@@ -42,6 +42,8 @@ jobs:
 
       - name: Create .env file
         run: printenv | grep '^REDIS_\|^CW_' > .env
-        env: ${{ toJSON(secrets) }}
+        env:
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+
       
       # TODO - setup deploy step here to digital ocean?
