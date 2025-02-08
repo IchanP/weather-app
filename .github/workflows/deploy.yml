@@ -22,7 +22,7 @@ jobs:
         
       - name: Create cert files
         run: |
-         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 --decode >  ${CLIENT_PATH}/client.pfx
+         echo "${{ secrets._REDIS_CLIENT_PFX }}" | base64 --decode >  ${CLIENT_PATH}/client.pfx 
          echo "${{ secrets._REDIS_SERVER_PEM }}" | base64 --decode > ${CLIENT_PATH}/ca_server.pem
          echo "${{ secrets._REDIS_TLS_CERT }}" | base64 --decode > ${CERT_PATH}/redis_server.crt
          echo "${{ secrets._REDIS_TLS_KEY }}" | base64 --decode > ${CERT_PATH}/redis_server.key
@@ -44,6 +44,8 @@ jobs:
         run: printenv | grep '^REDIS_\|^CW_' > .env
         env:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
+          CW_REDIS_CONNECTION_STRING: ${{ CW_REDIS_CONNECTION_STRING }}
 
       
       # TODO - setup deploy step here to digital ocean?
