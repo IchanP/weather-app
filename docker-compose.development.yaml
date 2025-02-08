@@ -10,8 +10,6 @@ services:
       dockerfile: Dockerfile.development
     
     volumes:
-     - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
-     - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
      - /src/CurrentWeatherAPI/bin/
      - /src/CurrentWeatherAPI/obj/
     env_file: ./dev-env/.env.cw
