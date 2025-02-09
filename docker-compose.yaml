@@ -20,6 +20,9 @@ services:
 
   current-weather-app:
     restart: on-failure
+    build:
+      context: ./CurrentWeatherApp
+      dockerfile: Dockerfile.production
     volumes:
      - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
      - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
