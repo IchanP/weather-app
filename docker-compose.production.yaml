@@ -1,0 +1,6 @@
+services:
+  redis-weather-cache:
+    image: ghcr.io/${GITHUB_REPOSITORY}/redis-weather-cache:latest
+    
+  current-weather-app:
+    image: ghcr.io/${GITHUB_REPOSITORY}/cw-api:1.0.0

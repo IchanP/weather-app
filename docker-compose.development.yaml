@@ -5,6 +5,7 @@ services:
     env_file: ./dev-env/.env.redis-cw
     
   current-weather-app:
+    image: cw-api:1.0.0
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.development
