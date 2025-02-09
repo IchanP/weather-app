@@ -4,6 +4,3 @@ services:
     
   current-weather-app:
     image: ghcr.io/${GITHUB_REPOSITORY}/cw-api:1.0.0
-    build:
-      context: ./CurrentWeatherApp
-      dockerfile: Dockerfile.production
