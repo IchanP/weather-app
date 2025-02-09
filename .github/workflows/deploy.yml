@@ -48,7 +48,15 @@ jobs:
           CW_REDIS_CONNECTION_STRING: ${{ secrets.CW_REDIS_CONNECTION_STRING }}
           # TODO add paths to the files
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy
         run: |
-          ssh root@${{ secrets.DO_HOST }} "cd ${DOCKER_CONFIG_PATH} && docker compose pull && docker compose -f docker-compose.yaml -f docker-compose.production.yaml up -d"
+          echo ${{ secrets.GITHUB_TOKEN }} | ssh root@${{ secrets.DO_HOST }} "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+          ssh root@${{ secrets.DO_HOST }} "cd ${DOCKER_CONFIG_PATH} && docker compose pull && docker compose -f docker-compose.yaml -f docker-compose.production.yaml up -d
 
