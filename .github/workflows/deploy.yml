@@ -21,6 +21,7 @@ jobs:
         with:
           key: ${{ secrets.DO_SSH_KEY }}
           known_hosts: ${{ secrets.DO_KNOWN_HOSTS }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
       
       - name: Debug SSH
         run: |
