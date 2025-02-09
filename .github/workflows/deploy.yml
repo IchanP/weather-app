@@ -57,6 +57,7 @@ jobs:
 
       - name: Deploy
         run: |
+          GITHUB_REPOSITORY_LOWERCASE=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           echo ${{ secrets.GITHUB_TOKEN }} | ssh root@${{ secrets.DO_HOST }} "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
-          ssh root@${{ secrets.DO_HOST }} "cd ${DOCKER_CONFIG_PATH} && docker compose pull && docker compose -f docker-compose.yaml -f docker-compose.production.yaml up -d"
+          ssh root@${{ secrets.DO_HOST }} "export GITHUB_REPOSITORY=$GITHUB_REPOSITORY_LOWERCASE && cd ${DOCKER_CONFIG_PATH} && docker compose pull && docker compose -f docker-compose.yaml -f docker-compose.production.yaml up -d"
 
