@@ -21,6 +21,10 @@ jobs:
         with:
           key: ${{ secrets.DO_SSH_KEY }}
           known_hosts: ${{ secrets.DO_KNOWN_HOSTS }}
+      
+      - name: Debug SSH
+        run: |
+          ssh -v root@${{ secrets.DO_HOST }} "echo 'SSH connection successful'"
 
       - name: Setup remote directories
         run: |
