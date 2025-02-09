@@ -7,7 +7,7 @@ on:
 
 env:
   CERT_PATH: /opt/weather-app/certs
-  CLIENT_PATH: /opt/weather-app/redis/client-certs
+  CLIENT_PATH: /opt/weather-app/client-certs
   DOCKER_CONFIG_PATH: /opt/weather-app/docker
 
 jobs:
