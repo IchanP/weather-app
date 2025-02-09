@@ -19,7 +19,6 @@ services:
              redis-server /usr/local/etc/redis/redis-conf/redis.conf"
 
   current-weather-app:
-    image: cw-api:1.0.0
     restart: on-failure
     volumes:
      - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
