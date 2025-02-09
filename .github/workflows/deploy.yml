@@ -40,7 +40,7 @@ jobs:
 
       - name: Copy docker files
         run: |
-          scp docker-compose.yaml docker-compose.prodution.yaml root@${{ secrets.DO_HOST }}:${DOCKER_CONFIG_PATH}/
+          scp docker-compose.yaml docker-compose.production.yaml root@${{ secrets.DO_HOST }}:${DOCKER_CONFIG_PATH}/
           printenv | grep '^REDIS_\|^CW_' | ssh root@${{ secrets.DO_HOST }} "cat > ${DOCKER_CONFIG_PATH}/.env"
         env:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
