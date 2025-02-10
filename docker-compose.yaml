@@ -6,10 +6,6 @@ services:
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.Redis
-    volumes:
-      - ./CurrentWeatherApp/redis/redis-conf:/usr/local/etc/redis/redis-conf
-      - ./CurrentWeatherApp/redis/redis-certs:/usr/local/etc/redis/certs
-    # TODO set in production file env_file: .env.cw
     ports:
     - 6379:6379  
     command: >
@@ -23,10 +19,6 @@ services:
     build:
       context: ./CurrentWeatherApp
       dockerfile: Dockerfile.production
-    volumes:
-     - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
-     - ./CurrentWeatherApp/CurrentWeatherAPI:/src/CurrentWeatherAPI
-    # TODO set in production file env_file: .env.redis-cw
     depends_on:
       - redis-weather-cache
     environment:

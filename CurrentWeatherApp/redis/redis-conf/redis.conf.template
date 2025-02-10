@@ -1,8 +1,8 @@
 port 0
 tls-port 6379
-tls-cert-file ${REDIS_TLS_CERT_FILE}
-tls-key-file ${REDIS_TLS_KEY_FILE}
-tls-ca-cert-file ${REDIS_TLS_CA_CERT_FILE}
+tls-cert-file ${_REDIS_TLS_CERT}
+tls-key-file ${_REDIS_TLS_KEY}
+tls-ca-cert-file ${_REDIS_TLS_CA_CERT}
 tls-protocols "TLSv1.2 TLSv1.3"
 tls-auth-clients yes
 user default off

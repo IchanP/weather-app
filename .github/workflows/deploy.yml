@@ -46,6 +46,15 @@ jobs:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
           CW_REDIS_CONNECTION_STRING: ${{ secrets.CW_REDIS_CONNECTION_STRING }}
+          CW_REDIS_PFX_PW: ${{ secrets.CW_REDIS_PFX_PW }}
+          # TODO - Move to using proper variables for paths here and in docker-compose
+          CW_REDIS_SERVER_PEM_PATH: /etc/redis/certs/ca_server.pem
+          CW_REDIS_PFX_PATH: /etc/redis/certs/client.pfx
+          REDIS_TLS_CERT_FILE: /usr/local/etc/redis/certs/redis_server.crt
+          REDIS_TLS_KEY_FILE: /usr/local/etc/redis/certs/redis_server.key
+          REDIS_TLS_CA_CERT_FILE: /usr/local/etc/redis/certs/ca.crt
+
+
           # TODO add paths to the files
 
       - name: Login to GitHub Container Registry
