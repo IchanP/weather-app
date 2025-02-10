@@ -33,7 +33,10 @@ jobs:
           echo "${{ secrets._REDIS_TLS_CERT }}" | base64 -d | ssh root@${{ secrets.DO_HOST }} "cat > ${CERT_PATH}/redis_server.crt"
           echo "${{ secrets._REDIS_TLS_KEY }}" | base64 -d | ssh root@${{ secrets.DO_HOST }} "cat > ${CERT_PATH}/redis_server.key"
           echo "${{ secrets._REDIS_TLS_CA_CERT }}" | base64 -d | ssh root@${{ secrets.DO_HOST }} "cat > ${CERT_PATH}/ca.crt"
-            
+      
+      # TODO - get redis.conf onto the server
+      
+
       - name: Set permissions
         run: |
           ssh root@${{ secrets.DO_HOST }} "chmod 600 ${CERT_PATH}/* ${CLIENT_PATH}/*"
