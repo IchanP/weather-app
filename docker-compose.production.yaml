@@ -2,7 +2,7 @@ services:
   redis-weather-cache:
     image: ghcr.io/${GITHUB_REPOSITORY}/redis-weather-cache:latest
     volumes:
-      - ./opt/weather-app/redis-conf:/usr/local/etc/redis/redis-conf
+      - /opt/weather-app/redis-conf:/usr/local/etc/redis/redis-conf
       - /opt/weather-app/client-certs:/etc/redis/certs
     environment:
       - REDIS_PASSWORD
@@ -20,3 +20,5 @@ services:
       - CW_REDIS_PFX_PW
       - CW_REDIS_SERVER_PEM_PATH
       - CW_REDIS_PFX_PATH
+      - REDIS_USERNAME
+      - REDIS_PASSWORD
