@@ -1,12 +1,11 @@
 services:
   redis-weather-cache:
     image: ghcr.io/${GITHUB_REPOSITORY}/redis-weather-cache:latest
-    env_file: .env
     volumes:
       - /opt/weather-app/client-certs:/etc/redis/certs
 
   current-weather-app:
     image: ghcr.io/${GITHUB_REPOSITORY}/cw-api:1.0.0
-    env_file: .env
     volumes:
      - /opt/weather-app/certs:/usr/local/etc/redis/certs
+     
