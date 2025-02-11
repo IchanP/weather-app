@@ -43,7 +43,7 @@ jobs:
 
       - name: Setup remote directories
         run: |
-          ssh root@${{ secrets.DO_HOST }} "mkdir -p ${CERT_PATH} ${CLIENT_PATH} ${DOCKER_CONFIG_PATH}"
+          ssh root@${{ secrets.DO_HOST }} "mkdir -p ${CERT_PATH} ${CLIENT_PATH} ${DOCKER_CONFIG_PATH} ${REDIS_CONFIG_PATH}"
 
       - name: Copy certificates
         run: |
