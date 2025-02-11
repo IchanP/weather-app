@@ -9,7 +9,7 @@ env:
   CERT_PATH: /opt/weather-app/certs
   CLIENT_PATH: /opt/weather-app/client-certs
   DOCKER_CONFIG_PATH: /opt/weather-app/docker
-  REDIS_CONFIG_PATH: /opt/weahter-app/redis-conf
+  REDIS_CONFIG_PATH: /opt/weather-app/redis-conf
 jobs:
   deploy:
     runs-on: ubuntu-latest
