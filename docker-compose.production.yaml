@@ -3,7 +3,7 @@ services:
     image: ghcr.io/${GITHUB_REPOSITORY}/redis-weather-cache:latest
     volumes:
       - /opt/weather-app/redis-conf:/usr/local/etc/redis/redis-conf
-      - /opt/weather-app/client-certs:/etc/redis/certs
+      - /opt/weather-app/client-certs:/usr/local/etc/redis/certs
     environment:
       - REDIS_PASSWORD
       - REDIS_USERNAME
