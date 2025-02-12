@@ -55,7 +55,9 @@ jobs:
 
       - name: Set permissions
         run: |
-          ssh root@${{ secrets.DO_HOST }} "chmod 600 ${CERT_PATH}/* ${CLIENT_PATH}/*"
+          run: |
+          ssh root@${{ secrets.DO_HOST }} "chmod 600 ${CERT_PATH}/* && \
+          chown -R 999:999 ${CERT_PATH}/*"
 
       - name: Copy docker files
         run: |
@@ -74,8 +76,8 @@ jobs:
             REDIS_USERNAME='${{ secrets.REDIS_USERNAME }}' \
             CW_REDIS_CONNECTION_STRING='${{ secrets.CW_REDIS_CONNECTION_STRING }}' \
             CW_REDIS_PFX_PW='${{ secrets.CW_REDIS_PFX_PW }}' \
-            CW_REDIS_SERVER_PEM_PATH=/etc/redis/certs/ca_server.pem \
-            CW_REDIS_PFX_PATH=/etc/redis/certs/client.pfx \
+            CW_REDIS_SERVER_PEM_PATH=/usr/local/etc/redis/certs/ca_server.pem \
+            CW_REDIS_PFX_PATH=/usr/local/etc/redis/certs/client.pfx \
             REDIS_TLS_CERT_FILE=/usr/local/etc/redis/certs/redis_server.crt \
             REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key \
             REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca.crt \
