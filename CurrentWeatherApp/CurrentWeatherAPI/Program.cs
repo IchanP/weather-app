@@ -42,6 +42,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         RedisConfSetup redisHelper = sp.GetRequiredService<RedisConfSetup>();
         ConfigurationOptions conf = redisHelper.SetupRedisConf(redisString, redisPfxPath, pfxPw, redisUsername, redisPassword);
         logger.LogInformation("Connecting to Redis...");
+        logger.LogInformation($"PFX Path exists: {File.Exists(redisPfxPath)}");
+        logger.LogInformation($"PEM Path exists: {File.Exists(redisServerPemPath)}");
+        logger.LogInformation($"Full Redis Configuration: {conf}");
         ConnectionMultiplexer? redis = ConnectionMultiplexer.Connect(conf);
         logger.LogInformation("Successfully connected to Redis.");
         return redis;
