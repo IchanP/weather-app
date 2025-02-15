@@ -64,7 +64,7 @@ jobs:
           scp ./CurrentWeatherApp/redis/redis-conf/redis.conf.template root@${{ secrets.DO_HOST }}:${REDIS_CONFIG_PATH}/
           scp docker-compose.yaml docker-compose.production.yaml root@${{ secrets.DO_HOST }}:${DOCKER_CONFIG_PATH}/
 
-      # TODO - this wont scale at all so we should try and move to docker swarm at some point...
+      # TODO - this wont scale at all so we should try and move to docker swarm at some point
       - name: Deploy
         run: |
           GITHUB_REPOSITORY_LOWERCASE=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
