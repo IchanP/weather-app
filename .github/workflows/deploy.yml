@@ -82,3 +82,7 @@ jobs:
             REDIS_TLS_KEY_FILE=/usr/local/etc/redis/certs/redis_server.key \
             REDIS_TLS_CA_CERT_FILE=/usr/local/etc/redis/certs/ca.crt \
             docker compose -f docker-compose.yaml -f docker-compose.production.yaml up -d"
+      
+      - name: Cleanup dangling images
+        run: |
+          ssh root@${{ secrets.DO_HOST }} docker image prune -f
