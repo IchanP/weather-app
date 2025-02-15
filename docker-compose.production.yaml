@@ -1,6 +1,7 @@
 services:
   redis-weather-cache:
     image: ghcr.io/${GITHUB_REPOSITORY}/redis-weather-cache:latest
+    pull_policy: always
     volumes:
       - /opt/weather-app/redis-conf:/usr/local/etc/redis/redis-conf
       - /opt/weather-app/certs:/usr/local/etc/redis/certs
@@ -13,6 +14,7 @@ services:
 
   current-weather-app:
     image: ghcr.io/${GITHUB_REPOSITORY}/cw-api:1.0.0
+    pull_policy: always
     volumes:
      - /opt/weather-app/client-certs:/usr/local/etc/redis/certs
     environment:
