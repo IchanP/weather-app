@@ -1,7 +1,5 @@
 services:
 
-  # TODO - Move to using secrets from github in production!
-  # NOTE - Look into docker swarm?
   redis-weather-cache:
     build:
       context: ./CurrentWeatherApp
@@ -25,3 +23,11 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5074
     ports:
       - 8888:5074
+  
+  warning-fetcher-app:
+    restart: on-failure
+    # TODO add prod build context
+    ports:
+      - 8888:8000
+  
+  # TODO - add WarningFetcherApp here
