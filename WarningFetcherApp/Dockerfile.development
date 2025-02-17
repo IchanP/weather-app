@@ -3,4 +3,4 @@ WORKDIR usr/src/app
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 # TODO - add ports and stuff?
-CMD ["python", "./app.py"]
+CMD ["python", "main.py"]
