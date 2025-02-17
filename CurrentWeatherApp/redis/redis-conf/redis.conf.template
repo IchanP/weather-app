@@ -7,4 +7,3 @@ tls-protocols "TLSv1.2"
 tls-auth-clients yes
 user default off
 user ${REDIS_USERNAME} +@connection ~* +get +set on >${REDIS_PASSWORD}
-loglevel debug

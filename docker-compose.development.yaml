@@ -24,6 +24,7 @@ services:
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
     
   warning-fetcher-app:
+    image: wf-app:1.0.0
     build:
       context: ./WarningFetcherApp
       dockerfile: Dockerfile.development
