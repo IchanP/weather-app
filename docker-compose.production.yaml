@@ -24,3 +24,7 @@ services:
       - CW_REDIS_PFX_PATH
       - REDIS_USERNAME
       - REDIS_PASSWORD
+  
+  warning-fetcher-app:
+    image: ghcr.io/${GITHUB_REPOSITORY}/wf-app:1.0.0
+    pull_policy: always
