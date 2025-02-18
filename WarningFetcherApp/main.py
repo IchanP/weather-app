@@ -1,12 +1,9 @@
 from fastapi import FastAPI
+from routes import root
 
 app = FastAPI()
 
+# TODO add middleware
+# app.add_middleware()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/hi")
-async def root():
-    return {"message": "hello"}
+app.include_router(root.router)
