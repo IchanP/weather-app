@@ -25,6 +25,8 @@ services:
     
   warning-fetcher-app:
     image: wf-app:1.0.0
+    volumes:
+        - ./WarningFetcherApp:/usr/src/app
     build:
       context: ./WarningFetcherApp
       dockerfile: Dockerfile.development
