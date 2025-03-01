@@ -30,6 +30,10 @@ The system is designed around microservices. The final pieces are not in place, 
 
 ![Architecture](./docs/architecture-overview.png)
 
+### Future plans
+
+Moving to using a message queue between the Warning Fetcher and Alert System is planned at some point for reliability.
+
 ## Finished parts
 
 - ``CurrentWeatherApp`` is in a state where it can integrate with the other microservices at this point.
