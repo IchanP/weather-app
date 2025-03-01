@@ -1,4 +1,4 @@
-from CommunicatorAb import CommunicatorAb
+from services.CommunicatorAb import CommunicatorAb
 from fastapi import WebSocket
 
 class WebsocketManager(CommunicatorAb):
@@ -13,4 +13,6 @@ class WebsocketManager(CommunicatorAb):
     async def connect(self, socket: WebSocket):
         await socket.accept()
         self.active_connections.append(socket)
-        
+
+    def disconnect(self, socket: WebSocket):
+        self.active_connections.remove(socket)
