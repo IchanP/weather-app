@@ -11,6 +11,13 @@ router = APIRouter()
 async def subscribe_websocket(websocket: WebSocket):
     # TODO - integrate with a manager that fetches data and then pushes out...
     await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+    try:
+        while True:
+            # TODO - implement
+            print("Yo")
+    except:
+        manager.disconnect(websocket)
+        websocket.send_text(f"Closing websocket connection with warning application.")
+        await websocket.close()
+        # TODO send out confirmation message that it disconnected?
+    
