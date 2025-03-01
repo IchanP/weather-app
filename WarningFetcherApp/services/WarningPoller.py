@@ -1,4 +1,4 @@
-from CommunicatorAb import CommunicatorAb
+from services.CommunicatorAb import CommunicatorAb
 
 class WarningPoller:
     
