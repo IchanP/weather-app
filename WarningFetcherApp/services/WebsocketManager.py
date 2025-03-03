@@ -1,4 +1,4 @@
-from services.CommunicatorAb import CommunicatorAb
+from services.base_classes.CommunicatorAb import CommunicatorAb
 from fastapi import WebSocket
 import logging
 
