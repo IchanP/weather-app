@@ -8,16 +8,18 @@ poller.add_communicator(manager)
 router = APIRouter()
 
 @router.websocket("/ws")
-async def subscribe_websocket(websocket: WebSocket):
+async def subscribe_websocket(socket: WebSocket):
     # TODO - integrate with a manager that fetches data and then pushes out...
-    await websocket.accept()
+    await manager.connect(socket)
+    await socket.send_json({"status": "connected", "message": "Connected to the warning system"})
+    
     try:
         while True:
-            # TODO - implement
-            print("Yo")
+           data = await socket.receive_text()
+           await socket.send_text(f"Received message: {data}")
+           # TODO - If we add further functionality we'd add something here depending on the message. 
+           # Not necessary since we're nut fully using the duplex
     except:
-        manager.disconnect(websocket)
-        websocket.send_text(f"Closing websocket connection with warning application.")
-        await websocket.close()
-        # TODO send out confirmation message that it disconnected?
+        # NOTE - Can't really send out messages because the client already connected.
+        manager.disconnect(socket)
     
