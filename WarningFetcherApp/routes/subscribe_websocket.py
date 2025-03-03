@@ -1,5 +1,5 @@
 from fastapi import WebSocket, APIRouter
-from services.WarningPoller import poller
+from services.SMHIWarningPoller import poller
 from services.WebsocketManager import WebsocketManager
 
 manager = WebsocketManager()
