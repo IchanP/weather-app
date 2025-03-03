@@ -9,6 +9,7 @@ class WarningPoller:
     
     def add_communicator(self, communicator: CommunicatorAb):
         self.communicator = communicator
+    
 
 
 poller = WarningPoller()
