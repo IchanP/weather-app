@@ -17,4 +17,5 @@ class PollingFacade:
         self.scheduler.start()
     
     def polling_job(self):
-        weather_text_data = self.poller.fetch_weather_data()
+        weather_text_data = self.poller.fetch_and_parse_weather_data()
+        

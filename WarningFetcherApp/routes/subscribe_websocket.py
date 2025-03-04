@@ -5,7 +5,7 @@ from services.PollingFacade import PollingFacade
 
 manager = WebsocketManager()
 smhi_poller = SMHIWarningPoller()
-poll_facade = PollingFacade(manager, smhi_poller, 30)
+poll_facade = PollingFacade(manager, smhi_poller, 10)
 
 router = APIRouter()
 
