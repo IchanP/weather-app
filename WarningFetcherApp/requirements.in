@@ -2,3 +2,4 @@ fastapi[standard]
 apscheduler
 requests
 pydantic
+pip-tools
