@@ -13,6 +13,8 @@ anyio==4.8.0
     #   watchfiles
 apscheduler==3.11.0
     # via -r requirements.in
+build==1.2.2.post1
+    # via pip-tools
 certifi==2025.1.31
     # via
     #   httpcore
@@ -22,12 +24,9 @@ charset-normalizer==3.4.1
     # via requests
 click==8.1.8
     # via
+    #   pip-tools
     #   rich-toolkit
     #   typer
-    #   uvicorn
-colorama==0.4.6
-    # via
-    #   click
     #   uvicorn
 dnspython==2.7.0
     # via email-validator
@@ -61,6 +60,10 @@ markupsafe==3.0.2
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
+packaging==24.2
+    # via build
+pip-tools==7.4.1
+    # via -r requirements.in
 pydantic==2.10.6
     # via
     #   -r requirements.in
@@ -69,6 +72,10 @@ pydantic-core==2.27.2
     # via pydantic
 pygments==2.19.1
     # via rich
+pyproject-hooks==1.2.0
+    # via
+    #   build
+    #   pip-tools
 python-dotenv==1.0.1
     # via uvicorn
 python-multipart==0.0.20
@@ -99,8 +106,6 @@ typing-extensions==4.12.2
     #   pydantic-core
     #   rich-toolkit
     #   typer
-tzdata==2025.1
-    # via tzlocal
 tzlocal==5.3
     # via apscheduler
 urllib3==2.3.0
@@ -109,7 +114,15 @@ uvicorn[standard]==0.34.0
     # via
     #   fastapi
     #   fastapi-cli
+uvloop==0.21.0
+    # via uvicorn
 watchfiles==1.0.4
     # via uvicorn
 websockets==15.0
     # via uvicorn
+wheel==0.45.1
+    # via pip-tools
+
+# The following packages are considered to be unsafe in a requirements file:
+# pip
+# setuptools
