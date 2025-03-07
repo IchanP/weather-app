@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from .AreaName import AreaName
 from .Description import Description
+from typing import Optional
 
 class WarningLevel(BaseModel):
     sv: str
@@ -19,15 +20,16 @@ class AffectedArea(BaseModel):
 
 class Geometry(BaseModel):
     type: str
-    coordinates: list[list[float]]
+    coordinates: list[list[list[float]]]
 
 class Properties(BaseModel):
-
+    sv: Optional[str] = None
+    en: Optional[str] = None
 
 class Area(BaseModel):
     type: str
-    gemoetry: Geometry
-    properties: properties
+    geometry: Geometry
+    properties: Optional[Properties] = None
     # TODO - read this : https://datatracker.ietf.org/doc/html/rfc7946
 
 class WarningArea(BaseModel):
@@ -40,3 +42,4 @@ class WarningArea(BaseModel):
     eventDescription: EventDescription
     affectedAreas: list[AffectedArea]
     descriptions: list[Description]
+    area: Area
