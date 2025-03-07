@@ -19,6 +19,6 @@ class WebsocketManager(CommunicatorAb):
         logger.info(f"Client disconnected. Remaining connections: {len(self.active_connections)}")
         
     def broadcast(self, message: str):
-        logger.info(f"Broadcasting message {message} to all participants")
+        logger.info(f"Broadcasting mes  age {message} to all participants")
         for member in self.active_connections:
             member.send_json(message)

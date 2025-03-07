@@ -1,6 +1,5 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from services.base_classes.WeatherPoller import WeatherPoller
-from services.data_class.SmhiWarningResponse import SmhiWarningResponse
+from services.data_class.smhi_warning_response.SmhiWarningResponse import SmhiWarningResponse
 from requests import get
 import json
 
@@ -17,5 +16,4 @@ class SMHIWarningPoller(WeatherPoller):
         
     def _sanitize_smhi_data(self, data: str) -> dict:
         parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
-        print(f"parsed_response {parsed_responses}")
         pass
