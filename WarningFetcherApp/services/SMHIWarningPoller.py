@@ -1,5 +1,5 @@
-from services.base_classes.WeatherPoller import WeatherPoller
-from services.data_class.smhi_warning_response.SmhiWarningResponse import SmhiWarningResponse
+from .base_classes.WeatherPoller import WeatherPoller
+from .data_class.smhi_warning_response.SmhiWarningResponse import SmhiWarningResponse
 from requests import get
 import json
 
@@ -11,9 +11,10 @@ class SMHIWarningPoller(WeatherPoller):
         url="https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
         response = get(url)
         data = response.text
+        print(data)
         sanitized_json = self._sanitize_smhi_data(data)
         return sanitized_json
         
-    def _sanitize_smhi_data(self, data: str) -> dict:
+    def _sanitize_smhi_data(self, data: str) -> list[SmhiWarningResponse]:
         parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
-        pass
+        return parsed_responses
