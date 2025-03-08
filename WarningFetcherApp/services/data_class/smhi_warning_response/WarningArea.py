@@ -22,7 +22,7 @@ class Geometry(BaseModel):
     type: str
     bbox: Optional[list[float]] = None
     # NOTE - The type of coordinates depends on the type field, as defined by the GeoJson specification...
-    coordinates: Optional[Union[List[float], Optional[List[List[float]]], Optional[List[List[List[float]]]]]] = None
+    coordinates: Optional[Union[List[float], Optional[List[List[float]]], Optional[List[List[List[float]]]]]] = None, None, None
 
 class Properties(BaseModel):
     sv: Optional[str] = None
@@ -30,18 +30,17 @@ class Properties(BaseModel):
 
 class Area(BaseModel):
     type: str
-    geometry: Geometry
+    geometry: Optional[Geometry] = None
     properties: Optional[Properties] = None
-    # TODO - read this : https://datatracker.ietf.org/doc/html/rfc7946
 
 class WarningArea(BaseModel):
     id: int
     approximateStart: str
-    approximateEnd: str
+    approximateEnd: Optional[str] = None
     published: str
-    areaName: AreaName
+    areaName: Optional[AreaName] = None
     warningLevel: WarningLevel
     eventDescription: EventDescription
     affectedAreas: list[AffectedArea]
-    descriptions: list[Description]
+    descriptions: Optional[list[Description]] = None
     area: Area
