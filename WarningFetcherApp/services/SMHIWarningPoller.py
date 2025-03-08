@@ -11,10 +11,13 @@ class SMHIWarningPoller(WeatherPoller):
         url="https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
         response = get(url)
         data = response.text
-        print(data)
         sanitized_json = self._sanitize_smhi_data(data)
         return sanitized_json
         
     def _sanitize_smhi_data(self, data: str) -> list[SmhiWarningResponse]:
-        parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
-        return parsed_responses
+        try: 
+            parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
+            return parsed_responses
+        except:
+            un_sanitized_response = json.loads(data)
+            return un_sanitized_response

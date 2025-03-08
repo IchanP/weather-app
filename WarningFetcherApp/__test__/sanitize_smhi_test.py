@@ -13,9 +13,11 @@ smhi_response_data = build_event_data(BASE_EVENT_ID, BASE_EVENT_AREA_NAME, BASE_
                                       WARNING_AREA_ID, WARNING_AREA_EVENT_DESCRIPTION, WARNING_AREA_AREA_NAME, 
                                       WARNING_AREA_AREA_TYPE)
 
+poller = SMHIWarningPoller()
+
+
 # TODO - Keep reading this https://datatracker.ietf.org/doc/html/rfc7946
 def test_sanitize_smhi_data():
-    poller = SMHIWarningPoller()
     response = poller._sanitize_smhi_data(smhi_response_data)
     # Test critical fields
     assert response[0].id == 6
@@ -34,3 +36,9 @@ def test_sanitize_smhi_data():
     assert len(response[0].warningAreas[0].area.geometry.coordinates[0]) == 6
     # Assert optional fields do not exist
     assert response[0].warningAreas[0].area.properties == None
+
+
+def test_sanitize_smhi_data_returns_unsanitized_on_failure():
+    response = poller._sanitize_smhi_data('[ {"one" : "1", "two" : "2", "three" : "3"} ]')
+    assert hasattr(response[0], 'id') == False
+    assert response[0]['one'] == '1'
