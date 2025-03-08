@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from routes import root
-from routes import subscribe_websocket
+from .routes import root, subscribe_websocket
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

@@ -1,6 +1,8 @@
 # New data to be integrated
 
-def build_event_data(BASE_EVENT_ID: int, BASE_EVENT_AREA_NAME: str, BASE_EVENT_CODE: str, BASE_EVENT_MHO_CODE: str) -> str:
+def build_event_data(BASE_EVENT_ID: int, BASE_EVENT_AREA_NAME: str, BASE_EVENT_CODE: str, BASE_EVENT_MHO_CODE: str, 
+                     WARNING_AREA_ID: int, WARNING_AREA_EVENT_DESCRIPTION: str, WARNING_AREA_AREA_NAME: str,
+                     WARNING_AREA_AREA_TYPE: str) -> str:
     return f"""
 [
     {{
@@ -43,19 +45,19 @@ def build_event_data(BASE_EVENT_ID: int, BASE_EVENT_AREA_NAME: str, BASE_EVENT_C
         ],
         "warningAreas": [
             {{
-                "id": 54,
+                "id": {WARNING_AREA_ID},
                 "approximateStart": "2021-09-16T22:00:00.000Z",
                 "approximateEnd": "2021-09-17T22:00:00.000Z",
                 "published": "2021-09-16T12:56:49.033Z",
                 "normalProbability": true,
-                "areaName": {{ "sv": "Essunga kommun", "en": "Essunga municipality" }},
+                "areaName": {{ "sv": "{WARNING_AREA_AREA_NAME}", "en": "Essunga municipality" }},
                 "warningLevel": {{
                     "sv": "Orange",
                     "en": "Orange",
                     "code": "ORANGE"
                 }},
                 "eventDescription": {{
-                    "sv": "Översvämning",
+                    "sv": "{WARNING_AREA_EVENT_DESCRIPTION}",
                     "en": "Flooding",
                     "code": "FLOODING"
                 }},
@@ -80,7 +82,7 @@ def build_event_data(BASE_EVENT_ID: int, BASE_EVENT_AREA_NAME: str, BASE_EVENT_C
                     }}
                 ],
                 "area": {{
-                    "type": "Feature",
+                    "type": "{WARNING_AREA_AREA_TYPE}",
                     "geometry": {{
                         "type": "Polygon",
                         "coordinates": [
@@ -99,4 +101,4 @@ def build_event_data(BASE_EVENT_ID: int, BASE_EVENT_AREA_NAME: str, BASE_EVENT_C
         ]
     }}
 ]
-"""
+    """
