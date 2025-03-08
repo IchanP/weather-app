@@ -1,5 +1,5 @@
-from services.base_classes.CommunicatorAb import CommunicatorAb
-from services.base_classes.WeatherPoller import WeatherPoller
+from .base_classes.CommunicatorAb import CommunicatorAb
+from .base_classes.WeatherPoller import WeatherPoller
 from apscheduler.schedulers.background import BackgroundScheduler
 
 class PollingFacade:
@@ -18,4 +18,5 @@ class PollingFacade:
     
     def polling_job(self):
         weather_text_data = self.poller.fetch_and_parse_weather_data()
+        print(weather_text_data)
         
