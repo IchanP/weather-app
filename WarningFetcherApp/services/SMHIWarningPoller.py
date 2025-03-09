@@ -6,7 +6,7 @@ import json
 # Polls SMHI warning API
 class SMHIWarningPoller(WeatherPoller):
     
-    def fetch_and_parse_weather_data(self, url: str) -> dict:
+    def fetch_and_parse_weather_data(self, url: str) -> list:
         try:
             response = get(url)
             response.raise_for_status()
@@ -23,6 +23,7 @@ class SMHIWarningPoller(WeatherPoller):
         try: 
             parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
             return parsed_responses
+        # Handles cases where some non-optional fields are missing due to mistakes from the API...
         except:
             un_sanitized_response = json.loads(data)
             return un_sanitized_response
