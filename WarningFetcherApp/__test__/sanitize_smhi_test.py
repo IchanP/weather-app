@@ -16,7 +16,6 @@ smhi_response_data = build_event_data(BASE_EVENT_ID, BASE_EVENT_AREA_NAME, BASE_
 poller = SMHIWarningPoller()
 
 
-# TODO - Keep reading this https://datatracker.ietf.org/doc/html/rfc7946
 def test_sanitize_smhi_data():
     response = poller._sanitize_smhi_data(smhi_response_data)
     # Test critical fields

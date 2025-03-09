@@ -11,7 +11,7 @@ namespace CurrentWeatherAPI.src.services
         private readonly int fetchOffsetHour = 0;
         // What minute on the next hour we want to fetch
         // If minute is set to 1 we want to fetch on XX:01
-        private readonly int fetchOffsetMinute = 1;
+        private readonly int fetchOffsetMinute = 4;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
