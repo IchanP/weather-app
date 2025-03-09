@@ -25,6 +25,18 @@ def test_fetch_and_parse_weather_throws_http_500(mocker: MockerFixture):
     with raises(HTTPError):
         poller.fetch_and_parse_weather_data("http://example.com")
 
+def test_fetch_and_parse_weather_returns_json(mocker: MockerFixture):
+    mock_response = mocker.Mock()
+    mock_response.status_code = 200
+    mock_response.text = '[ {"one" : "1", "two" : "2", "three" : "3"} ]'
+
+    mocker.patch(f"{module_path}.get", return_value=mock_response)
+    
+    parsed_dict = poller.fetch_and_parse_weather_data("http://example.com")
+    assert parsed_dict[0]["one"] == "1"
+    assert parsed_dict[0]["two"] == "2"
+    assert parsed_dict[0]["three"] == "3"
+
 
 
 def setup_mock_response(mocker: MockerFixture, error_code: int):
