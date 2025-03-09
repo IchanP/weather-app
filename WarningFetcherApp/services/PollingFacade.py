@@ -4,7 +4,7 @@ from .base_classes.WeatherPoller import WeatherPoller
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 import logging
-
+import asyncio
 class PollingFacade:
     
     communicator: CommunicatorAb
@@ -19,13 +19,16 @@ class PollingFacade:
         # Default options are fine since we want the job to restart between restarts
         # And it's not a CPU intensive operation
         self.scheduler = scheduler
-        self.scheduler.add_job(self.polling_job, 'interval', minutes=polling_interval_minutes)
+        self.scheduler.add_job(self._run_polling_job_async, 'interval', seconds=polling_interval_minutes)
         self.scheduler.start()
     
-    def polling_job(self):
+    def _run_polling_job_async(self):
+        asyncio.run(self.polling_job())
+    
+    async def polling_job(self):
         try:
             weather_text_data = self.poller.fetch_and_parse_weather_data(self.url_to_poll)
-            print(weather_text_data)
+            await self.communicator.broadcast(weather_text_data)
         except (HTTPError, ValueError) as e:
             # Refetch
             logging.error(f"HTTP Error caused polling failure {e}")
@@ -33,7 +36,6 @@ class PollingFacade:
             self.scheduler.add_job(self.polling_job, 'date', run_date=next_run_time)
         except Exception as e:
             logging.error(f"Unexpected error while polling {e}")
-            pass
             
     def _calculate_next_runtime(self):
         return datetime.now() + timedelta(minutes=9)
