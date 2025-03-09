@@ -1,9 +1,11 @@
 from fastapi import WebSocket, APIRouter
-from services.WarningPoller import poller
-from services.WebsocketManager import WebsocketManager
+from ..services.SMHIWarningPoller import SMHIWarningPoller
+from ..services.WebsocketManager import WebsocketManager
+from ..services.PollingFacade import PollingFacade
 
 manager = WebsocketManager()
-poller.add_communicator(manager)
+smhi_poller = SMHIWarningPoller()
+poll_facade = PollingFacade(manager, smhi_poller, 10)
 
 router = APIRouter()
 
