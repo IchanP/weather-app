@@ -1,6 +1,6 @@
 from .base_classes.WeatherPoller import WeatherPoller
 from .data_class.smhi_warning_response.SmhiWarningResponse import SmhiWarningResponse
-from requests import get
+from requests import HTTPError, get
 import json
 
 # Polls SMHI warning API
@@ -16,6 +16,8 @@ class SMHIWarningPoller(WeatherPoller):
         except:
             if 400 <= response.status_code < 500:
               raise ValueError(f"Client Error: {response.status_code} - {response.reason}")
+            if 500 <= response.status_code < 600:
+                raise HTTPError(f"Server Error: {response.status_code} - {response.reason}")
             else:
                 raise
         
