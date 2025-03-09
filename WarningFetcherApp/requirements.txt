@@ -83,6 +83,10 @@ pyproject-hooks==1.2.0
     #   build
     #   pip-tools
 pytest==8.3.5
+    # via
+    #   -r ./WarningFetcherApp/requirements.in
+    #   pytest-mock
+pytest-mock==3.14.0
     # via -r ./WarningFetcherApp/requirements.in
 python-dotenv==1.0.1
     # via uvicorn

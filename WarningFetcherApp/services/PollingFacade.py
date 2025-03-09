@@ -17,6 +17,7 @@ class PollingFacade:
         self.scheduler.start()
     
     def polling_job(self):
-        weather_text_data = self.poller.fetch_and_parse_weather_data()
+        # TODO - Replace with real endpoint
+        weather_text_data = self.poller.fetch_and_parse_weather_data("https://opendata-download-warnings.smhi.se/ibww/test/test_2.json")
         print(weather_text_data)
         
