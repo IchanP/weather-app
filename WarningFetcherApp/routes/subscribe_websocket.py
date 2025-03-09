@@ -2,10 +2,11 @@ from fastapi import WebSocket, APIRouter
 from ..services.SMHIWarningPoller import SMHIWarningPoller
 from ..services.WebsocketManager import WebsocketManager
 from ..services.PollingFacade import PollingFacade
-
+from apscheduler.schedulers.background import BackgroundScheduler
 manager = WebsocketManager()
 smhi_poller = SMHIWarningPoller()
-poll_facade = PollingFacade(manager, smhi_poller, 10)
+scheduler = BackgroundScheduler()
+poll_facade = PollingFacade(manager, smhi_poller, scheduler, 30)
 
 router = APIRouter()
 
