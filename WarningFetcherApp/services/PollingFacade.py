@@ -12,8 +12,7 @@ class PollingFacade:
     communicator: CommunicatorAb
     scheduler: BackgroundScheduler
     poller: WeatherPoller
-    # TODO - replace with real endpoint
-    url_to_poll: str = "https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
+    url_to_poll: str = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json"
 
     def __init__(self, communicator: CommunicatorAb, poller: WeatherPoller, scheduler: BackgroundScheduler, polling_interval_minutes: int):
         self.communicator = communicator
