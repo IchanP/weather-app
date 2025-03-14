@@ -1,7 +1,7 @@
 from .base_classes.CommunicatorAb import CommunicatorAb
 from fastapi import WebSocket
 from ..config.logger import logger
-
+import jsonpickle
 class WebsocketManager(CommunicatorAb):
     
     # NOTE - Having it as in memory is fine for the moment
@@ -18,10 +18,11 @@ class WebsocketManager(CommunicatorAb):
         self.active_connections.remove(socket)
         logger.info(f"Client disconnected. Remaining connections: {len(self.active_connections)}")
         
-    async def broadcast(self, message: str):
+    async def broadcast(self, message):
+            serialized_json = jsonpickle.encode(message)
             for member in self.active_connections:
                 try:
                     logger.info(f"Sending json data to member: {member}")
-                    await member.send_json(message)
+                    await member.send_json(serialized_json)
                 except Exception as e:
                      logger.error(f"Unexpected error occured a sending data to {member}. Error: {e}")
