@@ -21,7 +21,7 @@ class PollingFacade:
         # Default options are fine since we want the job to restart between restarts
         # And it's not a CPU intensive operation
         self.scheduler = scheduler
-        self.scheduler.add_job(self._run_polling_job_async, 'interval', minutes=polling_interval_minutes)
+        self.scheduler.add_job(self._run_polling_job_async, 'interval', seconds=polling_interval_minutes)
         self.scheduler.start()
     
     def _run_polling_job_async(self):
