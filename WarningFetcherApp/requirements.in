@@ -5,3 +5,4 @@ pydantic
 pip-tools
 pytest
 pytest-mock
+jsonpickle

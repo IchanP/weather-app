@@ -21,7 +21,7 @@ class PollingFacade:
         # Default options are fine since we want the job to restart between restarts
         # And it's not a CPU intensive operation
         self.scheduler = scheduler
-        self.scheduler.add_job(self._run_polling_job_async, 'interval', seconds=polling_interval_minutes)
+        self.scheduler.add_job(self._run_polling_job_async, 'interval', minutes=polling_interval_minutes)
         self.scheduler.start()
     
     def _run_polling_job_async(self):
@@ -30,7 +30,6 @@ class PollingFacade:
     async def polling_job(self):
         try:
             weather_text_data = self.poller.fetch_and_parse_weather_data(self.url_to_poll)
-            logger.error(type(weather_text_data))
             await self.communicator.broadcast(weather_text_data)
         except (HTTPError, ValueError) as e:
             # Refetch
