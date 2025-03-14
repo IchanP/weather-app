@@ -2,6 +2,7 @@ from .base_classes.WeatherPoller import WeatherPoller
 from .data_class.smhi_warning_response.SmhiWarningResponse import SmhiWarningResponse
 from requests import HTTPError, get
 import json
+from ..config.logger import logger
 
 # Polls SMHI warning API
 class SMHIWarningPoller(WeatherPoller):
@@ -24,8 +25,10 @@ class SMHIWarningPoller(WeatherPoller):
     def _sanitize_smhi_data(self, data: str) -> list[SmhiWarningResponse]:
         try: 
             parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
+            logger.info("Successfully parsed SMHI data, returning a sanitized response")
             return parsed_responses
         # Handles cases where some non-optional fields are missing due to mistakes from the API...
         except:
             un_sanitized_response = json.loads(data)
+            logger.error("Failed to sanitize SMHI data, returning an unsanitized response")
             return un_sanitized_response

@@ -1,8 +1,6 @@
 from .base_classes.CommunicatorAb import CommunicatorAb
 from fastapi import WebSocket
-import logging
-
-logger = logging.getLogger(__name__)
+from ..config.logger import logger
 
 class WebsocketManager(CommunicatorAb):
     
@@ -24,6 +22,7 @@ class WebsocketManager(CommunicatorAb):
             logger.info(f"Broadcasting message: - {message} - to all participants")
             for member in self.active_connections:
                 try:
+                    logger.info(f"Sending json data: {message}")
                     await member.send_json(message)
                 except Exception as e:
-                     logger.error(f"Unexpected error occured whiel sending data to {member}. Error: {e}")
+                     logger.error(f"Unexpected error occured a sending data to {member}. Error: {e}")
