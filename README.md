@@ -7,6 +7,7 @@ It also aims to provide current weather data through an interactive map.
 ## Requirements
 
 - .NET 9.X
+- Python 3.X
 
 ## How to run
 
