@@ -18,7 +18,7 @@ on:
     - 'CurrentWeatherApp/**'
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
     defaults:
