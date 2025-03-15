@@ -8,6 +8,7 @@ It also aims to provide current weather data through an interactive map.
 
 - .NET 9.X
 - Python 3.X
+- Python 3.X
 
 ## How to run
 
@@ -30,6 +31,10 @@ docker compose down --rmi all
 The system is designed around microservices. The final pieces are not in place, but the data flow is not planned to change at this point.
 
 ![Architecture](./docs/architecture-overview.png)
+
+### Future plans
+
+Moving to using a message queue between the Warning Fetcher and Alert System is planned at some point for reliability.
 
 ## Finished parts
 
