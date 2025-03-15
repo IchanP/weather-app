@@ -7,7 +7,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 manager = WebsocketManager()
 smhi_poller = SMHIWarningPoller()
 scheduler = BackgroundScheduler()
-poll_facade = PollingFacade(manager, smhi_poller, scheduler, 30)
+url = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json"
+poll_facade = PollingFacade(manager, smhi_poller, scheduler, 30, url)
 
 router = APIRouter()
 

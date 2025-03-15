@@ -3,6 +3,7 @@ from requests import HTTPError
 from ..services.SMHIWarningPoller import SMHIWarningPoller
 from pytest import raises
 import inspect
+import json
 
 # Need the fully qualified path to satisfy .patch()
 module_path = inspect.getmodule(SMHIWarningPoller).__name__
@@ -32,10 +33,11 @@ def test_fetch_and_parse_weather_returns_json(mocker: MockerFixture):
 
     mocker.patch(f"{module_path}.get", return_value=mock_response)
     
-    parsed_dict = poller.fetch_and_parse_weather_data("http://example.com")
-    assert parsed_dict[0]["one"] == "1"
-    assert parsed_dict[0]["two"] == "2"
-    assert parsed_dict[0]["three"] == "3"
+    json_str = poller.fetch_and_parse_weather_data("http://example.com")
+    parsed_json = json.loads(json_str)
+    assert parsed_json[0]["one"] == "1"
+    assert parsed_json[0]["two"] == "2"
+    assert parsed_json[0]["three"] == "3"
 
 
 
