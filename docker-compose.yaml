@@ -26,8 +26,8 @@ services:
   
   warning-fetcher-app:
     restart: on-failure
-    # TODO add prod build context
+    build:
+      context: ./WarningFetcherApp
+      dockerfile: Dockerfile.production
     ports:
       - 8000:8000
-  
-  # TODO - add WarningFetcherApp here
