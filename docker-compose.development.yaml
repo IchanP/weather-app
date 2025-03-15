@@ -22,3 +22,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH=1
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+    
+  warning-fetcher-app:
+    image: wf-app:1.0.0
+    volumes:
+        - ./WarningFetcherApp:/usr/src/app
+    build:
+      context: ./WarningFetcherApp
+      dockerfile: Dockerfile.development
+    env_file: ./dev-env/.env.wf

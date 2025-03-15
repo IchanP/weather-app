@@ -1,0 +1,8 @@
+fastapi[standard]
+apscheduler
+requests
+pydantic
+pip-tools
+pytest
+pytest-mock
+pytest-asyncio

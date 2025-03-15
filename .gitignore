@@ -2,3 +2,5 @@
 dev-env
 .env
 winnat-fix.sh
+dev-scripts
+.pytest_cache
