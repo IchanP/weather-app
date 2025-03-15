@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from ..config.logger import logger
 
 communicator = WebsocketManager()
+url = "http://example.com"
 
 @pytest.mark.asyncio
 async def test_polling_job_refetches_after_delay(mocker: MockerFixture):
@@ -18,7 +19,7 @@ async def test_polling_job_refetches_after_delay(mocker: MockerFixture):
 
     add_job_mock = mocker.patch.object(scheduler, "add_job")
 
-    facade = PollingFacade(communicator, mock_poller, scheduler, 100)
+    facade = PollingFacade(communicator, mock_poller, scheduler, 100, url)
 
     # Mock the date_time of the call
     next_run_time = datetime.now() + timedelta(minutes=9)
@@ -33,7 +34,8 @@ async def test_polling_job_logs_and_passes_on_unspecific_error(mocker: MockerFix
     ex = NameError()
     mock_poller = setup_mock_poller(mocker, ex)
 
-    facade = PollingFacade(communicator, mock_poller, scheduler, 100)
+    facade = PollingFacade(communicator, mock_poller, scheduler, 100, url)
+    
     error_log_mock = mocker.patch.object(logger, "error")
 
     await facade.polling_job()

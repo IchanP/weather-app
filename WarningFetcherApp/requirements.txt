@@ -85,7 +85,10 @@ pyproject-hooks==1.2.0
 pytest==8.3.5
     # via
     #   -r ./WarningFetcherApp/requirements.in
+    #   pytest-asyncio
     #   pytest-mock
+pytest-asyncio==0.25.3
+    # via -r ./WarningFetcherApp/requirements.in
 pytest-mock==3.14.0
     # via -r ./WarningFetcherApp/requirements.in
 python-dotenv==1.0.1
