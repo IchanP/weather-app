@@ -7,7 +7,7 @@ from ..config.logger import logger
 # Polls SMHI warning API
 class SMHIWarningPoller(WeatherPoller):
     
-    def fetch_and_parse_weather_data(self, url: str) -> list:
+    def fetch_and_parse_weather_data(self, url: str) -> list[str]:
         try:
             response = get(url)
             response.raise_for_status()
@@ -22,13 +22,12 @@ class SMHIWarningPoller(WeatherPoller):
             else:
                 raise
         
-    def _sanitize_smhi_data(self, data: str) -> list[SmhiWarningResponse]:
+    def _sanitize_smhi_data(self, data: str) -> list[str]:
         try: 
             parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
             logger.info("Successfully parsed SMHI data, returning a sanitized response")
-            return parsed_responses
+            return [item.model_dump_json() for item in parsed_responses]
         # Handles cases where some non-optional fields are missing due to mistakes from the API...
         except:
-            un_sanitized_response = json.loads(data)
             logger.error("Failed to sanitize SMHI data, returning an unsanitized response")
-            return un_sanitized_response
+            return data

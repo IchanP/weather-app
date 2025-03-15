@@ -12,11 +12,12 @@ class PollingFacade:
     communicator: CommunicatorAb
     scheduler: BackgroundScheduler
     poller: WeatherPoller
-    url_to_poll: str = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json"
+    url_to_poll: str
 
-    def __init__(self, communicator: CommunicatorAb, poller: WeatherPoller, scheduler: BackgroundScheduler, polling_interval_minutes: int):
+    def __init__(self, communicator: CommunicatorAb, poller: WeatherPoller, scheduler: BackgroundScheduler, polling_interval_minutes: int, url: str):
         self.communicator = communicator
         self.poller = poller
+        self.url_to_poll = url
         # Default options are fine since we want the job to restart between restarts
         # And it's not a CPU intensive operation
         self.scheduler = scheduler
