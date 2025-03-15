@@ -42,4 +42,4 @@ jobs:
         pip install -r requirements.txt
     
     - name: Test with pytest 
-      run: pytest --tb=line --no-header -vv -r -W ignore::DeprecationWarning
+      run: pytest --tb=line --no-header -vv -ra -W ignore::DeprecationWarning
