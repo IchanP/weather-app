@@ -8,7 +8,6 @@ It also aims to provide current weather data through an interactive map.
 
 - .NET 9.X
 - Python 3.X
-- Python 3.X
 
 ## How to run
 
@@ -39,3 +38,4 @@ Moving to using a message queue between the Warning Fetcher and Alert System is 
 ## Finished parts
 
 - ``CurrentWeatherApp`` is in a state where it can integrate with the other microservices at this point.
+- ``WarningFetcherApp`` works but can use some improvements by switching to message brokers over socket.
