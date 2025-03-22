@@ -1,3 +1,5 @@
 {
-    "dotnet.defaultSolution": "CurrentWeatherAPI.sln"
+    "dotnet.defaultSolution": "CurrentWeatherAPI.sln",
+    "eslint.format.enable": true,
+    "prettier.endOfLine": "lf"
 }
