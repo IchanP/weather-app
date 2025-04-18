@@ -22,12 +22,14 @@ class SMHIWarningPoller(WeatherPoller):
             else:
                 raise
         
-    def _sanitize_smhi_data(self, data: str) -> list[str]:
-        try: 
+    def _sanitize_smhi_data(self, data: str) -> list[dict]:
+        try:
             parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
             logger.info("Successfully parsed SMHI data, returning a sanitized response")
-            return [item.model_dump_json() for item in parsed_responses]
-        # Handles cases where some non-optional fields are missing due to mistakes from the API...
-        except:
-            logger.error("Failed to sanitize SMHI data, returning an unsanitized response")
-            return data
+            return [item.model_dump() for item in parsed_responses]
+        except json.JSONDecodeError:
+            logger.error("Failed to decode JSON data")
+            return []
+        except Exception as e:
+            logger.error(f"An unexpected error occurred while sanitizing data: {e}")
+            return []

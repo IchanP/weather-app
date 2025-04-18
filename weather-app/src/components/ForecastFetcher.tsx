@@ -9,8 +9,14 @@ const ForecastFetcher = () => {
   /**
    * Fetches current and forecast data for the last hour.
    */
-  const fetchForecast = () => {
-    "tada";
+  const fetchForecast = async () => {
+    const response = await fetch(
+      "https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
+    );
+    if (!response.ok) {
+      throw Error("Response not ok");
+    }
+    return response.json();
   };
 
   const { isError, isPending, data, error } = useQuery({
@@ -18,6 +24,10 @@ const ForecastFetcher = () => {
     queryFn: fetchForecast,
   });
 
+  console.log("Data:", data);
+  if (isPending) return <span>Loading...</span>;
+
+  if (isError) return <div>Error: {error.message}</div>;
   return (
     <>
       <Map />

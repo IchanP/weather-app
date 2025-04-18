@@ -18,7 +18,7 @@ class WebsocketManager(CommunicatorAb):
         self.active_connections.remove(socket)
         logger.info(f"Client disconnected. Remaining connections: {len(self.active_connections)}")
         
-    async def broadcast(self, message: str):
+    async def broadcast(self, message: dict):
             for member in self.active_connections:
                 try:
                     logger.info(f"Sending json data to member: {member}")
