@@ -1,5 +1,8 @@
 {
     "dotnet.defaultSolution": "CurrentWeatherAPI.sln",
     "eslint.format.enable": true,
-    "prettier.endOfLine": "lf"
+    "prettier.endOfLine": "lf",
+    "files.associations": {
+        "*.css": "tailwindcss"
+    }
 }
