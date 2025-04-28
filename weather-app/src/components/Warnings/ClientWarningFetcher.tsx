@@ -1,13 +1,13 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
-import { Spinner } from "./Spinner";
+import { Spinner } from "../Spinner";
 
 /**
  * Responsible for fetching the forecasted weather and passing it to the renderer.
  */
 const WarningFetcher = () => {
-  const Map = dynamic(() => import("@/components/Map"), {
+  const Map = dynamic(() => import("@/components/Map/Map"), {
     ssr: false,
   });
   // TODO leave all this here for now so we can go back and look at it...

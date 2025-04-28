@@ -1,3 +1,4 @@
+import { Warning } from "@/components/Warnings/types";
 import fs from "node:fs";
 import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -5,7 +6,7 @@ import { fileURLToPath } from "node:url";
 /**
  * Fetches current warnings. Throws an error if the response is not ok.
  */
-const fetchWarnings = async () => {
+const fetchWarnings = async (): Promise<Warning[]> => {
   // TODO requires setup in production
   // Construct the absolute path to the JSON file
   const __filename = fileURLToPath(import.meta.url);
@@ -24,11 +25,9 @@ const fetchWarnings = async () => {
   }
 };
 
-// TODO add type here...
-
 /**
  * Fetches weather warnings and returns them as a JavaScript object.
  */
-export const useGetWarnings = () => {
+export const useGetWarnings = (): Promise<Warning[]> => {
   return fetchWarnings();
 };

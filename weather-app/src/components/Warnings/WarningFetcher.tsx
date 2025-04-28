@@ -1,5 +1,6 @@
 import { useGetWarnings } from "@/hooks/useWarnings";
 import React from "react";
+import WarningManager from "./WarningManager";
 
 /**
  * Fetches weather warning data on the server side and passes it to client components.
@@ -13,7 +14,6 @@ const WarningFetcher = async (): Promise<React.JSX.Element> => {
     try {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       data = await useGetWarnings();
-      console.log(data);
       break;
     } catch (err) {
       retries++;
@@ -31,8 +31,11 @@ const WarningFetcher = async (): Promise<React.JSX.Element> => {
     return <div>Loading...</div>;
   }
 
-  console.log(data);
-  return <></>;
+  return (
+    <>
+      <WarningManager warningData={data} />
+    </>
+  );
 };
 
 export default WarningFetcher;

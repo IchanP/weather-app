@@ -1,4 +1,4 @@
-import Warnings from "@/components/Warnings";
+import Warnings from "@/components/Warnings/Warnings";
 
 /**
  * Renders the home page of the application.

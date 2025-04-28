@@ -7,7 +7,7 @@ export function Spinner({
 }: {
   show?: boolean;
   wait?: `delay-${number}`;
-}) {
+}): React.JSX.Element {
   return (
     <div
       className={`inline-block animate-spin px-3 transition ${
