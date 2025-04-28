@@ -21,6 +21,7 @@ const eslintConfig = [
     rules: {
       "linebreak-style": "off",
       "jsdoc/require-description": "warn",
+      "@typescript-eslint/explicit-function-return-type": "error",
       "jsdoc/require-jsdoc": [
         "warn",
         {

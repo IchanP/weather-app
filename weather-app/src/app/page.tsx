@@ -1,15 +1,13 @@
-import Forecast from "@/components/Forecast";
+import Warnings from "@/components/Warnings";
 
 /**
  * Renders the home page of the application.
  */
-export default function Home() {
+export default async function Home(): Promise<React.JSX.Element> {
   return (
     <>
-      <div>
-        <div>
-            <Forecast />
-        </div>
+      <div className="w-screen h-screen centered-column">
+        <Warnings />
       </div>
     </>
   );

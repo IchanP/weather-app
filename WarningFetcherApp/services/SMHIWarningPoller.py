@@ -27,6 +27,7 @@ class SMHIWarningPoller(WeatherPoller):
             parsed_responses = [SmhiWarningResponse(**item) for item in json.loads(data)]
             logger.info("Successfully parsed SMHI data, returning a sanitized response")
             return [item.model_dump() for item in parsed_responses]
+        # TODO - This needs attention!
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON data")
             return []
