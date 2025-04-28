@@ -22,6 +22,27 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
+  const eventHandlers = {
+    /**
+     *
+     */
+    mouseover: (e) => {
+      console.log(e.target);
+      const layer = e.target;
+      layer.setStyle({
+        color: "red",
+      });
+      layer.bringToFront();
+    },
+    /**
+     *
+     */
+    mouseout: (e) => {
+      const layer = e.target;
+      layer.setStyle(style);
+    },
+  };
+
   return (
     <>
       <Map data={warningData}>
@@ -31,6 +52,7 @@ const WarningManager = ({
               warningArea={data}
               key={data.id}
               eventCode={event.event.mhoClassification.code}
+              eventHandlers={eventHandlers}
             />
           ))
         )}
