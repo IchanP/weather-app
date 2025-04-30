@@ -1,34 +1,42 @@
 "use client";
-import { Warning } from "@/components/Warnings/types";
+import React, { useState } from "react";
 import { createContext, useContext } from "react";
 
 interface WarningProviderProps {
-  warningData: Warning[];
   children: React.JSX.Element;
 }
 
-type ContextWarning = Warning[] | null;
+type WarningContextType = {
+  // TODO change type from unknown to... something
+  getGeoJSONRef(id: number): unknown; // TODO might not be needed
+  highlightItem(id: number): void; // On mouse enter
+  resetHiglight(id: number): void; // On mouse leave
+  registerGeoJSONRef(id: number, ref: unknown): void;
+  highlightWarningId: number | null;
+};
 
-const WarningContext = createContext<ContextWarning>(null);
+// TODO remake this type...
+const WarningContext = createContext<WarningContextType | null>(null);
 
 /**
  * TODO
  */
-export const WarningProvider = ({
-  warningData,
-  children,
-}: WarningProviderProps): React.JSX.Element => {
-  console.log(warningData);
-  return (
-    <WarningContext.Provider value={warningData}>
-      {children}
-    </WarningContext.Provider>
-  );
+export const WarningProvider = ({ children }: WarningProviderProps): React.JSX.Element => {
+  const [highlightWarningId, setHighlightWarningId] = useState<number | null>(null);
+
+  return <WarningContext.Provider value={{ highlightWarningId }}>{children}</WarningContext.Provider>;
 };
 
+// TODO fix return type...
 /**
- * TODO - Setup types
+ * Sets up a WarningContext and verifies that the function was called inside a WarningProvider.
+ * @throws {Error} - Throws an error if function was called outside of WarningProvider.
+ * @returns {ContextWarning} - Returns the WarningContext.
  */
-export const useWarning = (): ContextWarning => {
-  return useContext(WarningContext);
+export const useWarningContext = (): WarningContextType => {
+  const context = useContext(WarningContext);
+  if (!context) {
+    throw new Error("useWarningContext must be used within a WarningProvider");
+  }
+  return context;
 };

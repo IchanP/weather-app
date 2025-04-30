@@ -22,26 +22,7 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
-  const eventHandlers = {
-    /**
-     *
-     */
-    mouseover: (e) => {
-      console.log(e.target);
-      const layer = e.target;
-      layer.setStyle({
-        color: "red",
-      });
-      layer.bringToFront();
-    },
-    /**
-     *
-     */
-    mouseout: (e) => {
-      const layer = e.target;
-      layer.setStyle(style);
-    },
-  };
+  // TODO add a callback here and figure out how to connect map with list info....
 
   return (
     <>
@@ -52,7 +33,6 @@ const WarningManager = ({
               warningArea={data}
               key={data.id}
               eventCode={event.event.mhoClassification.code}
-              eventHandlers={eventHandlers}
             />
           ))
         )}
