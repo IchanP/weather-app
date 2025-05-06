@@ -1,3 +1,4 @@
+import { WarningProvider } from "@/context/WarningContext";
 import WarningFetcher from "./WarningFetcher";
 
 /**
@@ -8,7 +9,9 @@ const Warnings = (): React.JSX.Element => {
   return (
     <>
       <h1>Weather warnings</h1>
-      <WarningFetcher />
+      <WarningProvider>
+        <WarningFetcher />
+      </WarningProvider>
     </>
   );
 };

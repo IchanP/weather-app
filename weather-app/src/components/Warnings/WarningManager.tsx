@@ -15,6 +15,7 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
   ssr: false,
 });
 
+// TODO rewrite jsdoc...
 /**
  * Manager component for warning data.
  * Manages callbacks and events for when users interact with warning text or warning polygons on the map.
@@ -22,8 +23,6 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
-  // TODO add a callback here and figure out how to connect map with list info....
-
   return (
     <>
       <Map data={warningData}>
@@ -34,7 +33,7 @@ const WarningManager = ({
               key={data.id}
               eventCode={event.event.mhoClassification.code}
             />
-          ))
+          )),
         )}
       </Map>
     </>
