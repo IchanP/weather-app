@@ -6,12 +6,11 @@ interface WarningProviderProps {
   children: React.JSX.Element;
 }
 
-// TODO change this to something...
+// TODO change this from unknown
 type GeoJSONRef = unknown;
 
 // TODO add functions for handling onclick events...
 type WarningContextType = {
-  // TODO change type from unknown to... something
   getGeoJSONRef(id: number): GeoJSONRef; // TODO might not be needed
   highlightItem(id: number): void; // On mouse enter
   resetHiglight(): void; // On mouse leave

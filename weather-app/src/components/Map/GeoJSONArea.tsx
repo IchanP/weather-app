@@ -2,7 +2,13 @@
 import { GeoJSON } from "react-leaflet";
 import { GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
-import { RefObject, useEffect, useImperativeHandle, useRef } from "react";
+import {
+  RefObject,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { Geometry } from "geojson";
 import { LeafletMouseEvent } from "leaflet";
 import { useWarningContext } from "@/context/WarningContext";
@@ -38,7 +44,9 @@ const GeoJSONArea = ({
     fillColor: COLOR_MAP[eventCode],
   };
 
-  const geoRef = useRef<(LeafletGeoJSON & GeoRefInteractions) | null>(null);
+  const [style, setStyle] = useState(defaultStyle);
+  const geoRef = useRef<(LeafletGeoJSON & GeoRefInteractions) | null>(null); // TODO wrong type!
+
   const { registerGeoJSONRef, highlightItem, resetHiglight, removeGeoJSONRef } =
     useWarningContext();
 
@@ -59,10 +67,7 @@ const GeoJSONArea = ({
          * Sets the border of the GeoJSON area to the unhovored state.
          */
         setDefaultStyle(): void {
-          // TODO figure out how to set the style cause setStyle is not a function... must be doable without a layer ref somehow.
-          if (geoRef.current) {
-            console.log(geoRef.current);
-          }
+          setStyle(defaultStyle);
         },
         ...geoRef.current,
       }) as LeafletGeoJSON & GeoRefInteractions,
@@ -75,10 +80,12 @@ const GeoJSONArea = ({
      */
     mouseover: (e: LeafletMouseEvent): void => {
       const layer = e.target;
-      layer.setStyle({
+      setStyle({
+        ...style,
         color: "red",
       });
-      layer.bringToFront();
+      layer.bringToFront(); // TODO figure out how to trigger this item inside useImperativeHandle.
+      highlightItem(warningArea.id);
     },
     /**
      * Triggers when the users pointer leaves the area on the map.
@@ -94,7 +101,7 @@ const GeoJSONArea = ({
     <>
       <GeoJSON
         data={warningArea.area.geometry}
-        style={defaultStyle}
+        style={style}
         ref={geoRef}
         eventHandlers={eventHandlers}
       />
