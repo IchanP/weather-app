@@ -37,8 +37,6 @@ const GeoJSONArea = React.memo(
       [eventCode],
     );
 
-    console.log("warningArea", warningArea.id);
-
     const highlightedStyle = useMemo(() => {
       if (warningArea.id === highlightWarningId) {
         return {
@@ -77,7 +75,6 @@ const GeoJSONArea = React.memo(
     );
   },
   (prevProps: GeoJSONAreaProps, nextProps: GeoJSONAreaProps) => {
-    // Only re-render if the core props that define the GeoJSON area itself change.
     return (
       prevProps.warningArea.id === nextProps.warningArea.id &&
       prevProps.eventCode === nextProps.eventCode
