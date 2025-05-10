@@ -3,15 +3,14 @@ import { GeoJSON } from "react-leaflet";
 import { GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
 import {
-  RefObject,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { Geometry } from "geojson";
-import { LeafletMouseEvent } from "leaflet";
 import { useWarningContext } from "@/context/WarningContext";
+import { GeoRefInteractions } from "./types";
 
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
@@ -24,10 +23,6 @@ const COLOR_MAP = {
   HYD: "#0cc9ee",
 };
 
-interface GeoRefInteractions {
-  setDefaultStyle(): void;
-}
-
 /**
  * Wraps the react-leaflet GeoJSON component to apply specific stylings depending on the type of event being rendered.
  */
@@ -36,28 +31,44 @@ const GeoJSONArea = ({
   eventCode,
 }: GeoJSONAreaProps): React.JSX.Element => {
   // Default style
-  const defaultStyle = {
-    color: COLOR_MAP[eventCode],
-    weight: 2,
-    opacity: 0.8,
-    fillOpacity: 0.4,
-    fillColor: COLOR_MAP[eventCode],
-  };
+  const defaultStyle = useMemo(
+    () => ({
+      color: COLOR_MAP[eventCode],
+      weight: 2,
+      opacity: 0.8,
+      fillOpacity: 0.4,
+      fillColor: COLOR_MAP[eventCode],
+    }),
+    [eventCode],
+  );
 
   const [style, setStyle] = useState(defaultStyle);
-  const geoRef = useRef<(LeafletGeoJSON & GeoRefInteractions) | null>(null); // TODO wrong type!
+  const layerRef = useRef<LeafletGeoJSON | null>(null);
+  const geoRef = useRef<GeoRefInteractions>(null);
 
   const { registerGeoJSONRef, highlightItem, resetHiglight, removeGeoJSONRef } =
     useWarningContext();
 
+  /**
+   * Binds the Leaflet Layer instance to the layer ref.
+   */
+  const onEachFeature = (_: unknown, layer: LeafletGeoJSON): void => {
+    layerRef.current = layer;
+  };
+
   useEffect(() => {
     if (geoRef.current) {
-      registerGeoJSONRef(warningArea.id, geoRef);
+      registerGeoJSONRef(
+        warningArea.id,
+        geoRef as React.RefObject<GeoRefInteractions>,
+      );
     }
     return (): void => {
       removeGeoJSONRef(warningArea.id);
     };
   }, [warningArea.id, registerGeoJSONRef, removeGeoJSONRef]);
+
+  // TODO: add useCallback to improve performance
 
   useImperativeHandle(
     geoRef,
@@ -69,6 +80,16 @@ const GeoJSONArea = ({
         setDefaultStyle(): void {
           setStyle(defaultStyle);
         },
+        /**
+         * Highlights the border of the GeoJSON area to red.
+         */
+        setHighlightStyle(): void {
+          layerRef?.current?.bringToFront();
+          setStyle({
+            ...style,
+            color: "red",
+          });
+        },
         ...geoRef.current,
       }) as LeafletGeoJSON & GeoRefInteractions,
   );
@@ -78,13 +99,7 @@ const GeoJSONArea = ({
      * Triggers when the user mouses over the area on the map.
      * Highlights the border to be red and brings it to the front of the map.
      */
-    mouseover: (e: LeafletMouseEvent): void => {
-      const layer = e.target;
-      setStyle({
-        ...style,
-        color: "red",
-      });
-      layer.bringToFront(); // TODO figure out how to trigger this item inside useImperativeHandle.
+    mouseover: (): void => {
       highlightItem(warningArea.id);
     },
     /**
@@ -93,7 +108,6 @@ const GeoJSONArea = ({
      */
     mouseout: (): void => {
       resetHiglight();
-      geoRef.current?.setDefaultStyle();
     },
   };
 
@@ -102,8 +116,8 @@ const GeoJSONArea = ({
       <GeoJSON
         data={warningArea.area.geometry}
         style={style}
-        ref={geoRef}
         eventHandlers={eventHandlers}
+        onEachFeature={onEachFeature}
       />
     </>
   );

@@ -1,4 +1,5 @@
 "use client";
+import { GeoRefInteractions } from "@/components/Map/types";
 import React, { useRef, useState } from "react";
 import { createContext, useContext } from "react";
 
@@ -6,8 +7,7 @@ interface WarningProviderProps {
   children: React.JSX.Element;
 }
 
-// TODO change this from unknown
-type GeoJSONRef = unknown;
+type GeoJSONRef = React.RefObject<GeoRefInteractions>;
 
 // TODO add functions for handling onclick events...
 type WarningContextType = {
@@ -19,7 +19,6 @@ type WarningContextType = {
   highlightWarningId: number | null;
 };
 
-// TODO remake this type...
 const WarningContext = createContext<WarningContextType | null>(null);
 
 /**
@@ -29,11 +28,12 @@ const WarningContext = createContext<WarningContextType | null>(null);
 export const WarningProvider = ({
   children,
 }: WarningProviderProps): React.JSX.Element => {
+  // Tracks the currently highlighted item.
   const [highlightWarningId, setHighlightWarningId] = useState<number | null>(
     null,
   );
 
-  const geoJsonRefs = useRef<Record<number, GeoJSONRef>>({});
+  const geoJsonRefs = useRef<Map<number, GeoJSONRef>>(new Map());
 
   /**
    * Sets the current highlighted item to the passed ID.
@@ -41,13 +41,16 @@ export const WarningProvider = ({
    */
   const highlightItem = (id: number): void => {
     setHighlightWarningId(id);
+    const ref = geoJsonRefs.current.get(id);
+    ref?.current?.setHighlightStyle();
   };
 
   /**
-   * Sets the highlightWarningId field to null, resetting the highlight of all items.
+   * Sets the id of the currently highlighted item to null.
    */
   const resetHiglight = (): void => {
-    setHighlightWarningId(null);
+    const ref = geoJsonRefs.current.get(highlightWarningId as number);
+    ref?.current?.setDefaultStyle();
   };
 
   /**
@@ -56,10 +59,7 @@ export const WarningProvider = ({
    */
   const registerGeoJSONRef = (id: number, ref: GeoJSONRef): void => {
     console.log(id);
-    if (geoJsonRefs.current[id])
-      throw new Error("An ID already exists in the GeoJSON map.");
-
-    geoJsonRefs.current[id] = ref;
+    geoJsonRefs.current.set(id, ref);
   };
 
   /**
@@ -69,7 +69,7 @@ export const WarningProvider = ({
    * @throws {Error} - Throws an error if there is no ref with the id.
    */
   const getGeoJSONRef = (id: number): GeoJSONRef => {
-    const ref = geoJsonRefs.current[id];
+    const ref = geoJsonRefs.current.get(id);
     if (!ref) throw new Error("No ref found with the identifying ID.");
     return ref;
   };
@@ -80,7 +80,7 @@ export const WarningProvider = ({
    * @param {number} id - The identifying id of the ref.
    */
   const removeGeoJSONRef = (id: number): void => {
-    delete geoJsonRefs.current[id];
+    geoJsonRefs.current.delete(id);
   };
 
   return (
