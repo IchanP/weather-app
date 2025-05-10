@@ -1,10 +1,9 @@
 "use client";
-import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 import { Warning } from "../Warnings/types";
-import GeoJSONArea from "./GeoJSONArea";
 
 // interface GeoJSONProperties {
 //   sv: string;
@@ -38,12 +37,9 @@ export interface MapProps {
 /**
  * Renders a leaflet map with polygons with the provided GeoJSON data.
  */
-const Map = ({
-  data,
-  onClickCallback,
-  children,
-}: MapProps): React.JSX.Element => {
+const Map = ({ children }: MapProps): React.JSX.Element => {
   // https://docs.mapbox.com/api/maps/styles/
+  console.log("Map data");
   return (
     <MapContainer
       center={[60.33, 14.99]}
