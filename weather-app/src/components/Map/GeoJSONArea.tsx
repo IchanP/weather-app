@@ -1,7 +1,8 @@
 "use client";
 import { GeoJSON } from "react-leaflet";
+import { GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWarningContext } from "@/context/WarningContext";
 
 interface GeoJSONAreaProps {
@@ -37,15 +38,24 @@ const GeoJSONArea = React.memo(
       [eventCode],
     );
 
-    const highlightedStyle = useMemo(() => {
-      if (warningArea.id === highlightWarningId) {
-        return {
-          ...defaultStyle,
-          color: "red",
-        };
+    const layerRef = useRef<LeafletGeoJSON | null>(null);
+    /**
+      Binds the Leaflet Layer instance to the layer ref.
+     */
+    const onEachFeature = (_: unknown, layer: LeafletGeoJSON): void => {
+      layerRef.current = layer;
+    };
+
+    useEffect(() => {
+      if (layerRef.current) {
+        if (warningArea.id === highlightWarningId) {
+          layerRef.current.setStyle({ ...defaultStyle, color: "red" });
+          layerRef.current.bringToFront();
+        } else {
+          layerRef.current.setStyle(defaultStyle);
+        }
       }
-      return defaultStyle;
-    }, [warningArea.id, highlightWarningId, defaultStyle]);
+    }, [highlightWarningId, warningArea.id, defaultStyle]);
 
     const eventHandlers = {
       /**
@@ -68,8 +78,9 @@ const GeoJSONArea = React.memo(
       <>
         <GeoJSON
           data={warningArea.area.geometry}
-          style={highlightedStyle}
+          style={defaultStyle}
           eventHandlers={eventHandlers}
+          onEachFeature={onEachFeature}
         />
       </>
     );
