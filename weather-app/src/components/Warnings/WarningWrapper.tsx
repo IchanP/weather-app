@@ -3,7 +3,7 @@ import WarningFetcher from "./WarningFetcher";
 /**
  * Declares the components to be rendered to display the warnings.
  */
-const Warnings = (): React.JSX.Element => {
+const WarningWrapper = (): React.JSX.Element => {
   // TODO add stuff here.
   return (
     <>
@@ -13,4 +13,4 @@ const Warnings = (): React.JSX.Element => {
   );
 };
 
-export default Warnings;
+export default WarningWrapper;

@@ -1,4 +1,4 @@
-import { useGetWarnings } from "@/hooks/useWarnings";
+import { fetchWarnings } from "@/hooks/useWarnings";
 import React from "react";
 import WarningManager from "./WarningManager";
 
@@ -9,11 +9,9 @@ const WarningFetcher = async (): Promise<React.JSX.Element> => {
   const maxRetries = 3;
   let retries = 0;
   let data = null;
-
   while (retries < maxRetries) {
     try {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      data = await useGetWarnings();
+      data = await fetchWarnings();
       break;
     } catch (err) {
       retries++;

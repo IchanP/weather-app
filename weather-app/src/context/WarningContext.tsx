@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { createContext, useContext } from "react";
 
 interface WarningProviderProps {
-  children: React.JSX.Element;
+  children: React.JSX.Element | React.JSX.Element[];
 }
 
 // TODO add functions for handling onclick events...

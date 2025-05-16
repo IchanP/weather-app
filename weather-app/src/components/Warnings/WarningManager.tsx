@@ -2,13 +2,14 @@
 
 import dynamic from "next/dynamic";
 import { Warning } from "./types";
-import { useMemo } from "react";
 import { WarningProvider } from "@/context/WarningContext";
+import WarningList from "./WarningList";
 
 interface WarningManagerProps {
   warningData: Warning[];
 }
 
+// TODO extract map wrapper into its own component and turn this one into a server component.
 const Map = dynamic(() => import("@/components/Map/Map"), {
   ssr: false,
 });
@@ -18,33 +19,33 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 });
 
 /**
- * Manager component for warning data.
- * Manages callbacks and events for when users interact with warning text or warning polygons on the map.
+ * Manager component for rendering weather warnings and GeoJSON areas
+ * Responsiblef or rendering the components related to weather warnings.
  */
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
-  // Cache for performance
-  const memoizedData = useMemo(() => {
-    return warningData.map((warning) => ({ ...warning }));
-  }, [warningData]);
-
   return (
-    <>
+    <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
       <WarningProvider>
-        <Map data={warningData}>
-          {memoizedData.flatMap((event) =>
-            event.warningAreas.map((data) => (
-              <GeoJSONArea
-                warningArea={data}
-                key={data.id}
-                eventCode={event.event.mhoClassification.code}
-              />
-            )),
-          )}
-        </Map>
+        <div className="h-map w-map overflow-y-scroll">
+          <WarningList warnings={warningData} />
+        </div>
+        <div>
+          <Map data={warningData}>
+            {warningData.flatMap((event) =>
+              event.warningAreas.map((data) => (
+                <GeoJSONArea
+                  warningArea={data}
+                  key={data.id}
+                  eventCode={event.event.mhoClassification.code}
+                />
+              )),
+            )}
+          </Map>
+        </div>
       </WarningProvider>
-    </>
+    </div>
   );
 };
 

@@ -59,7 +59,7 @@ type MeteorologicalEvent = {
 export type Warning = {
   id: number;
   event: MeteorologicalEvent;
-  areaName: string | null;
+  areaName: LocalizedString | null;
   descriptions: Description[];
   warningAreas: WarningArea[];
 };

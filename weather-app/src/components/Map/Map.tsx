@@ -39,13 +39,13 @@ export interface MapProps {
  */
 const Map = ({ children }: MapProps): React.JSX.Element => {
   // https://docs.mapbox.com/api/maps/styles/
-  console.log("Map data");
   return (
     <MapContainer
       center={[60.33, 14.99]}
       zoom={5}
       scrollWheelZoom={true}
-      style={{ height: "800px", width: "813px" }}
+      // style={{ height: "800px", width: "813px" }}
+      className="h-map w-[500px]"
     >
       <TileLayer
         url="https://api.maptiler.com/maps/dataviz/256/{z}/{x}/{y}.png?key=iU1HxtOY7iBXFJrHCzTo"

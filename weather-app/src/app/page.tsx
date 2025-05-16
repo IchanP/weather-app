@@ -1,4 +1,4 @@
-import Warnings from "@/components/Warnings/Warnings";
+import WarningWrapper from "@/components/Warnings/WarningWrapper";
 
 /**
  * Renders the home page of the application.
@@ -6,8 +6,10 @@ import Warnings from "@/components/Warnings/Warnings";
 export default async function Home(): Promise<React.JSX.Element> {
   return (
     <>
-      <div className="w-screen h-screen centered-column">
-        <Warnings />
+      <div className="w-screen md:w-[80%]">
+        <div className="centered-column pt-8">
+          <WarningWrapper />
+        </div>
       </div>
     </>
   );
