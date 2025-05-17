@@ -104,30 +104,32 @@ export type WarningArea = {
   area: Area;
 };
 
+export type MeteorologicalEventCode =
+  | "THUNDER"
+  | "WIND"
+  | "WIND_MOUNTAINS"
+  | "WIND_MOUNTAINS_SNOW"
+  | "STRONG_COOLING"
+  | "SNOW"
+  | "WIND_SNOW"
+  | "BLACK_ICE"
+  | "RAIN"
+  | "FIRE"
+  | "HIGH_TEMPERATURES"
+  | "WIND_SEA"
+  | "ICE_ACCRETION"
+  | "LOW_SEA_LEVEL"
+  | "HIGH_SEALEVEL"
+  | "HIGH_SEA_LEVEL"
+  | "WATER_SHORTAGE"
+  | "HIGH_FLOW"
+  | "FLOODING";
+
 // Event
 type MeteorologicalEvent = {
   en: string;
   sv: string;
-  code:
-    | "THUNDER"
-    | "WIND"
-    | "WIND_MOUNTAINS"
-    | "WIND_MOUNTAINS_SNOW"
-    | "STRONG_COOLING"
-    | "SNOW"
-    | "WIND_SNOW"
-    | "BLACK_ICE"
-    | "RAIN"
-    | "FIRE"
-    | "HIGH_TEMPERATURES"
-    | "WIND_SEA"
-    | "ICE_ACCRETION"
-    | "LOW_SEA_LEVEL"
-    | "HIGH_SEALEVEL"
-    | "HIGH_SEA_LEVEL"
-    | "WATER_SHORTAGE"
-    | "HIGH_FLOW"
-    | "FLOODING";
+  code: MeteorologicalEventCode;
 
   mhoClassification: LocalizedString & { code: "MET" | "HYD" | "OCE" };
 };

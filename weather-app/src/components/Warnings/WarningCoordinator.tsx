@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { WarningArea } from "./types";
+import { MeteorologicalEventCode, WarningArea } from "./types";
 import WarningPreview from "./WarningPreview";
 
 interface WarningCoordinatorProps {
   warning: WarningArea;
+  eventCode: MeteorologicalEventCode;
 }
 
 /**
@@ -11,9 +12,18 @@ interface WarningCoordinatorProps {
  */
 const WarningCoordinator = ({
   warning,
+  eventCode,
 }: WarningCoordinatorProps): React.JSX.Element => {
   const [viewFull, setViewFull] = useState(false);
-  return <>{viewFull ? <></> : <WarningPreview warning={warning} />}</>;
+  return (
+    <>
+      {viewFull ? (
+        <p></p>
+      ) : (
+        <WarningPreview warning={warning} eventCode={eventCode} />
+      )}
+    </>
+  );
 };
 
 export default WarningCoordinator;

@@ -1,9 +1,10 @@
 import Image from "next/image";
-import { isWarningLevels, WarningArea } from "./types";
-import WarningLevel from "./WarningLevel";
+import { MeteorologicalEventCode, WarningArea } from "./types";
+import IconPicker from "../WarningIcon/IconPicker";
 
 interface WarningPreviewProps {
   warning: WarningArea;
+  eventCode: MeteorologicalEventCode;
 }
 
 /**
@@ -11,6 +12,7 @@ interface WarningPreviewProps {
  */
 const WarningPreview = ({
   warning,
+  eventCode,
 }: WarningPreviewProps): React.JSX.Element => {
   const affectedAreas = warning.affectedAreas.map((area) => area.sv).join(", ");
   const incident = warning.descriptions.findIndex(
@@ -24,13 +26,7 @@ const WarningPreview = ({
     <div className="text-wrap font-inter bg-[#1B1919] px-4 py-2 pb-4">
       <div className="grid grid-cols-[90px_1fr_45px] grid-rows-2">
         <div className="row-span-2">
-          {/* TODO - This needs cleanup */}
-          {isWarningLevels(warning.warningLevel.code) ? (
-            <WarningLevel code={warning.warningLevel.code} />
-          ) : (
-            <p>A</p>
-          )}
-          {/* TODO - add different icon */}
+          <IconPicker warning={warning} eventCode={eventCode} />
         </div>
         <h2 className="font-bold">{warning.eventDescription.sv}</h2>
         <div className="flex flex-row justify-end">

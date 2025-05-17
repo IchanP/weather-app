@@ -20,7 +20,11 @@ const WarningList = ({ warnings }: WarningListProps): React.JSX.Element => {
     <div className="flex flex-col gap-2">
       {warnings.flatMap((event) =>
         event.warningAreas.map((areaData) => (
-          <WarningCoordinator warning={areaData} key={areaData.id} />
+          <WarningCoordinator
+            warning={areaData}
+            key={areaData.id}
+            eventCode={event.event.code}
+          />
         )),
       )}
     </div>
