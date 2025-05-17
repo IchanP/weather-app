@@ -2,14 +2,16 @@ import Image from "next/image";
 import { isWarningLevels, WarningArea } from "./types";
 import WarningLevel from "./WarningLevel";
 
-interface WarningProps {
+interface WarningPreviewProps {
   warning: WarningArea;
 }
 
 /**
  * Renders and styles information about the specific warning.
  */
-const WarningPreview = ({ warning }: WarningProps): React.JSX.Element => {
+const WarningPreview = ({
+  warning,
+}: WarningPreviewProps): React.JSX.Element => {
   const affectedAreas = warning.affectedAreas.map((area) => area.sv).join(", ");
   const incident = warning.descriptions.findIndex(
     (description) => description.title.code === "INCIDENT",
@@ -19,7 +21,7 @@ const WarningPreview = ({ warning }: WarningProps): React.JSX.Element => {
   );
 
   return (
-    <div className="text-wrap bg-[#1B1919] px-2 py-2">
+    <div className="text-wrap font-inter bg-[#1B1919] px-4 py-2 pb-4">
       <div className="grid grid-cols-[90px_1fr_45px] grid-rows-2">
         <div className="row-span-2">
           {/* TODO - This needs cleanup */}
@@ -44,8 +46,7 @@ const WarningPreview = ({ warning }: WarningProps): React.JSX.Element => {
         <h3>{affectedAreas}</h3>
       </div>
 
-      {/* TODO - limit the number of rows in this P */}
-      <p>
+      <p className="line-clamp-2">
         {warning.descriptions[incident]
           ? warning.descriptions[incident].text.sv
           : warning.descriptions[happens].text.sv}
