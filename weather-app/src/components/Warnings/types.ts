@@ -21,11 +21,18 @@ type AffectedArea = {
   en: string;
 };
 
-type WarningLevels = "YELLOW" | "ORANGE" | "RED";
+export type WarningLevels = "YELLOW" | "ORANGE" | "RED";
+
+/**
+ * Returns true if code is type WarningLevels. Else it returns false.
+ */
+export function isWarningLevels(code: string): code is WarningLevels {
+  return code === "YELLOW" || code === "ORANGE" || code === "RED";
+}
 
 // Warning Level
 type WarningLevel = LocalizedString & {
-  code: string;
+  code: WarningLevels;
 };
 
 // Event Description

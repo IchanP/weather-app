@@ -23,8 +23,8 @@ const WarningLevel = ({ code }: WarningLevelProps): React.JSX.Element => {
     <>
       <Image
         src={LEVEL_MAP[code]}
-        height={40}
-        width={40}
+        height={60}
+        width={60}
         alt={`Warning level ${code}`}
       />
     </>

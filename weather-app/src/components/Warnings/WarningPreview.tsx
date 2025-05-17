@@ -1,4 +1,5 @@
-import { WarningArea } from "./types";
+import Image from "next/image";
+import { isWarningLevels, WarningArea } from "./types";
 import WarningLevel from "./WarningLevel";
 
 interface WarningProps {
@@ -19,12 +20,30 @@ const WarningPreview = ({ warning }: WarningProps): React.JSX.Element => {
 
   return (
     <div className="text-wrap bg-[#1B1919] px-2 py-2">
-      <div className="flex flex-row items-center justify-center gap-5">
-        <WarningLevel code={warning.warningLevel.code} />
-        <h2>{warning.eventDescription.sv}</h2>
-        {/* TODO - add icon */}
+      <div className="grid grid-cols-[90px_1fr_45px] grid-rows-2">
+        <div className="row-span-2">
+          {/* TODO - This needs cleanup */}
+          {isWarningLevels(warning.warningLevel.code) ? (
+            <WarningLevel code={warning.warningLevel.code} />
+          ) : (
+            <p>A</p>
+          )}
+          {/* TODO - add different icon */}
+        </div>
+        <h2 className="font-bold">{warning.eventDescription.sv}</h2>
+        <div className="flex flex-row justify-end">
+          <button className="cursor-pointer">
+            <Image
+              src="/down.svg"
+              alt="Open the warning"
+              height={40}
+              width={40}
+            />
+          </button>
+        </div>
         <h3>{affectedAreas}</h3>
       </div>
+
       {/* TODO - limit the number of rows in this P */}
       <p>
         {warning.descriptions[incident]
