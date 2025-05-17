@@ -1,5 +1,6 @@
-import Warning from "./Warning";
+import WarningPreview from "./WarningPreview";
 import { Warning as WarningType } from "./types";
+
 interface WarningListProps {
   /**
    * List of warnings to be displayed.
@@ -15,10 +16,10 @@ interface WarningListProps {
  */
 const WarningList = ({ warnings }: WarningListProps): React.JSX.Element => {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {warnings.flatMap((event) =>
         event.warningAreas.map((areaData) => (
-          <Warning warning={areaData} key={areaData.id} />
+          <WarningPreview warning={areaData} key={areaData.id} />
         )),
       )}
     </div>

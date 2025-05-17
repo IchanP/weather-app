@@ -21,7 +21,7 @@ type AffectedArea = {
   en: string;
 };
 
-// TODO Set up the code levels!
+type WarningLevels = "YELLOW" | "ORANGE" | "RED";
 
 // Warning Level
 type WarningLevel = LocalizedString & {

@@ -7,7 +7,7 @@ const WarningWrapper = (): React.JSX.Element => {
   // TODO add stuff here.
   return (
     <>
-      <h1>Weather warnings</h1>
+      <h1 className="pb-8">Weather warnings</h1>
       <WarningFetcher />
     </>
   );
