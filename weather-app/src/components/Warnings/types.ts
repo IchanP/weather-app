@@ -35,9 +35,59 @@ type WarningLevel = LocalizedString & {
   code: WarningLevels;
 };
 
+// Possible event codes divided into logical types
+// https://opendata.smhi.se/warnings/objects#eventdescription
+
+type WindEvent =
+  | "WIND"
+  | "WIND_MOUNTAINS"
+  | "WIND_MOUNTAINS_SNOW "
+  | "GALE_LOW"
+  | "GALE_HIGH"
+  | "STORM"
+  | "HURRICANE";
+
+type ColdEvent = "STRONG_COOLING" | "SNOW" | "WIND_SNOW" | "ICE" | "BLACK_ICE";
+
+type RainEvent = "RAIN" | "DOWNPOUR";
+
+type FireWarning = "GRASS_FIRE" | "FOREST_FIRE";
+
+type HighTempsEvent = "HIGH_TEMPERATURES";
+
+type ThunderEvent = "THUNDER";
+
+type SeaEvent =
+  | "LOW_SEA_LEVEL"
+  | "HIGH_SEALEVEL"
+  | "HIGH_SEA_LEVEL"
+  | "ICE_ACCRETION"
+  | "SEVERE_ICE_ACCRETION";
+
+type WaterEvent = "HIGH_FLOW" | "FLOODING";
+
+type WaterShortageEvent =
+  | "WATER_SHORTAGE"
+  | "GROUNDWATER_MAJOR"
+  | "GROUNDWATER_MINOR"
+  | "GROUNDWATER_MINOR_MAJOR"
+  | "WATERCOURSES"
+  | "WATERCOURSES_GROUNDWATER_MAJOR"
+  | "WATERCOURSES_GROUNDWATER_MINOR"
+  | "WATERCOURSES_GROUNDWATER_MINOR_MAJOR";
+
 // Event Description
 type EventDescription = LocalizedString & {
-  code: string;
+  code:
+    | WindEvent
+    | ColdEvent
+    | RainEvent
+    | FireWarning
+    | HighTempsEvent
+    | ThunderEvent
+    | SeaEvent
+    | WaterEvent
+    | WaterShortageEvent;
 };
 
 // Warning Area
@@ -58,7 +108,27 @@ export type WarningArea = {
 type MeteorologicalEvent = {
   en: string;
   sv: string;
-  code: string;
+  code:
+    | "THUNDER"
+    | "WIND"
+    | "WIND_MOUNTAINS"
+    | "WIND_MOUNTAINS_SNOW"
+    | "STRONG_COOLING"
+    | "SNOW"
+    | "WIND_SNOW"
+    | "BLACK_ICE"
+    | "RAIN"
+    | "FIRE"
+    | "HIGH_TEMPERATURES"
+    | "WIND_SEA"
+    | "ICE_ACCRETION"
+    | "LOW_SEA_LEVEL"
+    | "HIGH_SEALEVEL"
+    | "HIGH_SEA_LEVEL"
+    | "WATER_SHORTAGE"
+    | "HIGH_FLOW"
+    | "FLOODING";
+
   mhoClassification: LocalizedString & { code: "MET" | "HYD" | "OCE" };
 };
 
