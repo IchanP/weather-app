@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   isWarningLevels,
   MeteorologicalEventCode,
@@ -23,7 +24,16 @@ const IconPicker = ({
 
   if (isWarningIconProps(eventCode)) return <WarningIcon type={eventCode} />;
 
-  return <>{/* TODO - add a default icon */}</>;
+  return (
+    <>
+      <Image
+        width={60}
+        height={60}
+        src="/missing.svg"
+        alt="Placeholder for a missing icon"
+      />
+    </>
+  );
 };
 
 export default IconPicker;
