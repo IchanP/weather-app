@@ -24,8 +24,11 @@ const GeoJSONArea = React.memo(
     warningArea,
     eventCode,
   }: GeoJSONAreaProps): React.JSX.Element {
-    const { highlightItem, highlightWarningId, resetHiglight } =
-      useWarningContext();
+    const {
+      highlightWarning: highlightItem,
+      highlightWarningId,
+      resetHiglight,
+    } = useWarningContext();
 
     // Default style
     const defaultStyle = useMemo(

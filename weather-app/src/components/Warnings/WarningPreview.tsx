@@ -8,7 +8,6 @@ import { scrollElementIntoView } from "@/utils";
 interface WarningPreviewProps {
   warning: WarningArea;
   eventCode: MeteorologicalEventCode;
-  openView(open: boolean): void;
 }
 
 const defaultStyle: CSSProperties = {};
@@ -24,10 +23,13 @@ const hoveredStyle: CSSProperties = {
 const WarningPreview = ({
   warning,
   eventCode,
-  openView,
 }: WarningPreviewProps): React.JSX.Element => {
-  const { highlightItem, highlightWarningId, resetHiglight } =
-    useWarningContext();
+  const {
+    highlightWarning: highlightItem,
+    highlightWarningId,
+    resetHiglight,
+    focusWarning,
+  } = useWarningContext();
 
   const [style, setStyle] = useState<CSSProperties>(defaultStyle);
   const divRef = useRef<null | HTMLDivElement>(null);
@@ -41,8 +43,8 @@ const WarningPreview = ({
   }, [resetHiglight]);
 
   const onClick = useCallback(() => {
-    openView(true);
-  }, [openView]);
+    focusWarning(warning.id);
+  }, [focusWarning, warning.id]);
 
   useEffect(() => {
     if (highlightWarningId === warning.id) {

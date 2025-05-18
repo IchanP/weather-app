@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { Warning } from "./types";
 import { WarningProvider } from "@/context/WarningContext";
-import WarningList from "./WarningList";
+import WarningView from "./WarningView";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -29,7 +29,7 @@ const WarningManager = ({
     <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
       <WarningProvider>
         <div className="h-map w-map overflow-y-scroll">
-          <WarningList warnings={warningData} />
+          <WarningView warnings={warningData} />
         </div>
         <div>
           <Map data={warningData}>

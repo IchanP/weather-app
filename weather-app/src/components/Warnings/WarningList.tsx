@@ -1,4 +1,4 @@
-import WarningCoordinator from "./WarningCoordinator";
+import WarningPreview from "./WarningPreview";
 import { Warning as WarningType } from "./types";
 
 interface WarningListProps {
@@ -19,7 +19,7 @@ const WarningList = ({ warnings }: WarningListProps): React.JSX.Element => {
     <div className="flex flex-col gap-2">
       {warnings.flatMap((event) =>
         event.warningAreas.map((areaData) => (
-          <WarningCoordinator
+          <WarningPreview
             warning={areaData}
             key={areaData.id}
             eventCode={event.event.code}

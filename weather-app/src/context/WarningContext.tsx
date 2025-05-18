@@ -8,9 +8,12 @@ interface WarningProviderProps {
 
 // TODO add functions for handling onclick events...
 type WarningContextType = {
-  highlightItem(id: number): void; // On mouse enter
+  highlightWarning(id: number): void; // On mouse enter
   resetHiglight(): void; // On mouse leave
   highlightWarningId: number | null;
+  focusWarning(id: number): void;
+  focusedId: number | null;
+  resetFocus(): void;
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -27,11 +30,13 @@ export const WarningProvider = ({
     null,
   );
 
+  const [focusedId, setFocusedId] = useState<number | null>(null);
+
   /**
    * Sets the current highlighted item to the passed ID.
    * @param {number} id - The id of the items to be highlighted.
    */
-  const highlightItem = (id: number): void => {
+  const highlightWarning = (id: number): void => {
     setHighlightWarningId(id);
   };
 
@@ -42,12 +47,29 @@ export const WarningProvider = ({
     setHighlightWarningId(null);
   };
 
+  /**
+   * Sets the c
+   */
+  const focusWarning = (id: number): void => {
+    setFocusedId(id);
+  };
+
+  /**
+   * Sets the focusedId to null.
+   */
+  const resetFocus = (): void => {
+    setFocusedId(null);
+  };
+
   return (
     <WarningContext.Provider
       value={{
         highlightWarningId,
-        highlightItem,
+        highlightWarning,
         resetHiglight,
+        focusWarning,
+        focusedId,
+        resetFocus,
       }}
     >
       {children}
