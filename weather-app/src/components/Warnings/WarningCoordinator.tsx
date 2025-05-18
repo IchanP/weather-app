@@ -14,13 +14,17 @@ const WarningCoordinator = ({
   warning,
   eventCode,
 }: WarningCoordinatorProps): React.JSX.Element => {
-  const [viewFull, setViewFull] = useState(false);
+  const [viewFull, setViewFull] = useState<boolean>(false);
   return (
     <>
       {viewFull ? (
-        <p></p>
+        <p onClick={() => setViewFull(false)}>Test</p>
       ) : (
-        <WarningPreview warning={warning} eventCode={eventCode} />
+        <WarningPreview
+          warning={warning}
+          eventCode={eventCode}
+          openView={setViewFull}
+        />
       )}
     </>
   );

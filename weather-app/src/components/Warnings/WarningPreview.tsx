@@ -2,11 +2,13 @@ import Image from "next/image";
 import { MeteorologicalEventCode, WarningArea } from "./types";
 import IconPicker from "../WarningIcon/IconPicker";
 import { useWarningContext } from "@/context/WarningContext";
-import { CSSProperties, useCallback, useEffect, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { scrollElementIntoView } from "@/utils";
 
 interface WarningPreviewProps {
   warning: WarningArea;
   eventCode: MeteorologicalEventCode;
+  openView(open: boolean): void;
 }
 
 const defaultStyle: CSSProperties = {};
@@ -22,11 +24,13 @@ const hoveredStyle: CSSProperties = {
 const WarningPreview = ({
   warning,
   eventCode,
+  openView,
 }: WarningPreviewProps): React.JSX.Element => {
   const { highlightItem, highlightWarningId, resetHiglight } =
     useWarningContext();
 
   const [style, setStyle] = useState<CSSProperties>(defaultStyle);
+  const divRef = useRef<null | HTMLDivElement>(null);
 
   const mouseOver = useCallback(() => {
     highlightItem(warning.id);
@@ -36,15 +40,23 @@ const WarningPreview = ({
     resetHiglight();
   }, [resetHiglight]);
 
+  const onClick = useCallback(() => {
+    openView(true);
+  }, [openView]);
+
   useEffect(() => {
     if (highlightWarningId === warning.id) {
       setStyle(hoveredStyle);
+      if (divRef.current) {
+        scrollElementIntoView(divRef.current);
+      }
     } else {
       setStyle(defaultStyle);
     }
   }, [highlightWarningId, warning.id]);
 
   const affectedAreas = warning.affectedAreas.map((area) => area.sv).join(", ");
+  // Retrieve the indexes of the descrpitions.
   const incident = warning.descriptions.findIndex(
     (description) => description.title.code === "INCIDENT",
   );
@@ -54,10 +66,12 @@ const WarningPreview = ({
 
   return (
     <div
-      className="text-wrap font-inter bg-[#1B1919] px-4 py-2 pb-4 cursor-pointer select-none"
+      className="text-wrap border-1 border-[#1B1919] font-inter bg-[#1B1919] px-4 py-2 pb-4 cursor-pointer select-none mr-2"
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={style}
+      ref={divRef}
+      onClick={onClick}
     >
       <div className="grid grid-cols-[90px_1fr_45px] grid-rows-2">
         <div className="row-span-2">
