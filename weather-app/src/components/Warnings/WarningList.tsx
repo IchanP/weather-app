@@ -1,5 +1,4 @@
 import WarningCoordinator from "./WarningCoordinator";
-import WarningPreview from "./WarningPreview";
 import { Warning as WarningType } from "./types";
 
 interface WarningListProps {

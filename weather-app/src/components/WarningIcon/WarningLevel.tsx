@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import { WarningLevels } from "./types";
+import { WarningLevels } from "../Warnings/types";
 
 interface WarningLevelProps {
   code: WarningLevels;
