@@ -56,6 +56,7 @@ const GeoJSONArea = React.memo(
         if (warningArea.id === highlightWarningId) {
           layerRef.current.setStyle({ ...defaultStyle, color: "red" });
           layerRef.current.bringToFront();
+          // TODO fly to location here
         } else {
           layerRef.current.setStyle(defaultStyle);
         }

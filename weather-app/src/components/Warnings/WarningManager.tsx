@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import { Warning } from "./types";
 import { WarningProvider } from "@/context/WarningContext";
 import WarningView from "./WarningView";
+import TypeSelectorWrapper from "./TypeSelectorWrapper";
+import { useState } from "react";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -25,27 +27,33 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
+  // TODO figure out how to set this properly at the start...
+  const [displayData, setDisplayData] = useState<Warning[]>([]);
+
   return (
-    <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
-      <WarningProvider>
-        <div className="h-map w-map overflow-y-scroll">
-          <WarningView warnings={warningData} />
-        </div>
-        <div>
-          {/* TODO extract to own component? */}
-          <Map data={warningData}>
-            {warningData.flatMap((event) =>
-              event.warningAreas.map((data) => (
-                <GeoJSONArea
-                  warningArea={data}
-                  key={data.id}
-                  eventCode={event.event.mhoClassification.code}
-                />
-              )),
-            )}
-          </Map>
-        </div>
-      </WarningProvider>
+    <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
+      <TypeSelectorWrapper data={warningData} setData={setDisplayData} />
+      <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
+        <WarningProvider>
+          <div className="h-map w-map overflow-y-scroll">
+            <WarningView warnings={warningData} />
+          </div>
+          <div>
+            {/* TODO extract to own component? */}
+            <Map data={warningData}>
+              {warningData.flatMap((event) =>
+                event.warningAreas.map((data) => (
+                  <GeoJSONArea
+                    warningArea={data}
+                    key={data.id}
+                    eventCode={event.event.mhoClassification.code}
+                  />
+                )),
+              )}
+            </Map>
+          </div>
+        </WarningProvider>
+      </div>
     </div>
   );
 };
