@@ -21,7 +21,7 @@ type AffectedArea = {
   en: string;
 };
 
-export type WarningLevels = "YELLOW" | "ORANGE" | "RED";
+export type WarningLevels = "YELLOW" | "ORANGE" | "RED" | "MESSAGE";
 
 /**
  * Returns true if code is type WarningLevels. Else it returns false.

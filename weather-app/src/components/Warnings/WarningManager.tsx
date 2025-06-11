@@ -1,11 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Warning } from "./types";
+import { Warning, WarningArea } from "./types";
 import { WarningProvider } from "@/context/WarningContext";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
 import { useState } from "react";
+import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -27,8 +28,11 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
-  // TODO figure out how to set this properly at the start...
-  const [displayData, setDisplayData] = useState<Warning[]>([]);
+  const { tieredWarnings } = useFilteredWarnings(warningData);
+  const [displayData, setDisplayData] =
+    useState<WarningArea[][]>(tieredWarnings);
+
+  console.log(displayData);
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">

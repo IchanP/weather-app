@@ -1,0 +1,66 @@
+import {
+  MeteorologicalEventCode,
+  Warning,
+  WarningArea,
+} from "@/components/Warnings/types";
+import { useMemo } from "react";
+
+interface FilteredWarningsReturnValue {
+  tieredWarnings: WarningArea[][];
+  fireWarnings: WarningArea[][];
+  highTempWarnings: WarningArea[][];
+  waterShortageWarnings: WarningArea[][];
+}
+
+/**
+ * Filters the passed warnings into high tempereatures, tirered warnings, water shortage and fire risks.
+ */
+export const useFilteredWarnings = (
+  warnings: Warning[],
+): FilteredWarningsReturnValue => {
+  // TODO - ideally this should be put in a global state manager as the warnings are the same globally.
+  // However this is fine for our use case currently.
+  const tieredWarnings = useMemo(
+    () =>
+      warnings.map((warning) => {
+        return warning.warningAreas.filter(
+          (area) => area.warningLevel.code !== "MESSAGE",
+        );
+      }),
+    [warnings],
+  );
+
+  const fireWarnings = useMemo(
+    () => filterOnCode(warnings, "FIRE"),
+    [warnings],
+  );
+
+  const highTempWarnings = useMemo(
+    () => filterOnCode(warnings, "HIGH_TEMPERATURES"),
+    [warnings],
+  );
+
+  const waterShortageWarnings = useMemo(
+    () => filterOnCode(warnings, "WATER_SHORTAGE"),
+    [warnings],
+  );
+
+  return {
+    tieredWarnings,
+    fireWarnings,
+    highTempWarnings,
+    waterShortageWarnings,
+  };
+};
+
+/**
+ *
+ */
+function filterOnCode(
+  warnings: Warning[],
+  code: MeteorologicalEventCode,
+): WarningArea[][] {
+  return warnings
+    .filter((warning) => warning.event.code === code)
+    .map((warning) => warning.warningAreas);
+}

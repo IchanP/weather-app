@@ -3,6 +3,7 @@ import { JSX } from "react";
 interface TypeSelectorProps {
   text: string;
   warnings?: number;
+  onClick(): void;
 }
 
 /**
@@ -14,10 +15,11 @@ interface TypeSelectorProps {
 const TypeSelector = ({
   text,
   warnings = 0,
+  onClick,
 }: TypeSelectorProps): JSX.Element => {
   return (
-    <div className="flex flex-row bg-[#1B1919] justify-between grow cursor-pointer p-2 hover:bg-gray-hover">
-      <p className="pl-2">{text}</p>
+    <div className="flex flex-row bg-[#1B1919] justify-between items-center grow cursor-pointer p-2 hover:bg-gray-hover">
+      <p className="pl-2 text-3xl">{text}</p>
       <p className="border-blue-100 text-2xl border-2 px-3 rounded-full">
         {warnings}
       </p>
