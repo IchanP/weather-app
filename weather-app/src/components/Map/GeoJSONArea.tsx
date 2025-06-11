@@ -28,6 +28,7 @@ const GeoJSONArea = React.memo(
       highlightWarning: highlightItem,
       highlightWarningId,
       resetHiglight,
+      focusWarning,
     } = useWarningContext();
 
     // Default style
@@ -76,8 +77,15 @@ const GeoJSONArea = React.memo(
       mouseout: useCallback(() => {
         resetHiglight();
       }, [resetHiglight]),
+      /**
+       * Triggers when the user clicks on the area.
+       * Tells context to focus this warning.
+       */
+      click: useCallback(() => {
+        focusWarning(warningArea.id);
+      }, [focusWarning, warningArea.id]),
     };
-
+    // https://stackoverflow.com/questions/66272555/how-to-fly-to-a-location-in-react-leaflet
     return (
       <>
         <GeoJSON

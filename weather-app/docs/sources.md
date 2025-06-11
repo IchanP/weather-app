@@ -15,3 +15,7 @@ Bushfire: <https://www.iconfinder.com/icons/5243645/burn_fire_flame_hot_icon>
 Water Shortage: <https://www.iconfinder.com/icons/6051126/water_null_water_tap_water_valve_icon>
 
 Heat: <https://www.iconfinder.com/icons/7795620/weather_warm_termometer_hot_temperature_icon>
+
+## Missing Icon
+
+Missing: 

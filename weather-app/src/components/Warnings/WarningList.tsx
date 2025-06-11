@@ -1,11 +1,11 @@
 import WarningPreview from "./WarningPreview";
-import { Warning as WarningType } from "./types";
+import { Warning } from "./types";
 
 interface WarningListProps {
   /**
    * List of warnings to be displayed.
    */
-  warnings: WarningType[];
+  warnings: Warning[];
 }
 
 /**

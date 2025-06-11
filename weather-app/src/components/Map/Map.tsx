@@ -5,29 +5,6 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import { Warning } from "../Warnings/types";
 
-// interface GeoJSONProperties {
-//   sv: string;
-//   en: string;
-// }
-
-// type GeoJSON = {
-//   type: string;
-//   properties: GeoJSONProperties | null;
-//   geometry: {
-//     type:
-//       | "Point"
-//       | "MultiPoint"
-//       | "LineString"
-//       | "MultiLineString"
-//       | "Polygon"
-//       | "MultiPolygon"
-//       | "GeometryCollection"
-//       | "Feature"
-//       | "FeatureCollection";
-//     coordinates: number[] | number[][] | number[][][];
-//   };
-// };
-
 export interface MapProps {
   data: Warning[];
   onClickCallback?(): void;
@@ -44,7 +21,10 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
       center={[60.33, 14.99]}
       zoom={5}
       scrollWheelZoom={true}
-      // style={{ height: "800px", width: "813px" }}
+      maxBounds={[
+        [73.344679, -15.303935], // Basically Greenland
+        [47.169846, 39.232198], // Slightly east of Ukraine
+      ]}
       className="h-map w-[500px]"
     >
       <TileLayer
@@ -53,7 +33,6 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
         minZoom={0}
         maxZoom={20}
       />
-      {/* Ugly double loop but good enough for now... */}
       {children}
     </MapContainer>
   );

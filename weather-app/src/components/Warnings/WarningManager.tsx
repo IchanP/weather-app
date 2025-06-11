@@ -32,6 +32,7 @@ const WarningManager = ({
           <WarningView warnings={warningData} />
         </div>
         <div>
+          {/* TODO extract to own component? */}
           <Map data={warningData}>
             {warningData.flatMap((event) =>
               event.warningAreas.map((data) => (
