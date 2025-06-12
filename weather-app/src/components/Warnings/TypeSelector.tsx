@@ -18,7 +18,10 @@ const TypeSelector = ({
   onClick,
 }: TypeSelectorProps): JSX.Element => {
   return (
-    <div className="flex flex-row bg-[#1B1919] justify-between items-center grow cursor-pointer p-2 hover:bg-gray-hover">
+    <div
+      onClick={onClick}
+      className="flex flex-row bg-[#1B1919] justify-between items-center grow cursor-pointer p-2 hover:bg-gray-hover"
+    >
       <p className="pl-2 text-3xl">{text}</p>
       <p className="border-blue-100 text-2xl border-2 px-3 rounded-full">
         {warnings}

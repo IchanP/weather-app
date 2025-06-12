@@ -7,7 +7,7 @@ import { useWarningContext } from "@/context/WarningContext";
 
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
-  eventCode: "MET" | "HYD" | "OCE";
+  eventCode: "MET" | "OCE" | "HYD";
 }
 
 const COLOR_MAP = {

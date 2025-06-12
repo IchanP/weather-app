@@ -41,7 +41,7 @@ type WarningLevel = LocalizedString & {
 type WindEvent =
   | "WIND"
   | "WIND_MOUNTAINS"
-  | "WIND_MOUNTAINS_SNOW "
+  | "WIND_MOUNTAINS_SNOW"
   | "GALE_LOW"
   | "GALE_HIGH"
   | "STORM"

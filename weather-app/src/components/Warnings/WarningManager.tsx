@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Warning, WarningArea } from "./types";
+import { Warning } from "./types";
 import { WarningProvider } from "@/context/WarningContext";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
@@ -29,10 +29,7 @@ const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
   const { tieredWarnings } = useFilteredWarnings(warningData);
-  const [displayData, setDisplayData] =
-    useState<WarningArea[][]>(tieredWarnings);
-
-  console.log(displayData);
+  const [displayData, setDisplayData] = useState<Warning[]>(tieredWarnings);
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
@@ -40,11 +37,11 @@ const WarningManager = ({
       <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
         <WarningProvider>
           <div className="h-map w-map overflow-y-scroll">
-            <WarningView warnings={warningData} />
+            <WarningView warnings={displayData} />
           </div>
           <div>
             {/* TODO extract to own component? */}
-            <Map data={warningData}>
+            <Map>
               {warningData.flatMap((event) =>
                 event.warningAreas.map((data) => (
                   <GeoJSONArea

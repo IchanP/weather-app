@@ -1,15 +1,11 @@
-import {
-  MeteorologicalEventCode,
-  Warning,
-  WarningArea,
-} from "@/components/Warnings/types";
+import { MeteorologicalEventCode, Warning } from "@/components/Warnings/types";
 import { useMemo } from "react";
 
 interface FilteredWarningsReturnValue {
-  tieredWarnings: WarningArea[][];
-  fireWarnings: WarningArea[][];
-  highTempWarnings: WarningArea[][];
-  waterShortageWarnings: WarningArea[][];
+  tieredWarnings: Warning[];
+  fireWarnings: Warning[];
+  highTempWarnings: Warning[];
+  waterShortageWarnings: Warning[];
 }
 
 /**
@@ -23,9 +19,13 @@ export const useFilteredWarnings = (
   const tieredWarnings = useMemo(
     () =>
       warnings.map((warning) => {
-        return warning.warningAreas.filter(
+        const areas = warning.warningAreas.filter(
           (area) => area.warningLevel.code !== "MESSAGE",
         );
+        return {
+          ...warning,
+          warningAreas: areas,
+        };
       }),
     [warnings],
   );
@@ -54,13 +54,19 @@ export const useFilteredWarnings = (
 };
 
 /**
- *
+ * Filters the warnings based on if it matches the provided code.
+ * @param {Warning[]} warnings - The array of Warnings to filter the areas from.
+ * @param {MeteorologicalEventCode} code - The code to match.
+ * @returns {WarningArea[]} - Returns a Warning array.
  */
 function filterOnCode(
   warnings: Warning[],
   code: MeteorologicalEventCode,
-): WarningArea[][] {
+): Warning[] {
   return warnings
     .filter((warning) => warning.event.code === code)
-    .map((warning) => warning.warningAreas);
+    .map((warning) => ({
+      ...warning,
+      warningAreas: [...warning.warningAreas],
+    }));
 }

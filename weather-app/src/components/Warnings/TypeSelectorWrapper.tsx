@@ -1,19 +1,12 @@
 import { Dispatch, JSX, SetStateAction } from "react";
-import { Warning, WarningArea } from "./types";
+import { Warning } from "./types";
 import TypeSelector from "./TypeSelector";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
 
 interface TypeSelectorProps {
   data: Warning[];
-  setData: Dispatch<SetStateAction<WarningArea[][]>>;
+  setData: Dispatch<SetStateAction<Warning[]>>;
 }
-
-const warningTypes = [
-  "Varningar",
-  "Brandrisk",
-  "Höga Temperaturer",
-  "Vattenbrist",
-];
 
 /**
  * Selects the type of warning to displays and filters the array of warnings to display only that type.
@@ -30,6 +23,7 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
+  // TODO - turn into an array of objects to loop over...
   return (
     <div className="flex flex-row gap-2 flex-wrap basis-full w-full">
       <TypeSelector
