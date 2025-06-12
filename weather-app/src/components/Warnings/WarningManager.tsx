@@ -33,16 +33,16 @@ const WarningManager = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
-      <TypeSelectorWrapper data={warningData} setData={setDisplayData} />
-      <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
-        <WarningProvider>
+      <WarningProvider>
+        <TypeSelectorWrapper data={warningData} setData={setDisplayData} />
+        <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
           <div className="h-map w-map overflow-y-scroll">
             <WarningView warnings={displayData} />
           </div>
           <div>
             {/* TODO extract to own component? */}
             <Map>
-              {warningData.flatMap((event) =>
+              {displayData.flatMap((event) =>
                 event.warningAreas.map((data) => (
                   <GeoJSONArea
                     warningArea={data}
@@ -53,8 +53,8 @@ const WarningManager = ({
               )}
             </Map>
           </div>
-        </WarningProvider>
-      </div>
+        </div>
+      </WarningProvider>
     </div>
   );
 };

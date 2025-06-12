@@ -2,6 +2,7 @@ import { Dispatch, JSX, SetStateAction } from "react";
 import { Warning } from "./types";
 import TypeSelector, { TypeSelectorProps } from "./TypeSelector";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
+import { useWarningContext } from "@/context/WarningContext";
 
 interface TypeSelectorWrapperProps {
   data: Warning[];
@@ -23,30 +24,41 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
+  const { resetFocus } = useWarningContext();
+
+  /**
+   * Sets the passed warning array as the warnings to display and resets the focused warning.
+   * @param {Warning[]} displayedWarning - The warning to display.
+   */
+  const displayWarning = (displayedWarning: Warning[]): void => {
+    resetFocus();
+    setData(displayedWarning);
+  };
+
   const selectorProps: TypeSelectorProps[] = [
     {
       text: "Varningar",
       warnings: tieredWarnings.length,
       // eslint-disable-next-line jsdoc/require-jsdoc
-      onClick: () => setData(tieredWarnings),
+      onClick: () => displayWarning(tieredWarnings),
     },
     {
       text: "Brandrisk",
       warnings: fireWarnings.length,
       // eslint-disable-next-line jsdoc/require-jsdoc
-      onClick: () => setData(fireWarnings),
+      onClick: () => displayWarning(fireWarnings),
     },
     {
       text: "Höga Temperaturer",
       warnings: highTempWarnings.length,
       // eslint-disable-next-line jsdoc/require-jsdoc
-      onClick: () => setData(highTempWarnings),
+      onClick: () => displayWarning(highTempWarnings),
     },
     {
       text: "Vattenbrist",
       warnings: waterShortageWarnings.length,
       // eslint-disable-next-line jsdoc/require-jsdoc
-      onClick: () => setData(waterShortageWarnings),
+      onClick: () => displayWarning(waterShortageWarnings),
     },
   ];
 
