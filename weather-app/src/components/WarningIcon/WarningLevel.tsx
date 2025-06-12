@@ -10,6 +10,7 @@ const LEVEL_MAP: Record<WarningLevels, string> = {
   YELLOW: "/yellow_warning.svg",
   ORANGE: "/orange_warning.svg",
   RED: "/red_warning.svg",
+  MESSAGE: "",
 };
 
 /**

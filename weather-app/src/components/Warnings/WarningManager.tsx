@@ -31,6 +31,21 @@ const WarningManager = ({
   const { tieredWarnings } = useFilteredWarnings(warningData);
   const [displayData, setDisplayData] = useState<Warning[]>(tieredWarnings);
 
+  /**
+   * Filters out all the WarningAreas except for the current ID and sets the displayData to the warning.
+   */
+  const displayOneArea = (id: number): void => {
+    setDisplayData((prev) =>
+      prev.map((warning) => {
+        const areas = warning.warningAreas.filter((area) => area.id === id);
+        return {
+          ...warning,
+          warningAreas: areas,
+        };
+      }),
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
       <WarningProvider>
@@ -40,13 +55,13 @@ const WarningManager = ({
             <WarningView warnings={displayData} />
           </div>
           <div>
-            {/* TODO extract to own component? */}
             <Map>
               {displayData.flatMap((event) =>
                 event.warningAreas.map((data) => (
                   <GeoJSONArea
                     warningArea={data}
                     key={data.id}
+                    display={displayOneArea}
                     eventCode={event.event.mhoClassification.code}
                   />
                 )),

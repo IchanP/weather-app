@@ -6,7 +6,6 @@ interface WarningProviderProps {
   children: React.JSX.Element | React.JSX.Element[];
 }
 
-// TODO add functions for handling onclick events...
 type WarningContextType = {
   highlightWarning(id: number): void; // On mouse enter
   resetHiglight(): void; // On mouse leave

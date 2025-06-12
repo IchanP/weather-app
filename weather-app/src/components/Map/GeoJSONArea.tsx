@@ -8,6 +8,7 @@ import { useWarningContext } from "@/context/WarningContext";
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
   eventCode: "MET" | "OCE" | "HYD";
+  display: (id: number) => void;
 }
 
 const COLOR_MAP = {
@@ -23,12 +24,14 @@ const GeoJSONArea = React.memo(
   function GeoJSONArea({
     warningArea,
     eventCode,
+    display,
   }: GeoJSONAreaProps): React.JSX.Element {
     const {
       highlightWarning: highlightItem,
       highlightWarningId,
       resetHiglight,
       focusWarning,
+      focusedId,
     } = useWarningContext();
 
     // Default style
@@ -53,15 +56,21 @@ const GeoJSONArea = React.memo(
 
     useEffect(() => {
       if (layerRef.current) {
-        if (warningArea.id === highlightWarningId) {
+        if (warningArea.id === focusedId) {
+          // TODO fix this style
+          layerRef.current.setStyle({ ...defaultStyle, color: "purple" });
+          layerRef.current.bringToFront();
+          display(warningArea.id);
+          // TODO - Fly to location here
+        } else if (warningArea.id === highlightWarningId) {
           layerRef.current.setStyle({ ...defaultStyle, color: "red" });
           layerRef.current.bringToFront();
-          // TODO fly to location here
         } else {
           layerRef.current.setStyle(defaultStyle);
         }
       }
-    }, [highlightWarningId, warningArea.id, defaultStyle]);
+      // TODO - return function which resets the display?
+    }, [highlightWarningId, focusedId, warningArea.id, defaultStyle, display]);
 
     const eventHandlers = {
       /**
