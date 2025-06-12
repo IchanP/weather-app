@@ -1,9 +1,9 @@
 import { Dispatch, JSX, SetStateAction } from "react";
 import { Warning } from "./types";
-import TypeSelector from "./TypeSelector";
+import TypeSelector, { TypeSelectorProps } from "./TypeSelector";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
 
-interface TypeSelectorProps {
+interface TypeSelectorWrapperProps {
   data: Warning[];
   setData: Dispatch<SetStateAction<Warning[]>>;
 }
@@ -15,7 +15,7 @@ interface TypeSelectorProps {
 const TypeSelectorWrapper = ({
   data,
   setData,
-}: TypeSelectorProps): JSX.Element => {
+}: TypeSelectorWrapperProps): JSX.Element => {
   const {
     tieredWarnings,
     fireWarnings,
@@ -23,29 +23,43 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
-  // TODO - turn into an array of objects to loop over...
+  const selectorProps: TypeSelectorProps[] = [
+    {
+      text: "Varningar",
+      warnings: tieredWarnings.length,
+      // eslint-disable-next-line jsdoc/require-jsdoc
+      onClick: () => setData(tieredWarnings),
+    },
+    {
+      text: "Brandrisk",
+      warnings: fireWarnings.length,
+      // eslint-disable-next-line jsdoc/require-jsdoc
+      onClick: () => setData(fireWarnings),
+    },
+    {
+      text: "Höga Temperaturer",
+      warnings: highTempWarnings.length,
+      // eslint-disable-next-line jsdoc/require-jsdoc
+      onClick: () => setData(highTempWarnings),
+    },
+    {
+      text: "Vattenbrist",
+      warnings: waterShortageWarnings.length,
+      // eslint-disable-next-line jsdoc/require-jsdoc
+      onClick: () => setData(waterShortageWarnings),
+    },
+  ];
+
   return (
     <div className="flex flex-row gap-2 flex-wrap basis-full w-full">
-      <TypeSelector
-        text={"Varningar"}
-        warnings={tieredWarnings.length}
-        onClick={() => setData(tieredWarnings)}
-      />
-      <TypeSelector
-        text={"Brandrisk"}
-        warnings={fireWarnings.length}
-        onClick={() => setData(fireWarnings)}
-      />
-      <TypeSelector
-        text={"Höga Temperaturer"}
-        warnings={highTempWarnings.length}
-        onClick={() => setData(highTempWarnings)}
-      />
-      <TypeSelector
-        text={"Vattenbrist"}
-        warnings={waterShortageWarnings.length}
-        onClick={() => setData(waterShortageWarnings)}
-      />
+      {selectorProps.map((props, index) => (
+        <TypeSelector
+          key={index}
+          text={props.text}
+          warnings={props.warnings}
+          onClick={props.onClick}
+        />
+      ))}
     </div>
   );
 };
