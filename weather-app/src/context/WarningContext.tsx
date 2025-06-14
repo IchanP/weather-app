@@ -13,6 +13,8 @@ type WarningContextType = {
   focusWarning(id: number): void;
   focusedId: number | null;
   resetFocus(): void;
+  setMapFocus(coordinates?: [number, number]): void;
+  coordinates: [number, number] | null;
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -28,6 +30,10 @@ export const WarningProvider = ({
   const [highlightWarningId, setHighlightWarningId] = useState<number | null>(
     null,
   );
+
+  const [coordinates, setCoordinates] = useState<
+    [number, number] | undefined
+  >();
 
   const [focusedId, setFocusedId] = useState<number | null>(null);
 
@@ -60,6 +66,15 @@ export const WarningProvider = ({
     setFocusedId(null);
   };
 
+  /**
+   * Tells the map to center on the specific coordinates provided.
+   *
+   * @param {[number, number]} coordinates - The latitude and longitude to center the map on.
+   */
+  const setMapFocus = (coordinates?: [number, number]): void => {
+    setCoordinates(coordinates);
+  };
+
   return (
     <WarningContext.Provider
       value={{
@@ -69,6 +84,8 @@ export const WarningProvider = ({
         focusWarning,
         focusedId,
         resetFocus,
+        setMapFocus,
+        coordinates,
       }}
     >
       {children}

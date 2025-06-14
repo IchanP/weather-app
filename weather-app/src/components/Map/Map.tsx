@@ -1,8 +1,11 @@
 "use client";
 import { MapContainer, TileLayer } from "react-leaflet";
+import { Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
+import { useEffect, useMemo, useRef } from "react";
+import { useWarningContext } from "@/context/WarningContext";
 
 export interface MapProps {
   children: React.JSX.Element[];
@@ -10,14 +13,41 @@ export interface MapProps {
 
 /**
  * Renders a leaflet map with polygons with the provided GeoJSON data.
+ * Is bound to northern europe and centered on Sweden.
  */
 const Map = ({ children }: MapProps): React.JSX.Element => {
+  const defaultZoom = 5;
+  const defaultCenter: [number, number] = useMemo(() => [60.33, 14.99], []);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const { coordinates } = useWarningContext();
+
+  useEffect(() => {
+    /**
+     * Flies to the specified coordinates or to the default center if none are provided.
+     */
+    const flyTo = (
+      coords: [number, number] = defaultCenter,
+      zoom: number = defaultZoom,
+    ): void => {
+      if (mapRef) {
+        mapRef.current?.flyTo(coords, zoom);
+      }
+    };
+
+    if (coordinates) {
+      flyTo(coordinates, 2);
+    } else {
+      flyTo();
+    }
+  }, [coordinates, defaultCenter]);
+
   // https://docs.mapbox.com/api/maps/styles/
   return (
     <MapContainer
-      center={[60.33, 14.99]}
-      zoom={5}
+      center={defaultCenter}
+      zoom={defaultZoom}
       scrollWheelZoom={true}
+      ref={mapRef}
       maxBounds={[
         [73.344679, -15.303935], // Basically Greenland
         [47.169846, 39.232198], // Slightly east of Ukraine

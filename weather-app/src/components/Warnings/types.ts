@@ -9,9 +9,23 @@ type Description = {
   text: LocalizedString;
 };
 
-type Area = {
-  type: string;
-  geometry: GeoJSON.Geometry;
+type LatLong = [number, number];
+
+export type Area = {
+  type:
+    | "Point"
+    | "LineString"
+    | "MultiPoint"
+    | "Polygon"
+    | "MultiLineString"
+    | "MultiPolygon";
+  geometry: GeoJSON.Geometry & {
+    coordinates:
+      | Array<LatLong>
+      | LatLong
+      | Array<Array<LatLong>>
+      | Array<Array<Array<LatLong>>>;
+  };
   properties: unknown;
 };
 

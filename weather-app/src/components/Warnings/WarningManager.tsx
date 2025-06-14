@@ -1,12 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Warning } from "./types";
-import { WarningProvider } from "@/context/WarningContext";
+import { Area, Warning } from "./types";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
+import { useWarningContext } from "@/context/WarningContext";
+import { calculateCenter } from "@/utils/areaCalculations";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -30,46 +31,63 @@ const WarningManager = ({
 }: WarningManagerProps): React.JSX.Element => {
   const { tieredWarnings } = useFilteredWarnings(warningData);
   const [displayData, setDisplayData] = useState<Warning[]>(tieredWarnings);
+  const { setMapFocus } = useWarningContext();
+
+  /**
+   * Attempts to calculate the center point to fly the map to.
+   * @param {Area} area - The area to perform the calculation on.
+   */
+  const tryFlyTo = (area: Area): void => {
+    try {
+      const center = calculateCenter(area);
+      setMapFocus();
+    } catch (e: unknown) {
+      // TODO implement
+      console.error(e.message);
+    }
+  };
 
   /**
    * Filters out all the WarningAreas except for the current ID and sets the displayData to the warning.
+   * @param {number} id - The ID of the WarningArea to display.
    */
   const displayOneArea = (id: number): void => {
-    setDisplayData((prev) =>
-      prev.map((warning) => {
-        const areas = warning.warningAreas.filter((area) => area.id === id);
-        return {
+    const newData = displayData.reduce((acc: Warning[], warning) => {
+      const areas = warning.warningAreas.filter((area) => area.id === id);
+      if (areas.length > 0) {
+        acc.push({
           ...warning,
           warningAreas: areas,
-        };
-      }),
-    );
+        });
+      }
+      return acc;
+    }, []);
+    setDisplayData(newData);
+    tryFlyTo(newData[0].warningAreas[0].area);
   };
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
-      <WarningProvider>
-        <TypeSelectorWrapper data={warningData} setData={setDisplayData} />
-        <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
-          <div className="h-map w-map overflow-y-scroll">
-            <WarningView warnings={displayData} />
-          </div>
-          <div>
-            <Map>
-              {displayData.flatMap((event) =>
-                event.warningAreas.map((data) => (
-                  <GeoJSONArea
-                    warningArea={data}
-                    key={data.id}
-                    display={displayOneArea}
-                    eventCode={event.event.mhoClassification.code}
-                  />
-                )),
-              )}
-            </Map>
-          </div>
+      <TypeSelectorWrapper data={warningData} setData={setDisplayData} />
+      <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
+        <div className="h-map w-map overflow-y-scroll">
+          <WarningView warnings={displayData} />
         </div>
-      </WarningProvider>
+        <div>
+          <Map>
+            {displayData.flatMap((event) =>
+              event.warningAreas.map((data) => (
+                <GeoJSONArea
+                  warningArea={data}
+                  key={data.id}
+                  display={displayOneArea}
+                  eventCode={event.event.mhoClassification.code}
+                />
+              )),
+            )}
+          </Map>
+        </div>
+      </div>
     </div>
   );
 };
