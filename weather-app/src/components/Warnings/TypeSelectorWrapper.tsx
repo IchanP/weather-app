@@ -24,7 +24,7 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
-  const { resetFocus } = useWarningContext();
+  const { resetFocus, setMapFocus } = useWarningContext();
 
   /**
    * Sets the passed warning array as the warnings to display and resets the focused warning.
@@ -33,6 +33,7 @@ const TypeSelectorWrapper = ({
   const displayWarning = (displayedWarning: Warning[]): void => {
     resetFocus();
     setData(displayedWarning);
+    setMapFocus();
   };
 
   const selectorProps: TypeSelectorProps[] = [

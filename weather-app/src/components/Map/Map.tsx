@@ -30,8 +30,8 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
       coords: LatLng | LatLong = defaultCenter,
       zoom: number = defaultZoom,
     ): void => {
-      if (mapRef) {
-        mapRef.current?.flyTo(coords, zoom);
+      if (mapRef.current) {
+        mapRef.current.flyTo(coords, zoom);
       }
     };
 
