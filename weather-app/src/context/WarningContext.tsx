@@ -1,4 +1,5 @@
 "use client";
+import { LatLng } from "leaflet";
 import React, { useState } from "react";
 import { createContext, useContext } from "react";
 
@@ -13,8 +14,8 @@ type WarningContextType = {
   focusWarning(id: number): void;
   focusedId: number | null;
   resetFocus(): void;
-  setMapFocus(coordinates?: [number, number]): void;
-  coordinates: [number, number] | null;
+  setMapFocus(coordinates?: LatLng): void;
+  coordinates: LatLng | undefined;
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -31,9 +32,7 @@ export const WarningProvider = ({
     null,
   );
 
-  const [coordinates, setCoordinates] = useState<
-    [number, number] | undefined
-  >();
+  const [coordinates, setCoordinates] = useState<LatLng | undefined>();
 
   const [focusedId, setFocusedId] = useState<number | null>(null);
 
@@ -69,9 +68,9 @@ export const WarningProvider = ({
   /**
    * Tells the map to center on the specific coordinates provided.
    *
-   * @param {[number, number]} coordinates - The latitude and longitude to center the map on.
+   * @param {LatLng} coordinates - The latitude and longitude to center the map on.
    */
-  const setMapFocus = (coordinates?: [number, number]): void => {
+  const setMapFocus = (coordinates?: LatLng): void => {
     setCoordinates(coordinates);
   };
 

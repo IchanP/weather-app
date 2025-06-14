@@ -1,6 +1,6 @@
 "use client";
 import { GeoJSON } from "react-leaflet";
-import { GeoJSON as LeafletGeoJSON } from "leaflet";
+import { LatLng, GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWarningContext } from "@/context/WarningContext";
@@ -8,7 +8,7 @@ import { useWarningContext } from "@/context/WarningContext";
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
   eventCode: "MET" | "OCE" | "HYD";
-  display: (id: number) => void;
+  display: (id: number, center: LatLng) => void;
 }
 
 const COLOR_MAP = {
@@ -60,8 +60,9 @@ const GeoJSONArea = React.memo(
           // TODO fix this style
           layerRef.current.setStyle({ ...defaultStyle, color: "purple" });
           layerRef.current.bringToFront();
-          display(warningArea.id);
-          // TODO - Fly to location here
+          // Grab the center to fly to it.
+          const center = layerRef.current.getBounds().getCenter();
+          display(warningArea.id, center);
         } else if (warningArea.id === highlightWarningId) {
           layerRef.current.setStyle({ ...defaultStyle, color: "red" });
           layerRef.current.bringToFront();

@@ -1,11 +1,12 @@
 "use client";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { Map as LeafletMap } from "leaflet";
+import { LatLng, Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 import { useEffect, useMemo, useRef } from "react";
 import { useWarningContext } from "@/context/WarningContext";
+import { LatLong } from "../Warnings/types";
 
 export interface MapProps {
   children: React.JSX.Element[];
@@ -17,7 +18,7 @@ export interface MapProps {
  */
 const Map = ({ children }: MapProps): React.JSX.Element => {
   const defaultZoom = 5;
-  const defaultCenter: [number, number] = useMemo(() => [60.33, 14.99], []);
+  const defaultCenter: LatLong = useMemo(() => [60.33, 14.99], []);
   const mapRef = useRef<LeafletMap | null>(null);
   const { coordinates } = useWarningContext();
 
@@ -26,7 +27,7 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
      * Flies to the specified coordinates or to the default center if none are provided.
      */
     const flyTo = (
-      coords: [number, number] = defaultCenter,
+      coords: LatLng | LatLong = defaultCenter,
       zoom: number = defaultZoom,
     ): void => {
       if (mapRef) {
@@ -35,7 +36,7 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
     };
 
     if (coordinates) {
-      flyTo(coordinates, 2);
+      flyTo(coordinates, 8);
     } else {
       flyTo();
     }

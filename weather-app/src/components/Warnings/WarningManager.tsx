@@ -1,13 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Area, Warning } from "./types";
+import { Warning } from "./types";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
 import { useWarningContext } from "@/context/WarningContext";
-import { calculateCenter } from "@/utils/areaCalculations";
+import { LatLng } from "leaflet";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -34,24 +34,10 @@ const WarningManager = ({
   const { setMapFocus } = useWarningContext();
 
   /**
-   * Attempts to calculate the center point to fly the map to.
-   * @param {Area} area - The area to perform the calculation on.
-   */
-  const tryFlyTo = (area: Area): void => {
-    try {
-      const center = calculateCenter(area);
-      setMapFocus();
-    } catch (e: unknown) {
-      // TODO implement
-      console.error(e.message);
-    }
-  };
-
-  /**
    * Filters out all the WarningAreas except for the current ID and sets the displayData to the warning.
    * @param {number} id - The ID of the WarningArea to display.
    */
-  const displayOneArea = (id: number): void => {
+  const displayOneArea = (id: number, center: LatLng): void => {
     const newData = displayData.reduce((acc: Warning[], warning) => {
       const areas = warning.warningAreas.filter((area) => area.id === id);
       if (areas.length > 0) {
@@ -63,7 +49,7 @@ const WarningManager = ({
       return acc;
     }, []);
     setDisplayData(newData);
-    tryFlyTo(newData[0].warningAreas[0].area);
+    setMapFocus(center);
   };
 
   return (
