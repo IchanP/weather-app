@@ -1,6 +1,7 @@
 "use client";
+import { Warning } from "@/components/Warnings/types";
 import { LatLng } from "leaflet";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { createContext, useContext } from "react";
 
 interface WarningProviderProps {
@@ -11,11 +12,13 @@ type WarningContextType = {
   highlightWarning(id: number): void; // On mouse enter
   resetHiglight(): void; // On mouse leave
   highlightWarningId: number | null;
-  focusWarning(id: number): void;
+  focusWarning(id: number, center: LatLng): void;
   focusedId: number | null;
   resetFocus(): void;
-  setMapFocus(coordinates?: LatLng): void;
   coordinates: LatLng | undefined;
+  setDisplayData(data: Warning[]): void;
+  displayData: Warning[];
+  // filteredWarnings: Warning[];
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -32,9 +35,30 @@ export const WarningProvider = ({
     null,
   );
 
+  const [displayData, setDisplayData] = useState<Warning[]>([]);
+
   const [coordinates, setCoordinates] = useState<LatLng | undefined>();
 
+  /**
+   * FocusedId is a WarningArea ID.
+   */
   const [focusedId, setFocusedId] = useState<number | null>(null);
+
+  const filteredWarnings = useMemo(() => {
+    if (!focusedId) return displayData;
+    return displayData.reduce((acc: Warning[], warning) => {
+      const areas = warning.warningAreas.filter(
+        (area) => area.id === focusedId,
+      );
+      if (areas.length > 0) {
+        acc.push({
+          ...warning,
+          warningAreas: areas,
+        });
+      }
+      return acc;
+    }, []);
+  }, [focusedId, displayData]);
 
   /**
    * Sets the current highlighted item to the passed ID.
@@ -52,10 +76,12 @@ export const WarningProvider = ({
   };
 
   /**
-   * Sets the c
+   * Sets the passedc id as the focused ID.
+   * @param {number} id - The ID of the WarningArea to receive the focus.
    */
-  const focusWarning = (id: number): void => {
+  const focusWarning = (id: number, coordinates: LatLng): void => {
     setFocusedId(id);
+    setMapFocus(coordinates);
   };
 
   /**
@@ -63,6 +89,7 @@ export const WarningProvider = ({
    */
   const resetFocus = (): void => {
     setFocusedId(null);
+    setMapFocus();
   };
 
   /**
@@ -83,8 +110,9 @@ export const WarningProvider = ({
         focusWarning,
         focusedId,
         resetFocus,
-        setMapFocus,
         coordinates,
+        displayData,
+        setDisplayData,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 "use client";
 import { GeoJSON } from "react-leaflet";
-import { LatLng, GeoJSON as LeafletGeoJSON } from "leaflet";
+import { GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWarningContext } from "@/context/WarningContext";
@@ -8,7 +8,6 @@ import { useWarningContext } from "@/context/WarningContext";
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
   eventCode: "MET" | "OCE" | "HYD";
-  display: (id: number, center: LatLng) => void;
 }
 
 const COLOR_MAP = {
@@ -24,7 +23,6 @@ const GeoJSONArea = React.memo(
   function GeoJSONArea({
     warningArea,
     eventCode,
-    display,
   }: GeoJSONAreaProps): React.JSX.Element {
     const {
       highlightWarning: highlightItem,
@@ -60,9 +58,6 @@ const GeoJSONArea = React.memo(
           // TODO fix this style
           layerRef.current.setStyle({ ...defaultStyle, color: "purple" });
           layerRef.current.bringToFront();
-          // Grab the center to fly to it.
-          const center = layerRef.current.getBounds().getCenter();
-          display(warningArea.id, center);
         } else if (warningArea.id === highlightWarningId) {
           layerRef.current.setStyle({ ...defaultStyle, color: "red" });
           layerRef.current.bringToFront();
@@ -71,7 +66,7 @@ const GeoJSONArea = React.memo(
         }
       }
       // TODO - return function which resets the display?
-    }, [highlightWarningId, focusedId, warningArea.id, defaultStyle, display]);
+    }, [highlightWarningId, focusedId, warningArea.id, defaultStyle]);
 
     const eventHandlers = {
       /**
@@ -93,9 +88,13 @@ const GeoJSONArea = React.memo(
        * Tells context to focus this warning.
        */
       click: useCallback(() => {
-        focusWarning(warningArea.id);
+        if (layerRef.current) {
+          const center = layerRef.current.getBounds().getCenter();
+          focusWarning(warningArea.id, center);
+        }
       }, [focusWarning, warningArea.id]),
     };
+
     // https://stackoverflow.com/questions/66272555/how-to-fly-to-a-location-in-react-leaflet
     return (
       <>

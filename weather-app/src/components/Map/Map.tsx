@@ -47,6 +47,7 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
     <MapContainer
       center={defaultCenter}
       zoom={defaultZoom}
+      minZoom={defaultZoom}
       scrollWheelZoom={true}
       ref={mapRef}
       maxBounds={[

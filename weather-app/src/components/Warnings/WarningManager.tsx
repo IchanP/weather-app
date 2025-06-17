@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Warning } from "./types";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
 import { useWarningContext } from "@/context/WarningContext";
 import { LatLng } from "leaflet";
@@ -24,33 +24,36 @@ const GeoJSONArea = dynamic(() => import("@/components/Map/GeoJSONArea"), {
 
 /**
  * Manager component for rendering weather warnings and GeoJSON areas
- * Responsiblef or rendering the components related to weather warnings.
+ * Responsible for rendering the components related to weather warnings.
  */
 const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
   const { tieredWarnings } = useFilteredWarnings(warningData);
-  const [displayData, setDisplayData] = useState<Warning[]>(tieredWarnings);
-  const { setMapFocus } = useWarningContext();
+  const { setDisplayData, displayData } = useWarningContext();
+
+  useEffect(() => {
+    setDisplayData(tieredWarnings);
+  }, [setDisplayData, tieredWarnings]);
 
   /**
    * Filters out all the WarningAreas except for the current ID and sets the displayData to the warning.
    * @param {number} id - The ID of the WarningArea to display.
    */
-  const displayOneArea = (id: number, center: LatLng): void => {
-    const newData = displayData.reduce((acc: Warning[], warning) => {
-      const areas = warning.warningAreas.filter((area) => area.id === id);
-      if (areas.length > 0) {
-        acc.push({
-          ...warning,
-          warningAreas: areas,
-        });
-      }
-      return acc;
-    }, []);
-    setDisplayData(newData);
-    setMapFocus(center);
-  };
+  // const displayOneArea = (id: number, center: LatLng): void => {
+  //   const newData = displayData.reduce((acc: Warning[], warning) => {
+  //     const areas = warning.warningAreas.filter((area) => area.id === id);
+  //     if (areas.length > 0) {
+  //       acc.push({
+  //         ...warning,
+  //         warningAreas: areas,
+  //       });
+  //     }
+  //     return acc;
+  //   }, []);
+  //   setDisplayData(newData);
+  //   setMapFocus(center);
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
@@ -66,7 +69,6 @@ const WarningManager = ({
                 <GeoJSONArea
                   warningArea={data}
                   key={data.id}
-                  display={displayOneArea}
                   eventCode={event.event.mhoClassification.code}
                 />
               )),
