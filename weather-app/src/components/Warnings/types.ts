@@ -139,7 +139,7 @@ type WarningAreaDescriptions = {
 export type WarningArea = {
   id: number;
   approximateStart: string;
-  approximateEnd: string | null;
+  approximateEnd?: string;
   published: string;
   areaName: LocalizedString;
   warningLevel: WarningLevel;

@@ -8,7 +8,17 @@ import WarningFull from "./WarningFull";
 const WarningView = (): React.JSX.Element => {
   const { focusedId } = useWarningContext();
 
-  return <>{focusedId ? <WarningFull /> : <WarningList />}</>;
+  return (
+    <>
+      {focusedId ? (
+        <WarningFull />
+      ) : (
+        <div className="h-map overflow-y-scroll">
+          <WarningList />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default WarningView;

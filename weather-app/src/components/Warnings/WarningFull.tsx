@@ -1,14 +1,13 @@
 import React from "react";
 import Button from "../UI/Button";
 import { useWarningContext } from "@/context/WarningContext";
-import { MoveLeft } from "lucide-react";
 import WarningHeading from "./WarningHeading";
 import IncidentText from "./IncidentText";
 import CenteredHeading from "../UI/CenteredHeading";
-import { MapPin } from "lucide-react";
+import { MoveLeft, MapPin, Clock, MessageSquareMore } from "lucide-react";
 import { findDescriptionIndex } from "@/utils/warningUtils";
 import CenteredIconHeader from "../UI/CenteredIconHeader";
-import { MessageSquareMore } from "lucide-react";
+
 /**
  * Renders information about a WarningArea.
  */
@@ -33,8 +32,29 @@ const WarningFull = (): React.JSX.Element => {
   }
 
   let comments: string | undefined;
-  if (commentIndex) {
+  if (commentIndex >= 0) {
     comments = warningArea.descriptions[commentIndex].text.sv;
+  }
+
+  const startTime = new Date(warningArea.approximateStart);
+  const startDate = startTime.toLocaleString("sv-SE", {
+    day: "2-digit",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  let endDate = " och tills vidare.";
+  if (warningArea.approximateEnd) {
+    const endTime = new Date(warningArea.approximateEnd);
+    endDate =
+      " - " +
+      endTime.toLocaleString("sv-SE", {
+        day: "2-digit",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
   }
 
   return (
@@ -78,7 +98,12 @@ const WarningFull = (): React.JSX.Element => {
           <p>{comments}</p>
         </div>
       )}
-      {/* TODO - add when */}
+      <div>
+        <CenteredIconHeader text="Tid">
+          <Clock />
+        </CenteredIconHeader>
+        <p>Från {startDate + endDate}</p>
+      </div>
     </div>
   );
 };

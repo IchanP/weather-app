@@ -13,7 +13,7 @@ const CenteredIconHeader = ({
   children,
 }: CenteredHeadingProps): React.JSX.Element => {
   return (
-    <div className="flex flex-row gap-4 justify-center">
+    <div className="flex flex-row gap-1 justify-center items-center">
       {children}
       <CenteredHeading text={text} />
     </div>
