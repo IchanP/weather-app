@@ -1,4 +1,4 @@
-import { Dispatch, JSX, SetStateAction } from "react";
+import { JSX } from "react";
 import { Warning } from "./types";
 import TypeSelector, { TypeSelectorProps } from "./TypeSelector";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
@@ -6,7 +6,6 @@ import { useWarningContext } from "@/context/WarningContext";
 
 interface TypeSelectorWrapperProps {
   data: Warning[];
-  setData: Dispatch<SetStateAction<Warning[]>>;
 }
 
 /**
@@ -15,7 +14,6 @@ interface TypeSelectorWrapperProps {
  */
 const TypeSelectorWrapper = ({
   data,
-  setData,
 }: TypeSelectorWrapperProps): JSX.Element => {
   const {
     tieredWarnings,
@@ -24,7 +22,7 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
-  const { resetFocus } = useWarningContext();
+  const { resetFocus, setDisplayData } = useWarningContext();
 
   /**
    * Sets the passed warning array as the warnings to display and resets the focused warning.
@@ -32,7 +30,7 @@ const TypeSelectorWrapper = ({
    */
   const displayWarning = (displayedWarning: Warning[]): void => {
     resetFocus();
-    setData(displayedWarning);
+    setDisplayData(displayedWarning);
   };
 
   const selectorProps: TypeSelectorProps[] = [

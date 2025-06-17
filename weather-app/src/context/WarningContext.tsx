@@ -1,7 +1,7 @@
 "use client";
 import { Warning } from "@/components/Warnings/types";
 import { LatLng } from "leaflet";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { createContext, useContext } from "react";
 
 interface WarningProviderProps {
@@ -12,13 +12,13 @@ type WarningContextType = {
   highlightWarning(id: number): void; // On mouse enter
   resetHiglight(): void; // On mouse leave
   highlightWarningId: number | null;
-  focusWarning(id: number, center: LatLng): void;
+  focusWarning(id: number): void;
   focusedId: number | null;
   resetFocus(): void;
   coordinates: LatLng | undefined;
   setDisplayData(data: Warning[]): void;
   displayData: Warning[];
-  // filteredWarnings: Warning[];
+  setMapFocus(center: LatLng): void;
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -44,62 +44,69 @@ export const WarningProvider = ({
    */
   const [focusedId, setFocusedId] = useState<number | null>(null);
 
-  const filteredWarnings = useMemo(() => {
-    if (!focusedId) return displayData;
-    return displayData.reduce((acc: Warning[], warning) => {
-      const areas = warning.warningAreas.filter(
-        (area) => area.id === focusedId,
-      );
-      if (areas.length > 0) {
-        acc.push({
-          ...warning,
-          warningAreas: areas,
-        });
-      }
-      return acc;
-    }, []);
-  }, [focusedId, displayData]);
+  /**
+   * Filters the warnings matching the ID.
+   */
+  const filterWarnings = useCallback(
+    (id: number): void => {
+      const data = displayData.reduce((acc: Warning[], warning) => {
+        const areas = warning.warningAreas.filter((area) => area.id === id);
+        if (areas.length > 0) {
+          acc.push({
+            ...warning,
+            warningAreas: areas,
+          });
+        }
+        return acc;
+      }, []);
+      setDisplayData(data);
+    },
+    [displayData],
+  );
 
   /**
    * Sets the current highlighted item to the passed ID.
    * @param {number} id - The id of the items to be highlighted.
    */
-  const highlightWarning = (id: number): void => {
+  const highlightWarning = useCallback((id: number): void => {
     setHighlightWarningId(id);
-  };
+  }, []);
 
   /**
    * Sets the id of the currently highlighted item to null.
    */
-  const resetHiglight = (): void => {
+  const resetHiglight = useCallback((): void => {
     setHighlightWarningId(null);
-  };
+  }, []);
 
   /**
-   * Sets the passedc id as the focused ID.
+   * Sets the passed id as the focused ID.
    * @param {number} id - The ID of the WarningArea to receive the focus.
    */
-  const focusWarning = (id: number, coordinates: LatLng): void => {
-    setFocusedId(id);
-    setMapFocus(coordinates);
-  };
-
-  /**
-   * Sets the focusedId to null.
-   */
-  const resetFocus = (): void => {
-    setFocusedId(null);
-    setMapFocus();
-  };
+  const focusWarning = useCallback(
+    (id: number): void => {
+      setFocusedId(id);
+      filterWarnings(id);
+    },
+    [filterWarnings],
+  );
 
   /**
    * Tells the map to center on the specific coordinates provided.
    *
    * @param {LatLng} coordinates - The latitude and longitude to center the map on.
    */
-  const setMapFocus = (coordinates?: LatLng): void => {
+  const setMapFocus = useCallback((coordinates?: LatLng): void => {
     setCoordinates(coordinates);
-  };
+  }, []);
+
+  /**
+   * Sets the focusedId to null.
+   */
+  const resetFocus = useCallback((): void => {
+    setFocusedId(null);
+    setMapFocus();
+  }, [setMapFocus]);
 
   return (
     <WarningContext.Provider
@@ -110,6 +117,7 @@ export const WarningProvider = ({
         focusWarning,
         focusedId,
         resetFocus,
+        setMapFocus,
         coordinates,
         displayData,
         setDisplayData,

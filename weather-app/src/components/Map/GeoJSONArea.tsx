@@ -30,6 +30,7 @@ const GeoJSONArea = React.memo(
       resetHiglight,
       focusWarning,
       focusedId,
+      setMapFocus,
     } = useWarningContext();
 
     // Default style
@@ -52,12 +53,14 @@ const GeoJSONArea = React.memo(
       layerRef.current = layer;
     };
 
+    // Handle styling
     useEffect(() => {
       if (layerRef.current) {
         if (warningArea.id === focusedId) {
-          // TODO fix this style
           layerRef.current.setStyle({ ...defaultStyle, color: "purple" });
           layerRef.current.bringToFront();
+          const center = layerRef.current.getBounds().getCenter();
+          setMapFocus(center);
         } else if (warningArea.id === highlightWarningId) {
           layerRef.current.setStyle({ ...defaultStyle, color: "red" });
           layerRef.current.bringToFront();
@@ -65,8 +68,13 @@ const GeoJSONArea = React.memo(
           layerRef.current.setStyle(defaultStyle);
         }
       }
-      // TODO - return function which resets the display?
-    }, [highlightWarningId, focusedId, warningArea.id, defaultStyle]);
+    }, [
+      highlightWarningId,
+      focusedId,
+      warningArea.id,
+      defaultStyle,
+      setMapFocus,
+    ]);
 
     const eventHandlers = {
       /**
@@ -89,8 +97,7 @@ const GeoJSONArea = React.memo(
        */
       click: useCallback(() => {
         if (layerRef.current) {
-          const center = layerRef.current.getBounds().getCenter();
-          focusWarning(warningArea.id, center);
+          focusWarning(warningArea.id);
         }
       }, [focusWarning, warningArea.id]),
     };

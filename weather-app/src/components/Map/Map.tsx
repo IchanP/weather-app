@@ -1,6 +1,6 @@
 "use client";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { LatLng, Map as LeafletMap } from "leaflet";
+import { LatLng, LatLngExpression, Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
@@ -31,7 +31,9 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
       zoom: number = defaultZoom,
     ): void => {
       if (mapRef.current) {
-        mapRef.current.flyTo(coords, zoom);
+        mapRef.current.flyTo(coords, zoom, {
+          duration: 0.25,
+        });
       }
     };
 
