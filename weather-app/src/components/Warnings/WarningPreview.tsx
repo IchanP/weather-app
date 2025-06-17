@@ -75,11 +75,16 @@ const WarningPreview = ({
       ref={divRef}
       onClick={onClick}
     >
-      <div className="grid grid-cols-[90px_1fr_45px] grid-rows-2">
-        <div className="row-span-2">
-          <IconPicker warning={warning} eventCode={eventCode} />
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-row gap-5">
+          <div>
+            <IconPicker warning={warning} eventCode={eventCode} />
+          </div>
+          <div>
+            <h2 className="font-bold">{warning.eventDescription.sv}</h2>
+            <h3>{affectedAreas}</h3>
+          </div>
         </div>
-        <h2 className="font-bold">{warning.eventDescription.sv}</h2>
         <div className="flex flex-row justify-end">
           <Image
             src="/down.svg"
@@ -88,7 +93,6 @@ const WarningPreview = ({
             width={40}
           />
         </div>
-        <h3>{affectedAreas}</h3>
       </div>
       <div className="mt-2">
         <p className="line-clamp-2">
