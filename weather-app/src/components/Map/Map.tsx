@@ -1,6 +1,6 @@
 "use client";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { LatLng, LatLngExpression, Map as LeafletMap } from "leaflet";
+import { LatLng, Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";

@@ -90,7 +90,7 @@ const WarningPreview = ({
         </div>
         <h3>{affectedAreas}</h3>
       </div>
-      <div>
+      <div className="mt-2">
         <p className="line-clamp-2">
           {warning.descriptions[incident]
             ? warning.descriptions[incident].text.sv

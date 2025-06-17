@@ -19,6 +19,7 @@ type WarningContextType = {
   setDisplayData(data: Warning[]): void;
   displayData: Warning[];
   setMapFocus(center: LatLng): void;
+  setWarningGroup(data: Warning[]): void;
 };
 
 const WarningContext = createContext<WarningContextType | null>(null);
@@ -36,6 +37,12 @@ export const WarningProvider = ({
   );
 
   const [displayData, setDisplayData] = useState<Warning[]>([]);
+  const [displayDataParent, setDisplayDataParent] = useState<Warning[]>([]);
+
+  const setWarningGroup = useCallback((data: Warning[]) => {
+    setDisplayDataParent(data);
+    setDisplayData(data);
+  }, []);
 
   const [coordinates, setCoordinates] = useState<LatLng | undefined>();
 
@@ -49,7 +56,7 @@ export const WarningProvider = ({
    */
   const filterWarnings = useCallback(
     (id: number): void => {
-      const data = displayData.reduce((acc: Warning[], warning) => {
+      const data = displayDataParent.reduce((acc: Warning[], warning) => {
         const areas = warning.warningAreas.filter((area) => area.id === id);
         if (areas.length > 0) {
           acc.push({
@@ -61,7 +68,7 @@ export const WarningProvider = ({
       }, []);
       setDisplayData(data);
     },
-    [displayData],
+    [displayDataParent],
   );
 
   /**
@@ -105,8 +112,9 @@ export const WarningProvider = ({
    */
   const resetFocus = useCallback((): void => {
     setFocusedId(null);
+    setDisplayData(displayDataParent);
     setMapFocus();
-  }, [setMapFocus]);
+  }, [setMapFocus, displayDataParent]);
 
   return (
     <WarningContext.Provider
@@ -121,6 +129,7 @@ export const WarningProvider = ({
         coordinates,
         displayData,
         setDisplayData,
+        setWarningGroup,
       }}
     >
       {children}

@@ -8,6 +8,17 @@ interface FilteredWarningsReturnValue {
   waterShortageWarnings: Warning[];
 }
 
+export type UntieredWarnings = "FIRE" | "HIGH_TEMPERATURES" | "WATER_SHORTAGE";
+
+/**
+ * Returns true if code is a type UntieredWarnings. Else it returns false.
+ */
+export function isUntieredWarning(code: string): code is UntieredWarnings {
+  return (
+    code === "FIRE" || code === "HIGH_TEMPERATURES" || code === "WATER_SHORTAGE"
+  );
+}
+
 /**
  * Filters the passed warnings into high tempereatures, tirered warnings, water shortage and fire risks.
  */

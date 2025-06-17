@@ -1,23 +1,17 @@
+import { useWarningContext } from "@/context/WarningContext";
 import WarningPreview from "./WarningPreview";
-import { Warning } from "./types";
-
-interface WarningListProps {
-  /**
-   * List of warnings to be displayed.
-   */
-  warnings: Warning[];
-}
 
 /**
  * Responsible for rendering a list of weather warnings.
  * @param {WarningListProps} props - The props for the component.
- * @param {Warning[]} props.warnings - The list of warnings to be displayed.
  * @returns {JSX.Element} - The rendered component.
  */
-const WarningList = ({ warnings }: WarningListProps): React.JSX.Element => {
+const WarningList = (): React.JSX.Element => {
+  const { displayData } = useWarningContext();
+
   return (
     <div className="flex flex-col gap-2">
-      {warnings.flatMap((event) =>
+      {displayData.flatMap((event) =>
         event.warningAreas.map((areaData) => (
           <WarningPreview
             warning={areaData}

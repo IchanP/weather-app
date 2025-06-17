@@ -29,18 +29,18 @@ const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
   const { tieredWarnings } = useFilteredWarnings(warningData);
-  const { setDisplayData, displayData } = useWarningContext();
+  const { setWarningGroup, displayData } = useWarningContext();
 
   useEffect(() => {
-    setDisplayData(tieredWarnings);
-  }, [setDisplayData, tieredWarnings]);
+    setWarningGroup(tieredWarnings);
+  }, [setWarningGroup, tieredWarnings]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
       <TypeSelectorWrapper data={warningData} />
       <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
         <div className="h-map w-map overflow-y-scroll">
-          <WarningView warnings={displayData} />
+          <WarningView />
         </div>
         <div>
           <Map>
