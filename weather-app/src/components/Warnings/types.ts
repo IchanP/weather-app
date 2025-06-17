@@ -1,15 +1,24 @@
 type LocalizedString = {
   sv: string;
   en: string;
-  code?: string;
 };
 
 type Description = {
-  title: LocalizedString;
+  title: {
+    code:
+      | "HAPPENS"
+      | "INCIDENT"
+      | "AFFECT"
+      | "COMMENTS"
+      | "WHERE"
+      | "WATERCOURSE"
+      | "GROUNDWATER_MINOR"
+      | "GROUNDWATER_MAJOR";
+  } & LocalizedString;
   text: LocalizedString;
 };
 
-type LatLong = [number, number];
+export type LatLong = [number, number];
 
 export type Area = {
   type:
@@ -104,6 +113,28 @@ type EventDescription = LocalizedString & {
     | WaterShortageEvent;
 };
 
+export type DescriptionCode =
+  | "HAPPENS"
+  | "INCIDENT"
+  | "AFFECT"
+  | "COMMENTS"
+  | "WHERE"
+  | "WATERCOURSE"
+  | "GROUNDWATER_MINOR"
+  | "GROUNDWATER_MAJOR";
+
+type WarningAreaDescriptions = {
+  title: {
+    sv: string;
+    en: string;
+    code: DescriptionCode;
+  };
+  text: {
+    sv: string;
+    en: string;
+  };
+};
+
 // Warning Area
 export type WarningArea = {
   id: number;
@@ -114,7 +145,7 @@ export type WarningArea = {
   warningLevel: WarningLevel;
   eventDescription: EventDescription;
   affectedAreas: AffectedArea[];
-  descriptions: Description[];
+  descriptions: WarningAreaDescriptions[];
   area: Area;
 };
 
@@ -141,12 +172,10 @@ export type MeteorologicalEventCode =
 
 // Event
 type MeteorologicalEvent = {
-  en: string;
-  sv: string;
   code: MeteorologicalEventCode;
 
   mhoClassification: LocalizedString & { code: "MET" | "HYD" | "OCE" };
-};
+} & LocalizedString;
 
 // Main Warning Type
 export type Warning = {

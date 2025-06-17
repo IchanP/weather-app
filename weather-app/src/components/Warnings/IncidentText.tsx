@@ -1,3 +1,4 @@
+import { findDescriptionIndex } from "@/utils/warningUtils";
 import { WarningArea } from "./types";
 
 interface IncidentTextProps {
@@ -10,12 +11,8 @@ interface IncidentTextProps {
  */
 const IncidentText = ({ warning }: IncidentTextProps): React.JSX.Element => {
   // Retrieve the indexes of the descrpitions.
-  const incident = warning.descriptions.findIndex(
-    (description) => description.title.code === "INCIDENT",
-  );
-  const happens = warning.descriptions.findIndex(
-    (description) => description.title.code === "HAPPENS",
-  );
+  const incident = findDescriptionIndex(warning, "INCIDENT");
+  const happens = findDescriptionIndex(warning, "HAPPENS");
 
   return (
     <>

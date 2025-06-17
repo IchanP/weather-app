@@ -82,8 +82,11 @@ const GeoJSONArea = React.memo(
        * Highlights the border to be red and brings it to the front of the map.
        */
       mouseover: useCallback(() => {
-        highlightItem(warningArea.id);
-      }, [warningArea.id, highlightItem]),
+        // TODO - fix this ,it's a bit of a hack
+        if (warningArea.id !== focusedId) {
+          highlightItem(warningArea.id);
+        }
+      }, [warningArea.id, highlightItem, focusedId]),
       /**
        * Triggers when the users pointer leaves the area on the map.
        * Resets the style to the default value.

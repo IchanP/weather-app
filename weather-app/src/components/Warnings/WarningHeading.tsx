@@ -21,8 +21,8 @@ const WarningHeading = ({
         <IconPicker warning={warning} eventCode={eventCode} />
       </div>
       <div>
-        <h2 className="font-bold">{warning.eventDescription.sv}</h2>
-        <h3>{affectedAreas}</h3>
+        <h2 className="font-bold text-2xl">{warning.eventDescription.sv}</h2>
+        <h3 className="text-lg">{affectedAreas}</h3>
       </div>
     </div>
   );

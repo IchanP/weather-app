@@ -56,7 +56,7 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
         [73.344679, -15.303935], // Basically Greenland
         [47.169846, 39.232198], // Slightly east of Ukraine
       ]}
-      className="h-map w-[500px]"
+      className="h-map w-[550px]"
     >
       <TileLayer
         url="https://api.maptiler.com/maps/dataviz/256/{z}/{x}/{y}.png?key=iU1HxtOY7iBXFJrHCzTo"
