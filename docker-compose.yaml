@@ -26,6 +26,8 @@ services:
   
   warning-fetcher-app:
     restart: on-failure
+    depends_on:
+      - redis-weather-cache
     build:
       context: ./WarningFetcherApp
       dockerfile: Dockerfile.production

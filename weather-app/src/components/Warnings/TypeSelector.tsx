@@ -1,6 +1,6 @@
 import { JSX } from "react";
 
-interface TypeSelectorProps {
+export interface TypeSelectorProps {
   text: string;
   warnings?: number;
   onClick(): void;

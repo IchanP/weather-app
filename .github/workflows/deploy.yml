@@ -74,6 +74,8 @@ jobs:
             GITHUB_REPOSITORY=$GITHUB_REPOSITORY_LOWERCASE \
             REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' \
             REDIS_USERNAME='${{ secrets.REDIS_USERNAME }}' \
+            REDIS_WF_USERNAME='${{ secrets.REDIS_WF_USERNAME }}' \
+            REDIS_WF_PASSWORD='${{ secrets.REDIS_WF_PASSWORD }}' \
             CW_REDIS_CONNECTION_STRING='${{ secrets.CW_REDIS_CONNECTION_STRING }}' \
             CW_REDIS_PFX_PW='${{ secrets.CW_REDIS_PFX_PW }}' \
             CW_REDIS_SERVER_PEM_PATH=/usr/local/etc/redis/certs/ca_server.pem \

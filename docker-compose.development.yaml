@@ -27,6 +27,7 @@ services:
     image: wf-app:1.0.0
     volumes:
         - ./WarningFetcherApp:/usr/src/app
+        - ./CurrentWeatherApp/redis/redis-client:/etc/redis/certs
     build:
       context: ./WarningFetcherApp
       dockerfile: Dockerfile.development

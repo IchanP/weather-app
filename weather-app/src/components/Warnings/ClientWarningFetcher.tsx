@@ -17,7 +17,7 @@ const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL as string);
  */
 const ClientFetcher = (): React.JSX.Element => {
   const [isPending, setIsPending] = useState(true);
-  const [data, setData] = useState<Warning[] | null>([]);
+  const [data, setData] = useState<Warning[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,12 +30,14 @@ const ClientFetcher = (): React.JSX.Element => {
         const parsed = JSON.parse(event.data) as SocketData;
         if (parsed.status === "cached") {
           // TODO Need to validate that the data we got is ok.
+          // TODO - do a 2nd parsing of the message, cause that's needed for some reason...
           setIsPending(false);
           // TODO - need to run a typeguard here.
           //   setData(parsed.message as Warning[]);
           setError(null);
         } else if (parsed.status === "data") {
           // TODO - Run a typeguard.
+          // TODO - do a 2nd parsing of the message, cause that's needed for some reason...
           setData(parsed.message as Warning[]);
           setError(null);
         } else if (

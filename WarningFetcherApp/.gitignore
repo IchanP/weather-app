@@ -174,3 +174,9 @@ cython_debug/
 .pypirc
 
 linux_venv
+
+
+redis-certs
+redis-client
+
+redis.conf

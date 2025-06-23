@@ -27,4 +27,13 @@ services:
   
   warning-fetcher-app:
     image: ghcr.io/${GITHUB_REPOSITORY}/wf-app:1.0.0
+    volumes:
+      - /opt/weather-app/client-certs:/usr/local/etc/redis/certs
     pull_policy: always
+    environment:
+      - CW_REDIS_CONNECTION_STRING
+      - CW_REDIS_PFX_PW
+      - CW_REDIS_SERVER_PEM_PATH
+      - CW_REDIS_PFX_PATH
+      - REDIS_USERNAME
+      - REDIS_PASSWORD
