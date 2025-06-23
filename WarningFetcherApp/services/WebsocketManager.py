@@ -22,6 +22,6 @@ class WebsocketManager(CommunicatorAb):
             for member in self.active_connections:
                 try:
                     logger.info(f"Sending json data to member: {member}")
-                    await member.send_json(message)
+                    await member.send_json({"status": "data", "message": f"{message}"})
                 except Exception as e:
                      logger.error(f"Unexpected error occured a sending data to {member}. Error: {e}")

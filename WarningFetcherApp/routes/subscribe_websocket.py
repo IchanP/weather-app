@@ -16,7 +16,8 @@ router = APIRouter()
 async def subscribe_websocket(socket: WebSocket):
     await manager.connect(socket)
     await socket.send_json({"status": "connected", "message": "Connected to the warning system"})
-    
+    # TODO - grab data from redis
+    await socket.send_json({"status": "cached", "message": ""})
     try:
         while True:
            data = await socket.receive_text()
