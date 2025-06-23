@@ -39,7 +39,7 @@ const WarningManager = ({
     <div className="flex flex-col items-center justify-center gap-5 max-w-[100%]">
       <TypeSelectorWrapper data={warningData} />
       <div className="flex flex-col items-center justify-center md:flex-row md:gap-10 max-w-[100%]">
-        <div className="h-map">
+        <div className="h-map w-map">
           <WarningView />
         </div>
         <div>

@@ -1,4 +1,4 @@
-import WarningFetcher from "./WarningFetcher";
+import ClientFetcher from "./ClientWarningFetcher";
 
 /**
  * Declares the components to be rendered to display the warnings.
@@ -8,7 +8,7 @@ const WarningWrapper = (): React.JSX.Element => {
   return (
     <>
       <h1 className="pb-8">Weather warnings</h1>
-      <WarningFetcher />
+      <ClientFetcher />
     </>
   );
 };

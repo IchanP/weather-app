@@ -1,46 +1,73 @@
-// "use client";
-// import { useQuery } from "@tanstack/react-query";
-// import dynamic from "next/dynamic";
-// import { Spinner } from "../Spinner";
+"use client";
 
-// /**
-//  * Responsible for fetching the forecasted weather and passing it to the renderer.
-//  */
-// const WarningFetcher = () => {
-//   const Map = dynamic(() => import("@/components/Map/Map"), {
-//     ssr: false,
-//   });
-//   // TODO leave all this here for now so we can go back and look at it...
-//   /**
-//    * Fetches current and forecast data for the last hour.
-//    */
-//   const fetchWarnings = async () => {
-//     const response = await fetch("/datamock/warning-fetcher-mock.json");
-//     if (!response.ok) {
-//       throw Error("Response not ok");
-//     }
-//     return response.json();
-//   };
+import { Spinner } from "../Spinner";
+import { WarningProvider } from "@/context/WarningContext";
+import WarningManager from "./WarningManager";
+import React, { useEffect, useState } from "react";
+import { Warning } from "./types";
 
-//   // TODO move this to route level at some point
-//   const { isError, isPending, data, error } = useQuery({
-//     queryKey: ["warnings"],
-//     queryFn: fetchWarnings,
-//   });
+type SocketData = {
+  status: "connected" | "cached" | "data" | "message";
+  message: string | Warning[];
+};
+const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL as string);
 
-//   if (isPending)
-//     return (
-//       <div>
-//         <Spinner />
-//       </div>
-//     );
+/**
+ * Responsible for fetching the forecasted weather and passing it to the renderer.
+ */
+const ClientFetcher = (): React.JSX.Element => {
+  const [isPending, setIsPending] = useState(true);
+  const [data, setData] = useState<Warning[] | null>([]);
+  const [error, setError] = useState<string | null>(null);
 
-//   if (isError) return <div>Error: {error.message}</div>;
-//   return (
-//     <>
-//       <Map data={data} onClickCallback={() => console.log("yest")} />
-//     </>
-//   );
-// };
+  useEffect(() => {
+    try {
+      /**
+       * Handles the parsing of messages.
+       * Sets pending to false when cache is received.
+       */
+      socket.onmessage = (event: MessageEvent): void => {
+        const parsed = JSON.parse(event.data) as SocketData;
+        if (parsed.status === "cached") {
+          // TODO Need to validate that the data we got is ok.
+          setIsPending(false);
+          // TODO - need to run a typeguard here.
+          //   setData(parsed.message as Warning[]);
+          setError(null);
+        } else if (parsed.status === "data") {
+          // TODO - Run a typeguard.
+          setData(parsed.message as Warning[]);
+          setError(null);
+        } else if (
+          parsed.status === "connected" ||
+          parsed.status === "message"
+        ) {
+          console.log(parsed.message);
+        } else {
+          throw new TypeError();
+        }
+      };
+    } catch {
+      setError("The data displayed may be out of date."); // TODO Make more descriptive with a timestamp.
+    }
 
-// export default WarningFetcher;
+    return (): void => socket.close(1000, "The client has been unmounted");
+  }, []);
+
+  if (isPending)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+
+  return (
+    <>
+      <WarningProvider>
+        <WarningManager warningData={data as Warning[]} />
+      </WarningProvider>
+    </>
+  );
+};
+
+export default ClientFetcher;
