@@ -1,3 +1,4 @@
+import json
 from requests import HTTPError
 from .base_classes.CommunicatorAb import CommunicatorAb
 from .base_classes.WeatherPoller import WeatherPoller
@@ -5,7 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from ..config.logger import logger
 import asyncio
-
+from redis import Redis
 
 class PollingFacade:
     
@@ -13,11 +14,13 @@ class PollingFacade:
     scheduler: BackgroundScheduler
     poller: WeatherPoller
     url_to_poll: str
+    db: Redis
 
-    def __init__(self, communicator: CommunicatorAb, poller: WeatherPoller, scheduler: BackgroundScheduler, polling_interval_minutes: int, url: str):
+    def __init__(self, communicator: CommunicatorAb, poller: WeatherPoller, scheduler: BackgroundScheduler, polling_interval_minutes: int, url: str, db: Redis):
         self.communicator = communicator
         self.poller = poller
         self.url_to_poll = url
+        self.db = db
         # Default options are fine since we want the job to restart between restarts
         # And it's not a CPU intensive operation
         self.scheduler = scheduler
@@ -30,6 +33,8 @@ class PollingFacade:
     async def polling_job(self):
         try:
             weather_text_data = self.poller.fetch_and_parse_weather_data(self.url_to_poll)
+            serialized = json.dumps(weather_text_data)
+            self.db.set("cached", serialized)
             await self.communicator.broadcast(weather_text_data)
         except (HTTPError, ValueError) as e:
             # Refetch
