@@ -6,3 +6,6 @@ pip-tools
 pytest
 pytest-mock
 pytest-asyncio
+redis[hiredis]
+redis
+cryptography

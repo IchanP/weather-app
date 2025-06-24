@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from .routes import root, subscribe_websocket
 from fastapi.middleware.cors import CORSMiddleware
+from .db import redis_connection
 
 app = FastAPI()
 
