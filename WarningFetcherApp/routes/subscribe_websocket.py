@@ -1,23 +1,35 @@
-from fastapi import WebSocket, APIRouter
+from fastapi import Depends, WebSocket, APIRouter, Request
 from ..services.SMHIWarningPoller import SMHIWarningPoller
 from ..services.WebsocketManager import WebsocketManager
 from ..services.PollingFacade import PollingFacade
 from apscheduler.schedulers.background import BackgroundScheduler
+from redis import Redis
 
-manager = WebsocketManager()
-smhi_poller = SMHIWarningPoller()
-scheduler = BackgroundScheduler()
-url = "https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
-poll_facade = PollingFacade(manager, smhi_poller, scheduler, 10, url)
+def get_redis_db(request: Request) -> Redis:
+    return request.app.state.db
+
+def create_services(redis_db: Redis) -> WebsocketManager:
+    manager = WebsocketManager()
+    smhi_poller = SMHIWarningPoller(redis_db)
+    scheduler = BackgroundScheduler()
+    url = "https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
+    PollingFacade(manager, smhi_poller, scheduler, 10, url, redis_db)
+    return manager
 
 router = APIRouter()
 
+# https://stackoverflow.com/questions/63270196/how-to-do-persistent-database-connection-in-fastapi
+
 @router.websocket("/ws")
-async def subscribe_websocket(socket: WebSocket):
+async def subscribe_websocket(socket: WebSocket, redis_db: Redis = Depends(get_redis_db)):
+    manager = create_services(redis_db)
+    
     await manager.connect(socket)
     await socket.send_json({"status": "connected", "message": "Connected to the warning system"})
-    # TODO - grab data from redis
-    await socket.send_json({"status": "cached", "message": ""})
+    cached = redis_db.get("cached")
+    if (cached):
+     await socket.send_json({"status": "cached", "message": cached})
+
     try:
         while True:
            data = await socket.receive_text()
