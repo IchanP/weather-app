@@ -56,6 +56,8 @@ export const useFilteredWarnings = (
     [warnings],
   );
 
+  console.log(tieredWarnings);
+
   return {
     tieredWarnings,
     fireWarnings,

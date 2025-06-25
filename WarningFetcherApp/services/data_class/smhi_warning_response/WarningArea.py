@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from .AreaName import AreaName
 from .Description import Description
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Any
 
 class WarningLevel(BaseModel):
     sv: str
@@ -22,8 +22,7 @@ class Geometry(BaseModel):
     type: str
     bbox: Optional[list[float]] = None
     # NOTE - The type of coordinates depends on the type field, as defined by the GeoJson specification...
-    coordinates: Optional[Union[List[float], Optional[List[List[float]]], Optional[List[List[List[float]]]]]] = None, None, None
-
+    coordinates: Optional[Any] = None
 class Properties(BaseModel):
     sv: Optional[str] = None
     en: Optional[str] = None

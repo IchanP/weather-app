@@ -23,5 +23,3 @@ app.add_middleware(
 app.include_router(root.router)
 app.include_router(subscribe_websocket.router)
 
-connection = redis_connection.connect_redis()
-app.state.db = connection

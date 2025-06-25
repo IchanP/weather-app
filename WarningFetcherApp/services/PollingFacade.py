@@ -34,7 +34,9 @@ class PollingFacade:
         try:
             weather_text_data = self.poller.fetch_and_parse_weather_data(self.url_to_poll)
             serialized = json.dumps(weather_text_data)
+            print("Writing to DB...")
             self.db.set("cached", serialized)
+            print("DB written to...")
             await self.communicator.broadcast(weather_text_data)
         except (HTTPError, ValueError) as e:
             # Refetch

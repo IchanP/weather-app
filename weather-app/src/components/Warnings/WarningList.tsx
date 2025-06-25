@@ -8,7 +8,6 @@ import WarningPreview from "./WarningPreview";
  */
 const WarningList = (): React.JSX.Element => {
   const { displayData } = useWarningContext();
-
   return (
     <div className="flex flex-col gap-2">
       {displayData.flatMap((event) =>

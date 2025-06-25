@@ -12,8 +12,8 @@ redis_db = redis_connection.connect_redis()
 manager = WebsocketManager()
 smhi_poller = SMHIWarningPoller()
 scheduler = BackgroundScheduler()
-url = "https://opendata-download-warnings.smhi.se/ibww/test/test_2.json"
-facade = PollingFacade(manager, smhi_poller, scheduler, 10, url, redis_db)
+url = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json"
+facade = PollingFacade(manager, smhi_poller, scheduler, 15, url, redis_db)
 
 router = APIRouter()
 
@@ -24,7 +24,7 @@ async def subscribe_websocket(socket: WebSocket):
     
     await manager.connect(socket)
     await socket.send_json({"status": "connected", "message": "Connected to the warning system"})
-    cached = redis_db.get("cached")
+    cached: bytes = redis_db.get("cached")
     if (cached):
      print("Cache hit...")
      cached_data = json.loads(cached.decode('utf-8'))

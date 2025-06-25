@@ -33,28 +33,40 @@ const TypeSelectorWrapper = ({
     setWarningGroup(displayedWarning);
   };
 
+  /**
+   * Counts the number of warningAreas of the passed Warning[] array.
+   * @param {Warning[]} warnings - The warning array to count.
+   * @returns {number} - The number of warnings.
+   */
+  const countWarnings = (warnings: Warning[]): number => {
+    let areas = 0;
+    for (let i = 0; i < warnings.length; i++) {
+      areas += warnings[i].warningAreas.length;
+    }
+    return areas;
+  };
   const selectorProps: TypeSelectorProps[] = [
     {
       text: "Varningar",
-      warnings: tieredWarnings.length,
+      warnings: countWarnings(tieredWarnings),
       // eslint-disable-next-line jsdoc/require-jsdoc
       onClick: () => displayWarning(tieredWarnings),
     },
     {
       text: "Brandrisk",
-      warnings: fireWarnings.length,
+      warnings: countWarnings(fireWarnings),
       // eslint-disable-next-line jsdoc/require-jsdoc
       onClick: () => displayWarning(fireWarnings),
     },
     {
       text: "Höga Temperaturer",
-      warnings: highTempWarnings.length,
+      warnings: countWarnings(highTempWarnings),
       // eslint-disable-next-line jsdoc/require-jsdoc
       onClick: () => displayWarning(highTempWarnings),
     },
     {
       text: "Vattenbrist",
-      warnings: waterShortageWarnings.length,
+      warnings: countWarnings(waterShortageWarnings),
       // eslint-disable-next-line jsdoc/require-jsdoc
       onClick: () => displayWarning(waterShortageWarnings),
     },

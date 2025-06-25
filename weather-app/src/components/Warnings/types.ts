@@ -185,3 +185,22 @@ export type Warning = {
   descriptions: Description[];
   warningAreas: WarningArea[];
 };
+
+/**
+ * A simple function that checks the structure of the received data parameter.
+ * THIS IS NOT AN EXHAUSTIVE TYPEGUARD AND DOES NOT RUN A DEEPCHECK OF ALL THE PROPERTIES.
+ * IT SIMPLY VALIDATES THE STRUCTURE OF THE TOP LEVEL!
+ */
+export function isWarningArray(data: unknown): data is Warning[] {
+  return (
+    Array.isArray(data) &&
+    data.every(
+      (item) =>
+        typeof item === "object" &&
+        item !== null &&
+        "id" in item &&
+        "event" in item &&
+        "warningAreas" in item,
+    )
+  );
+}

@@ -4,7 +4,7 @@ import { Spinner } from "../Spinner";
 import { WarningProvider } from "@/context/WarningContext";
 import WarningManager from "./WarningManager";
 import React, { useEffect, useState } from "react";
-import { Warning } from "./types";
+import { isWarningArray, Warning } from "./types";
 
 type SocketData = {
   status: "connected" | "cached" | "data" | "message";
@@ -29,17 +29,25 @@ const ClientFetcher = (): React.JSX.Element => {
       socket.onmessage = (event: MessageEvent): void => {
         const parsed = JSON.parse(event.data) as SocketData;
         if (parsed.status === "cached") {
-          // TODO Need to validate that the data we got is ok.
-          // TODO - do a 2nd parsing of the message, cause that's needed for some reason...
+          console.log(parsed.message);
+          if (isWarningArray(parsed.message)) {
+            console.log("Cache hit... Setting data to parsed warnings.");
+            setData(parsed.message);
+            setError(null);
+          } else {
+            setError(
+              "We were unable to fetch warning data at this time. Please try again later.",
+            );
+          }
           setIsPending(false);
-          // TODO - need to run a typeguard here.
-          //   setData(parsed.message as Warning[]);
-          setError(null);
         } else if (parsed.status === "data") {
           // TODO - Run a typeguard.
           // TODO - do a 2nd parsing of the message, cause that's needed for some reason...
-          setData(parsed.message as Warning[]);
-          setError(null);
+          if (isWarningArray(parsed.message)) {
+            console.log("Data received... Setting data to parsed warnings.");
+            setData(parsed.message as Warning[]);
+            setError(null);
+          }
         } else if (
           parsed.status === "connected" ||
           parsed.status === "message"
@@ -53,6 +61,7 @@ const ClientFetcher = (): React.JSX.Element => {
       setError("The data displayed may be out of date."); // TODO Make more descriptive with a timestamp.
     }
 
+    // TODO.... this doesnt work lol
     return (): void => socket.close(1000, "The client has been unmounted");
   }, []);
 
