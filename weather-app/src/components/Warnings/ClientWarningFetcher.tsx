@@ -28,8 +28,8 @@ const ClientFetcher = (): React.JSX.Element => {
        */
       socket.onmessage = (event: MessageEvent): void => {
         const parsed = JSON.parse(event.data) as SocketData;
+        console.log(parsed.status);
         if (parsed.status === "cached") {
-          console.log(parsed.message);
           if (isWarningArray(parsed.message)) {
             console.log("Cache hit... Setting data to parsed warnings.");
             setData(parsed.message);
@@ -41,12 +41,11 @@ const ClientFetcher = (): React.JSX.Element => {
           }
           setIsPending(false);
         } else if (parsed.status === "data") {
-          // TODO - Run a typeguard.
-          // TODO - do a 2nd parsing of the message, cause that's needed for some reason...
           if (isWarningArray(parsed.message)) {
             console.log("Data received... Setting data to parsed warnings.");
-            setData(parsed.message as Warning[]);
+            setData(parsed.message);
             setError(null);
+          } else {
           }
         } else if (
           parsed.status === "connected" ||
