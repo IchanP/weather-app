@@ -5,6 +5,7 @@ import { WarningProvider } from "@/context/WarningContext";
 import WarningManager from "./WarningManager";
 import React, { useEffect, useState } from "react";
 import { isWarningArray, Warning } from "./types";
+import WarningBanner from "../UI/WarningBanner";
 
 type SocketData = {
   status: "connected" | "cached" | "data" | "message";
@@ -73,6 +74,7 @@ const ClientFetcher = (): React.JSX.Element => {
 
   return (
     <>
+      {error && <WarningBanner text={error} />}
       <WarningProvider>
         <WarningManager warningData={data as Warning[]} />
       </WarningProvider>
