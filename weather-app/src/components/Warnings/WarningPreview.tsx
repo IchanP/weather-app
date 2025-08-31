@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { MeteorologicalEventCode, WarningArea } from "./types";
-import { useWarningContext } from "@/context/WarningContext";
+import { useWarningStore } from "@/store/useWarningStore";
 import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { scrollElementIntoView } from "@/utils";
 import WarningHeading from "./WarningHeading";
@@ -25,27 +25,27 @@ const WarningPreview = ({
   warning,
   eventCode,
 }: WarningPreviewProps): React.JSX.Element => {
-  const {
-    highlightWarning: highlightItem,
-    highlightWarningId,
-    resetHiglight,
-    focusWarning,
-  } = useWarningContext();
+  const highlightWarning = useWarningStore((state) => state.highlightWarning);
+  const highlightWarningId = useWarningStore(
+    (state) => state.highlightWarningId,
+  );
+  const resetHighlight = useWarningStore((state) => state.resetHighlight);
+  const focusWarning = useWarningStore((state) => state.focusWarning);
 
   const [style, setStyle] = useState<CSSProperties>(defaultStyle);
   const divRef = useRef<null | HTMLDivElement>(null);
 
   const mouseOver = useCallback(() => {
-    highlightItem(warning.id);
-  }, [highlightItem, warning.id]);
+    highlightWarning(warning.id);
+  }, [warning.id, highlightWarning]);
 
   const mouseOut = useCallback(() => {
-    resetHiglight();
-  }, [resetHiglight]);
+    resetHighlight();
+  }, [resetHighlight]);
 
   const onClick = useCallback(() => {
     focusWarning(warning.id);
-  }, [focusWarning, warning.id]);
+  }, [warning.id, focusWarning]);
 
   useEffect(() => {
     if (highlightWarningId === warning.id) {

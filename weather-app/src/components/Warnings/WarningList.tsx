@@ -1,5 +1,5 @@
-import { useWarningContext } from "@/context/WarningContext";
 import WarningPreview from "./WarningPreview";
+import { useWarningStore } from "@/store/useWarningStore";
 
 /**
  * Responsible for rendering a list of weather warnings.
@@ -7,7 +7,8 @@ import WarningPreview from "./WarningPreview";
  * @returns {JSX.Element} - The rendered component.
  */
 const WarningList = (): React.JSX.Element => {
-  const { displayData } = useWarningContext();
+  const displayData = useWarningStore((state) => state.displayData);
+
   return (
     <div className="flex flex-col gap-2">
       {displayData.flatMap((event) =>

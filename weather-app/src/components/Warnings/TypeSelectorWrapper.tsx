@@ -2,7 +2,7 @@ import { JSX } from "react";
 import { Warning } from "./types";
 import TypeSelector, { TypeSelectorProps } from "./TypeSelector";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
-import { useWarningContext } from "@/context/WarningContext";
+import { useWarningStore } from "@/store/useWarningStore";
 
 interface TypeSelectorWrapperProps {
   data: Warning[];
@@ -22,7 +22,8 @@ const TypeSelectorWrapper = ({
     waterShortageWarnings,
   } = useFilteredWarnings(data);
 
-  const { resetFocus, setWarningGroup } = useWarningContext();
+  const resetFocus = useWarningStore((state) => state.resetFocus);
+  const setWarningGroup = useWarningStore((state) => state.setWarningGroup);
 
   /**
    * Sets the passed warning array as the warnings to display and resets the focused warning.

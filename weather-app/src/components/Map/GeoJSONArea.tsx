@@ -3,7 +3,7 @@ import { GeoJSON } from "react-leaflet";
 import { GeoJSON as LeafletGeoJSON } from "leaflet";
 import { WarningArea } from "../Warnings/types";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { useWarningContext } from "@/context/WarningContext";
+import { useWarningStore } from "@/store/useWarningStore";
 
 interface GeoJSONAreaProps {
   warningArea: WarningArea;
@@ -24,14 +24,14 @@ const GeoJSONArea = React.memo(
     warningArea,
     eventCode,
   }: GeoJSONAreaProps): React.JSX.Element {
-    const {
-      highlightWarning: highlightItem,
-      highlightWarningId,
-      resetHiglight,
-      focusWarning,
-      focusedId,
-      setMapFocus,
-    } = useWarningContext();
+    const highlightWarning = useWarningStore((state) => state.highlightWarning);
+    const highlightWarningId = useWarningStore(
+      (state) => state.highlightWarningId,
+    );
+    const resetHighlight = useWarningStore((state) => state.resetHighlight);
+    const focusWarning = useWarningStore((state) => state.focusWarning);
+    const focusedId = useWarningStore((state) => state.focusedId);
+    const setMapFocus = useWarningStore((state) => state.setMapFocus);
 
     // Default style
     const defaultStyle = useMemo(
@@ -84,16 +84,16 @@ const GeoJSONArea = React.memo(
       mouseover: useCallback(() => {
         // TODO - fix this ,it's a bit of a hack
         if (warningArea.id !== focusedId) {
-          highlightItem(warningArea.id);
+          highlightWarning(warningArea.id);
         }
-      }, [warningArea.id, highlightItem, focusedId]),
+      }, [warningArea.id, focusedId, highlightWarning]),
       /**
        * Triggers when the users pointer leaves the area on the map.
        * Resets the style to the default value.
        */
       mouseout: useCallback(() => {
-        resetHiglight();
-      }, [resetHiglight]),
+        resetHighlight();
+      }, [resetHighlight]),
       /**
        * Triggers when the user clicks on the area.
        * Tells context to focus this warning.

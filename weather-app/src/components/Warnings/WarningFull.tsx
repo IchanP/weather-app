@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../UI/Button";
-import { useWarningContext } from "@/context/WarningContext";
+import { useWarningStore } from "@/store/useWarningStore";
 import WarningHeading from "./WarningHeading";
 import IncidentText from "./IncidentText";
 import CenteredHeading from "../UI/CenteredHeading";
@@ -12,7 +12,8 @@ import CenteredIconHeader from "../UI/CenteredIconHeader";
  * Renders information about a WarningArea.
  */
 const WarningFull = (): React.JSX.Element => {
-  const { resetFocus, displayData } = useWarningContext();
+  const resetFocus = useWarningStore((state) => state.resetFocus);
+  const displayData = useWarningStore((state) => state.displayData);
   const warning = displayData[0];
   const warningArea = warning.warningAreas[0];
 

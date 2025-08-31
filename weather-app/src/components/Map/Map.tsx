@@ -5,8 +5,8 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 import { useEffect, useMemo, useRef } from "react";
-import { useWarningContext } from "@/context/WarningContext";
 import { LatLong } from "../Warnings/types";
+import { useWarningStore } from "@/store/useWarningStore";
 
 export interface MapProps {
   children: React.JSX.Element[];
@@ -20,7 +20,7 @@ const Map = ({ children }: MapProps): React.JSX.Element => {
   const defaultZoom = 5;
   const defaultCenter: LatLong = useMemo(() => [60.33, 14.99], []);
   const mapRef = useRef<LeafletMap | null>(null);
-  const { coordinates } = useWarningContext();
+  const coordinates = useWarningStore((state) => state.coordinates);
 
   useEffect(() => {
     /**

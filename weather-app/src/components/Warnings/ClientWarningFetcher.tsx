@@ -1,7 +1,6 @@
 "use client";
 
 import { Spinner } from "../Spinner";
-import { WarningProvider } from "@/context/WarningContext";
 import WarningManager from "./WarningManager";
 import React, { useEffect, useState } from "react";
 import { isWarningArray, Warning } from "./types";
@@ -60,8 +59,6 @@ const ClientFetcher = (): React.JSX.Element => {
     } catch {
       setError("The data displayed may be out of date."); // TODO Make more descriptive with a timestamp.
     }
-
-    // TODO.... this doesnt work lol
     return (): void => socket.close(1000, "The client has been unmounted");
   }, []);
 
@@ -75,9 +72,7 @@ const ClientFetcher = (): React.JSX.Element => {
   return (
     <>
       {error && <WarningBanner text={error} />}
-      <WarningProvider>
-        <WarningManager warningData={data as Warning[]} />
-      </WarningProvider>
+      <WarningManager warningData={data as Warning[]} />
     </>
   );
 };

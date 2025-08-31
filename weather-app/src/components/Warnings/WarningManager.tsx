@@ -1,12 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Warning } from "./types";
+import { Warning, WarningArea } from "./types";
 import WarningView from "./WarningView";
 import TypeSelectorWrapper from "./TypeSelectorWrapper";
 import { useEffect } from "react";
 import { useFilteredWarnings } from "@/hooks/useFilteredWarnings";
-import { useWarningContext } from "@/context/WarningContext";
+import { useWarningStore } from "@/store/useWarningStore";
 
 interface WarningManagerProps {
   warningData: Warning[];
@@ -29,7 +29,8 @@ const WarningManager = ({
   warningData,
 }: WarningManagerProps): React.JSX.Element => {
   const { tieredWarnings } = useFilteredWarnings(warningData);
-  const { setWarningGroup, displayData } = useWarningContext();
+  const setWarningGroup = useWarningStore((state) => state.setWarningGroup);
+  const displayData = useWarningStore((state) => state.displayData);
 
   useEffect(() => {
     setWarningGroup(tieredWarnings);
@@ -44,8 +45,8 @@ const WarningManager = ({
         </div>
         <div>
           <Map>
-            {displayData.flatMap((event) =>
-              event.warningAreas.map((data) => (
+            {displayData.flatMap((event: Warning) =>
+              event.warningAreas.map((data: WarningArea) => (
                 <GeoJSONArea
                   warningArea={data}
                   key={data.id}
